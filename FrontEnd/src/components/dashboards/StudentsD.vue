@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import { PlusIcon } from 'vue-tabler-icons';
 import { ref, onMounted, computed } from 'vue';
 import axios from 'axios';
 import { useI18n } from 'vue-i18n';
-import { PencilIcon } from 'vue-tabler-icons';
-import { TrashIcon } from 'vue-tabler-icons';
+
 import { SearchIcon } from 'vue-tabler-icons';
 
 // Access the Vue I18n instance
@@ -132,7 +130,7 @@ const filteredStudents = computed(() => {
                     </v-menu>
                 </div>
             </div>
-            <v-table class="month-table" style="max-height: 580px; overflow-y:scroll">
+            <v-table class="month-table" style="max-height: 580px; ">
                 <thead>
                     <tr>
                         <th class="text-subtitle-1 font-weight-bold">{{ t('Id') }}</th>
@@ -162,7 +160,9 @@ const filteredStudents = computed(() => {
                         
                     </tr>
                 </tbody>
+
             </v-table>
+             <a href="ui/students" ><ChevronRightIcon :size="20" stroke-width="2" color="blue" />View Students</a>
         </v-card-item>
     </v-card>
 </template>

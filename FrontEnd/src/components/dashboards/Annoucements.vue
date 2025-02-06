@@ -6,7 +6,7 @@
 
 <template>
 
-<h1>REVENUE</h1>
+<h1>Annoucements</h1>
             
 </template>
 <style scoped>

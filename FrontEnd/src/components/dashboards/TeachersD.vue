@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { PlusIcon } from 'vue-tabler-icons';
+import { ChevronRightIcon, PlusIcon } from 'vue-tabler-icons';
 import { ref, onMounted, computed } from 'vue';
 import axios from 'axios';
 import { useI18n } from 'vue-i18n';
@@ -155,6 +155,7 @@ const filteredTeachers = computed(() => {
                     </tr>
                 </tbody>
             </v-table>
+             <a href="ui/teachers" ><ChevronRightIcon :size="20" stroke-width="2" color="blue" />View Teachers</a>
         </v-card-item>
     </v-card>
 </template>

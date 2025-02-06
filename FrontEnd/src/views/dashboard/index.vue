@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import Revenue from '@/components/dashboards/Revenue.vue';
+import Revenue from '@/components/dashboards/Revenuedd.vue';
 import StudentsD from '@/components/dashboards/StudentsD.vue';
 import TotalS from '@/components/dashboards/TotalS.vue';
 import TotalG from '@/components/dashboards/TotalG.vue';

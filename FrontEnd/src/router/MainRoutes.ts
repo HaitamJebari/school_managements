@@ -22,6 +22,66 @@ const MainRoutes = {
             component: () => import('@/views/ui-components/Students.vue')
         },
         {
+            name: 'Classes',
+            path: '/ui/classes',
+            component: () => import('@/views/ui-components/Classes.vue')
+        },
+        {
+            name: 'Modules',
+            path: '/ui/modules',
+            component: () => import('@/views/ui-components/Modules.vue')
+        },
+        {
+            name: 'Groups',
+            path: '/ui/groups',
+            component: () => import('@/views/ui-components/Groups.vue')
+        },
+        {
+            name: 'Schedules',
+            path: '/ui/schedules',
+            component: () => import('@/views/ui-components/Schedules.vue')
+        },
+        {
+            name: 'Absences',
+            path: '/ui/absences',
+            component: () => import('@/views/ui-components/Absences.vue')
+        },
+        {
+            name: 'Exams',
+            path: '/ui/exams',
+            component: () => import('@/views/ui-components/Exams.vue')
+        },
+        {
+            name: 'Grades',
+            path: '/ui/grades',
+            component: () => import('@/views/ui-components/Grades.vue')
+        },
+        {
+            name: 'Grades',
+            path: '/ui/grades',
+            component: () => import('@/views/ui-components/Grades.vue')
+        },
+        {
+            name: 'Revenue',
+            path: '/ui/revenue',
+            component: () => import('@/views/ui-components/Revenue.vue')
+        },
+        {
+            name: 'Grades',
+            path: '/ui/grades',
+            component: () => import('@/views/ui-components/Grades.vue')
+        },
+        {
+            name: 'Results',
+            path: '/ui/results',
+            component: () => import('@/views/ui-components/Results.vue')
+        },
+        {
+            name: 'Annoucements',
+            path: '/ui/annoucements',
+            component: () => import('@/views/ui-components/Annoucements.vue')
+        },
+        {
             name: 'Alert',
             path: '/ui/alerts',
             component: () => import('@/views/ui-components/Alerts.vue')
