@@ -11,6 +11,10 @@
     },
     "dependencies": {
         "@burhanahmeed/vue-modal-2": "^1.1.11",
+        "@preact/signals": "^2.0.1",
+        "@schedule-x/calendar": "^2.18.0",
+        "@schedule-x/theme-default": "^2.18.0",
+        "@schedule-x/vue": "^2.16.0",
         "@tiptap/pm": "^2.0.0-beta.220",
         "@tiptap/starter-kit": "2.0.0-beta.220",
         "@tiptap/vue-3": "2.0.0-beta.220",
@@ -23,6 +27,7 @@
         "lodash": "^4.17.21",
         "maska": "^1.5.0",
         "pinia": "2.0.11",
+        "preact": "^10.25.4",
         "sweetalert2": "^11.15.10",
         "vite-plugin-vuetify": "1.0.2",
         "vue": "^3.5.13",

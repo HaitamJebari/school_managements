@@ -14,7 +14,8 @@ const groupsByYear = ref([
     { year: '2020', classA: 10, classB: 15, classC: 20 },
     { year: '2021', classA: 12, classB: 18, classC: 22 },
     { year: '2022', classA: 14, classB: 20, classC: 25 },
-    { year: '2023', classA: 16, classB: 22, classC: 28 }
+    { year: '2023', classA: 16, classB: 22, classC: 30 },
+    { year: '2024', classA: 16, classB: 22, classC: 30 }
 ]);
 
 const chartOptions = computed(() => {
@@ -256,11 +257,6 @@ const chartOptions = computed(() => {
                         </div>
                         <div>
                             <v-menu bottom left>
-                                <template v-slot:activator="{ props }">
-                                    <v-btn icon color="inherit" v-bind="props" flat>
-                                        <DotsVerticalIcon stroke-width="1.5" size="24" class="text-grey100" />
-                                    </v-btn>
-                                </template>
                                 <v-list density="compact">
                                     <v-list-item v-for="(item, i) in items" :key="i" :value="i">
                                         <v-list-item-title>{{ item.title }}</v-list-item-title>

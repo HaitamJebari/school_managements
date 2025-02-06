@@ -162,7 +162,7 @@ const filteredStudents = computed(() => {
                 </tbody>
 
             </v-table>
-             <a href="ui/students" ><ChevronRightIcon :size="20" stroke-width="2" color="blue" />View Students</a>
+             <a href="ui/students" ><ChevronRightIcon :size="20" stroke-width="2" color="blue" />Modify Students</a>
         </v-card-item>
     </v-card>
 </template>
