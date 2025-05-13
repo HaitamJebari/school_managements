@@ -57,19 +57,9 @@ const MainRoutes = {
             component: () => import('@/views/ui-components/Grades.vue')
         },
         {
-            name: 'Grades',
-            path: '/ui/grades',
-            component: () => import('@/views/ui-components/Grades.vue')
-        },
-        {
             name: 'Revenue',
             path: '/ui/revenue',
             component: () => import('@/views/ui-components/Revenue.vue')
-        },
-        {
-            name: 'Grades',
-            path: '/ui/grades',
-            component: () => import('@/views/ui-components/Grades.vue')
         },
         {
             name: 'Results',
@@ -78,8 +68,8 @@ const MainRoutes = {
         },
         {
             name: 'Annoucements',
-            path: '/ui/annoucements',
-            component: () => import('@/views/ui-components/Annoucements.vue')
+            path: '/ui/ann',
+            component: () => import('@/views/ui-components/ann.vue')
         },
         {
             name: 'Alert',

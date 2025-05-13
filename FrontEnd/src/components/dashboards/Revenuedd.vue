@@ -67,7 +67,7 @@ const areaChart = {
         <v-card-item>
             <div class="d-flex align-center justify-space-between pt-sm-2">
                 <v-card-title class="text-h5">Revenue </v-card-title>
-                <v-btn  size="small" icon class="bg-error">
+                <v-btn  size="small" icon class="bg-success">
                     <v-avatar size="20" class="text-surface">
                         <CurrencyDollarIcon size="20" />
                     </v-avatar>

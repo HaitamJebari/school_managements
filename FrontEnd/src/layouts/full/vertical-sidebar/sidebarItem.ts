@@ -117,7 +117,7 @@ const sidebarItem : menu[] = [
             title: "Annoucements",
             icon: NotificationIcon,
             BgColor: 'primary',
-            to: '/ui/announcements',
+            to: '/ui/ann',
         },
     ];
 

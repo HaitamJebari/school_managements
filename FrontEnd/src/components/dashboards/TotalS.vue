@@ -72,7 +72,7 @@ const Chart = [38, 40, 25];
         <v-card-item>
             <div class="d-sm-flex align-center justify-space-between pt-sm-2">
                 <v-card-title class="text-h5">Students</v-card-title>
-                <v-btn size="small" icon class="bg-error">
+                <v-btn size="small" icon class="bg-warning">
                     <v-avatar size="20" class="text-surface">
                         <UserIcon size="20" />
                     </v-avatar>

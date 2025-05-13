@@ -341,44 +341,44 @@ const filteredStudents = computed(() => {
                                 <div class="formContainer">
                                     <fieldset class="field1">
                                         <div class="inputGroup">
-                                            <input type="text" v-model="form1.id" required="" autocomplete="off" />
+                                            <input type="text" v-model="form1.id"  autocomplete="off" />
                                             <label for="name">{{ t('Id') }}</label>
                                         </div>
                                         <div class="inputGroup">
-                                            <input type="text" v-model="form1.first_name" required="" autocomplete="off" />
+                                            <input type="text" v-model="form1.first_name"  autocomplete="off" />
                                             <label for="name">{{ t('First Name') }}</label>
                                         </div>
                                         <div class="inputGroup">
-                                            <input type="text" v-model="form1.last_name" required="" autocomplete="off" />
+                                            <input type="text" v-model="form1.last_name"  autocomplete="off" />
                                             <label for="name">{{ t('Last Name') }}</label>
                                         </div>
                                         <div class="inputGroup">
-                                            <input type="text" v-model="form1.adresse" required="" autocomplete="off" />
+                                            <input type="text" v-model="form1.adresse"  autocomplete="off" />
                                             <label for="name">{{ t('Adresse') }}</label>
                                         </div>
                                         <div class="inputGroup">
-                                            <input type="number" v-model="form1.age" required="" autocomplete="off" />
+                                            <input type="number" v-model="form1.age"  autocomplete="off" />
                                             <label for="name">{{ t('Age') }}</label>
                                         </div>
                                     </fieldset>
                                     <fieldset class="field2">
                                         <div class="inputGroup">
-                                            <input type="text" v-model="form1.parent_name" required="" autocomplete="off" />
+                                            <input type="text" v-model="form1.parent_name"  autocomplete="off" />
                                             <label for="name">{{ t('Parent') }}</label>
                                         </div>
                                         <div class="inputGroup">
-                                            <input type="number" v-model="form1.parent_tel" required="" autocomplete="off" />
+                                            <input type="number" v-model="form1.parent_tel"  autocomplete="off" />
                                             <label for="name">{{ t('Parent Tel') }}</label>
                                         </div>
                                         <div class="inputGroup">
-                                            <input type="date" v-model="form1.inscription_date" required="" autocomplete="off" />
+                                            <input type="date" v-model="form1.inscription_date"  autocomplete="off" />
                                         </div>
                                         <div class="inputGroup">
-                                            <input type="number" v-model="form1.price" required="" autocomplete="off" />
+                                            <input type="number" v-model="form1.price"  autocomplete="off" />
                                             <label for="name">{{ t('Price') }}</label>
                                         </div>
                                         <div class="inputGroup">
-                                            <input type="email" v-model="form1.email" required="" autocomplete="off" />
+                                            <input type="email" v-model="form1.email"  autocomplete="off" />
                                             <label for="name">{{ t('Email') }}</label>
                                         </div>
                                     </fieldset>

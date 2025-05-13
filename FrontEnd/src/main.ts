@@ -106,6 +106,7 @@ const i18n = createI18n({
   messages, // Translation messages
 });
 const app = createApp(App);
+app.use(VueApexCharts);
 app.use(ElementPlus);
 app.use(VueSidePanel);
 app.use(BootstrapVue3);

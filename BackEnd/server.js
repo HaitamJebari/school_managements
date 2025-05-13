@@ -8,13 +8,14 @@ app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+const bcrypt = require("bcrypt");
 
 // Create MySQL connection
 const db = mysql.createConnection({
-  host: "localhost", // Replace with your MySQL host
-  user: "root", // Replace with your MySQL username
-  password: "", // Replace with your MySQL password
-  database: "school_managements", // Replace with your database name
+  host: "localhost", 
+  user: "root", 
+  password: "", 
+  database: "school_managements", 
 });
 
 // Connect to MySQL
@@ -24,6 +25,58 @@ db.connect((err) => {
     return;
   }
   console.log("Connected to MySQL database");
+});
+// Register route
+app.post("/register", async (req, res) => {
+  const { username, password } = req.body;
+
+  if (!username || !password)
+    return res.status(400).json({ message: "Username and password are required" });
+
+  try {
+    // Check if username exists
+    db.query("SELECT * FROM users WHERE username = ?", [username], async (err, results) => {
+      if (err) return res.status(500).json({ message: "Database error" });
+
+      if (results.length > 0)
+        return res.status(409).json({ message: "Username already exists" });
+
+      // Hash password
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      // Insert user
+      db.query("INSERT INTO users (username, password) VALUES (?, ?)", [username, hashedPassword], (err, result) => {
+        if (err) return res.status(500).json({ message: "Error saving user" });
+        res.status(201).json({ message: "User registered successfully" });
+      });
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// Login route
+app.post("/login", (req, res) => {
+  const { username, password } = req.body;
+
+  if (!username || !password)
+    return res.status(400).json({ message: "Username and password are required" });
+
+  db.query("SELECT * FROM users WHERE username = ?", [username], async (err, results) => {
+    if (err) return res.status(500).json({ message: "Database error" });
+
+    if (results.length === 0)
+      return res.status(401).json({ message: "Invalid credentials" });
+
+    const user = results[0];
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch)
+      return res.status(401).json({ message: "Invalid credentials" });
+
+    // You can generate a token here if needed
+    res.status(200).json({ message: "Login successful", user: { id: user.id, username: user.username } });
+  });
 });
 
 // ------------------------------------------------------Students------------------------------------------------------
@@ -352,4 +405,27 @@ app.get("/search_t", (req, res) => {
 const PORT = 5000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
+});
+
+
+
+// ------------------------------------------------------Class------------------------------------------------------
+
+// Add new class
+app.post("/classes", (req, res) => {
+  const { name, number } = req.body;
+
+  if (!name || !number) {
+    return res.status(400).json({ message: "Class name and number are required." });
+  }
+
+  const sql = `INSERT INTO classes (name, number) VALUES (?, ?)`;
+
+  db.query(sql, [name, number], (err, result) => {
+    if (err) {
+      console.error("Error inserting class:", err);
+      return res.status(500).json({ message: "Failed to add class." });
+    }
+    res.status(201).json({ id: result.insertId, name, number });
+  });
 });
