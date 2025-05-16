@@ -412,20 +412,195 @@ app.listen(PORT, () => {
 // ------------------------------------------------------Class------------------------------------------------------
 
 // Add new class
+app.get("/classes", (req, res) => {
+  const sql = "SELECT id, name, number, bg_color AS bgColor FROM classes";
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("Error fetching classes:", err);
+      return res.status(500).json({ message: "Failed to fetch classes." });
+    }
+    console.log("Returning classes:", results);  // Debug log
+    res.status(200).json(results);
+  });
+});
+
+// POST new class
 app.post("/classes", (req, res) => {
   const { name, number } = req.body;
-
+  
   if (!name || !number) {
     return res.status(400).json({ message: "Class name and number are required." });
   }
 
-  const sql = `INSERT INTO classes (name, number) VALUES (?, ?)`;
-
-  db.query(sql, [name, number], (err, result) => {
+  // Get all used colors from the database
+  const getUsedColorsSql = "SELECT bg_color FROM classes";
+  db.query(getUsedColorsSql, (err, results) => {
     if (err) {
-      console.error("Error inserting class:", err);
-      return res.status(500).json({ message: "Failed to add class." });
+      console.error("Error fetching used colors:", err);
+      return res.status(500).json({ message: "Failed to fetch color information." });
     }
-    res.status(201).json({ id: result.insertId, name, number });
+
+    const colors = ['#FFC107', '#4CAF50', '#2196F3', '#E91E63', '#9C27B0', '#00BCD4', '#FF5722'];
+    const usedColors = results.map(result => result.bg_color);
+    
+    // Filter out used colors
+    const availableColors = colors.filter(color => !usedColors.includes(color));
+    
+    // If all colors have been used, reset the available colors to all colors
+    const colorsToChooseFrom = availableColors.length > 0 ? availableColors : colors;
+    
+    // Select random color from available colors
+    const bgColor = colorsToChooseFrom[Math.floor(Math.random() * colorsToChooseFrom.length)];
+
+    // Debug log
+    console.log(`Generated color: ${bgColor} for class ${name}. Available colors: ${colorsToChooseFrom}`);
+
+    const sql = "INSERT INTO classes (name, number, bg_color) VALUES (?, ?, ?)";
+    
+    db.query(sql, [name, number, bgColor], (err, result) => {
+      if (err) {
+        console.error("Error inserting class:", err);
+        return res.status(500).json({ message: "Failed to add class." });
+      }
+      
+      // Verify the inserted data
+      const checkSql = "SELECT * FROM classes WHERE id = ?";
+      db.query(checkSql, [result.insertId], (err, insertedClass) => {
+        if (err) {
+          console.error("Error verifying insertion:", err);
+          return res.status(500).json({ message: "Failed to verify class creation." });
+        }
+        
+        console.log("Actually inserted:", insertedClass[0]);
+        res.status(201).json({
+          id: insertedClass[0].id,
+          name: insertedClass[0].name,
+          number: insertedClass[0].number,
+          bgColor: insertedClass[0].bg_color // Map to camelCase here
+        });
+      });
+    });
+  });
+});
+
+// Delete a class by ID
+app.delete("/classes/:id", (req, res) => {
+  const { id } = req.params; // Extract class ID from URL
+  const query = "DELETE FROM classes WHERE id = ?";
+  const updateIdsQuery = `
+    SET @count = 0;
+    UPDATE classes SET id = @count := @count + 1;
+  `;
+
+  db.query(query, [id], (err, result) => {
+    if (err) {
+      console.error("Error deleting class:", err);
+      res.status(500).send({ error: "Failed to delete class" });
+    } else if (result.affectedRows === 0) {
+      // No rows affected indicates the class ID doesn't exist
+      res.status(404).send({ message: "class not found" });
+    } else {
+      // Successfully deleted
+      res.status(200).send({ message: "class deleted successfully" });
+    }
+  });
+});
+
+
+// ------------------------------------------------------Group------------------------------------------------------
+
+
+// Add new groups
+app.get("/groups", (req, res) => {
+  const sql = "SELECT id, name, number, bg_color AS bgColor FROM groups";
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("Error fetching groups:", err);
+      return res.status(500).json({ message: "Failed to fetch groups." });
+    }
+    console.log("Returning groups:", results);  // Debug log
+    res.status(200).json(results);
+  });
+});
+
+// POST new groups
+app.post("/groups", (req, res) => {
+  const { name, number } = req.body;
+  
+  if (!name || !number) {
+    return res.status(400).json({ message: "groups name and number are required." });
+  }
+
+  // Get all used colors from the database
+  const getUsedColorsSql = "SELECT bg_color FROM groups";
+  db.query(getUsedColorsSql, (err, results) => {
+    if (err) {
+      console.error("Error fetching used colors:", err);
+      return res.status(500).json({ message: "Failed to fetch color information." });
+    }
+
+    const colors = ['#FFC107', '#4CAF50', '#2196F3', '#E91E63', '#9C27B0', '#00BCD4', '#FF5722'];
+    const usedColors = results.map(result => result.bg_color);
+    
+    // Filter out used colors
+    const availableColors = colors.filter(color => !usedColors.includes(color));
+    
+    // If all colors have been used, reset the available colors to all colors
+    const colorsToChooseFrom = availableColors.length > 0 ? availableColors : colors;
+    
+    // Select random color from available colors
+    const bgColor = colorsToChooseFrom[Math.floor(Math.random() * colorsToChooseFrom.length)];
+
+    // Debug log
+    console.log(`Generated color: ${bgColor} for groups ${name}. Available colors: ${colorsToChooseFrom}`);
+
+    const sql = "INSERT INTO groups (name, number, bg_color) VALUES (?, ?, ?)";
+    
+    db.query(sql, [name, number, bgColor], (err, result) => {
+      if (err) {
+        console.error("Error inserting groups:", err);
+        return res.status(500).json({ message: "Failed to add groups." });
+      }
+      
+      // Verify the inserted data
+      const checkSql = "SELECT * FROM groups WHERE id = ?";
+      db.query(checkSql, [result.insertId], (err, insertedGroups) => {
+        if (err) {
+          console.error("Error verifying insertion:", err);
+          return res.status(500).json({ message: "Failed to verify groups creation." });
+        }
+        
+        console.log("Actually inserted:", insertedGroups[0]);
+        res.status(201).json({
+          id: insertedGroups[0].id,
+          name: insertedGroups[0].name,
+          number: insertedGroups[0].number,
+          bgColor: insertedGroups[0].bg_color // Map to camelCase here
+        });
+      });
+    });
+  });
+});
+
+// Delete a group by ID
+app.delete("/groups/:id", (req, res) => {
+  const { id } = req.params; // Extract groups ID from URL
+  const query = "DELETE FROM groups WHERE id = ?";
+  const updateIdsQuery = `
+    SET @count = 0;
+    UPDATE groups SET id = @count := @count + 1;
+  `;
+
+  db.query(query, [id], (err, result) => {
+    if (err) {
+      console.error("Error deleting groups:", err);
+      res.status(500).send({ error: "Failed to delete groups" });
+    } else if (result.affectedRows === 0) {
+      // No rows affected indicates the groups ID doesn't exist
+      res.status(404).send({ message: "groups not found" });
+    } else {
+      // Successfully deleted
+      res.status(200).send({ message: "groups deleted successfully" });
+    }
   });
 });

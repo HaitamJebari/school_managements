@@ -61,57 +61,47 @@ const classForm = ref<{ name: string; number: number | string }>({
 });
 const classes = ref<ClassItem[]>([]);
 
-const fetchClasses = async () => {
-    try {
-        const response = await axios.get('http://localhost:5000/classes');
-        classes.value = response.data.map((item: any) => ({
-            name: item.name,
-            number: item.number,
-            bgColor: item.bgColor || getRandomBgColor() // fallback if missing
-        }));
-    } catch (error) {
-        console.error('Error fetching classes:', error);
-    }
-};
-const getRandomBgColor = () => {
-    const colors = ['#FFC107', '#4CAF50', '#2196F3', '#E91E63', '#9C27B0', '#00BCD4', '#FF5722'];
-    return colors[Math.floor(Math.random() * colors.length)];
-};
 
 const addClass = async () => {
     try {
-        const bgColor = getRandomBgColor();
-        const payload = {
+        const response = await axios.post('http://localhost:5000/classes', {
             name: classForm.value.name,
-            number: Number(classForm.value.number),
-            bgColor: bgColor
-        };
+            number: Number(classForm.value.number)
+        });
 
-        await axios.post('http://localhost:5000/classes', payload);
-
-        // Re-fetch the updated list from backend
-        await fetchClasses();
+        // The backend now returns the class with its random color
+        classes.value.push(response.data);
 
         Swal.fire({
             icon: 'success',
             title: 'Class added successfully!',
-            confirmButtonText: 'OK',
-            customClass: {
-                confirmButton: 'btn btn-success'
-            }
+            confirmButtonText: 'OK'
         });
 
         classForm.value = { name: '', number: '' };
+        closePopup();
     } catch (error) {
         console.error('Error adding class:', error);
         Swal.fire({
             icon: 'error',
             title: 'Failed to add class',
-            confirmButtonText: 'OK',
-            customClass: {
-                confirmButton: 'btn btn-danger'
-            }
+            text: error.response?.data?.message || 'An error occurred',
+            confirmButtonText: 'OK'
         });
+    }
+};
+
+// Update fetchClasses to use backend-provided colors
+const fetchClasses = async () => {
+    try {
+        const response = await axios.get('http://localhost:5000/classes');
+        classes.value = response.data.map((cls) => ({
+            ...cls,
+            bgColor: cls.bgColor || cls.bg_color // Handle both cases
+        }));
+        console.log('Classes after fetch:', classes.value); // Debug
+    } catch (error) {
+        console.error('Error fetching classes:', error);
     }
 };
 const submitForm = () => {
@@ -120,31 +110,105 @@ const submitForm = () => {
 const resetForm1 = () => {
     classForm.value = { name: '', number: '' };
 };
-onMounted(() => {
-    fetchClasses(); // Load existing classes when component mounts
+onMounted(async () => {
+    console.log('Fetching classes...');
+    await fetchClasses();
+    console.log('Classes fetched:', classes.value);
 });
+
+//delete class
+const showConfirmationDialog = (classesId: number) => {
+    const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+            confirmButton: 'btn btn-success mx-2',
+            cancelButton: 'btn btn-danger mx-2'
+        },
+        buttonsStyling: false
+    });
+
+    swalWithBootstrapButtons
+        .fire({
+            title: 'Are you sure?',
+            text: 'This action cannot be undone!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, cancel!',
+            reverseButtons: true
+        })
+        .then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const response = await axios.delete(`http://localhost:5000/classes/${classesId}`);
+                    if (response.status === 200) {
+                        swalWithBootstrapButtons.fire({
+                            title: 'Deleted!',
+                            text: 'The student has been deleted successfully.',
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        });
+                        // Update the local list of class
+                        classes.value = classes.value.filter((classes) => classes.id !== classesId);
+                    } else {
+                        swalWithBootstrapButtons.fire({
+                            title: 'Failed!',
+                            text: 'Failed to delete the teacher.',
+                            icon: 'error',
+                            confirmButtonText: 'OK',
+                            customClass: {
+                                confirmButton: 'btn btn-danger'
+                            }
+                        });
+                    }
+                } catch (error) {
+                    swalWithBootstrapButtons.fire({
+                        title: 'Error!',
+                        text: 'Something went wrong during deletion.',
+                        icon: 'error',
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            confirmButton: 'btn btn-danger'
+                        }
+                    });
+                }
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                swalWithBootstrapButtons.fire({
+                    title: 'Cancelled',
+                    icon: 'info',
+                    confirmButtonText: 'OK',
+                    customClass: {
+                        confirmButton: 'btn btn-info    '
+                    }
+                });
+            }
+        });
+};
 </script>
 <template>
     <v-row class="mt-5">
-        <v-col v-for="(classItem, index) in classes" :key="index" cols="12" sm="12" lg="4">
-            <v-Card :style="{ backgroundColor: classItem.bgColor }">
-                <v-card elevation="0" style="background-color: #47b5ff; color: white">
-                    <v-btn icon color="inherit" style="background-color: #47b5ff; color: white; position: absolute; right: 0" flat>
-                        <TrashIcon stroke-width="1.5" size="24" class="text-grey100" />
-                    </v-btn>
-                    <div class="inside-card">
-                        <h4>{{ classItem.name }}</h4>
+        <v-col v-for="(classItem, index) in classes" :key="classItem.id" cols="12" sm="12" lg="4">
+            <v-card :style="{ backgroundColor: classItem.bgColor }">
+                <v-btn
+                    :style="{ backgroundColor: classItem.bgColor }"
+                    icon
+                    @click="showConfirmationDialog(classItem.id)"
+                    style="position: absolute; right: 10px; top: 10px; z-index: 10"
+                >
+                    <TrashIcon stroke-width="1.5" size="24" />
+                </v-btn>
+
+                <div class="inside-card">
+                    <h4>{{ classItem.name }} {{ classItem.number || 0 }}</h4>
+                </div>
+                <div class="total">
+                    <h1>500</h1>
+                    <div class="images">
+                        <img src="../../assets/images/profile/user-4.jpg" alt="" srcset="" />
+                        <img src="../../assets/images/profile/user-5.jpg" id="img2" alt="" srcset="" />
+                        <img src="../../assets/images/profile/user-6.jpg" alt="" srcset="" />
                     </div>
-                    <div class="total">
-                        <h1>{{ classItem.number || 0 }}</h1>
-                        <div class="images">
-                            <img src="../../assets/images/profile/user-4.jpg" alt="" srcset="" />
-                            <img src="../../assets/images/profile/user-5.jpg" id="img2" alt="" srcset="" />
-                            <img src="../../assets/images/profile/user-6.jpg" alt="" srcset="" />
-                        </div>
-                    </div>
-                </v-card>
-            </v-Card>
+                </div>
+            </v-card>
         </v-col>
 
         <v-col cols="12" sm="12" lg="4" class="d-flex align-center justify-center">

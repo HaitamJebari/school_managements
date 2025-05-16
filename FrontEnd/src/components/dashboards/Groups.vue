@@ -8,43 +8,43 @@ import VueApexCharts from 'vue3-apexcharts';
 const series = ref([44, 55]);
 
 const chartOptionss = ref({
-  chart: {
-    type: "donut",
-  },
-  labels: ["Males", "Females"], // Set labels for the donut
-  plotOptions: {
-    pie: {
-      startAngle: -90,
-      endAngle: 270,
+    chart: {
+        type: 'donut'
     },
-  },
-  dataLabels: {
-    enabled: true, // Enable data labels for better visibility
-  },
-  fill: {
-    type: "gradient",
-  },
-  legend: {
-    formatter: (val, opts) => {
-      return `${val} - ${opts.w.globals.series[opts.seriesIndex]}`;
+    labels: ['Males', 'Females'], // Set labels for the donut
+    plotOptions: {
+        pie: {
+            startAngle: -90,
+            endAngle: 270
+        }
     },
-  },
-  title: {
-    text: "Total of Male and Female Students",
-  },
-  responsive: [
-    {
-      breakpoint: 480,
-      options: {
-        chart: {
-          width: 200,
-        },
-        legend: {
-          position: "bottom",
-        },
-      },
+    dataLabels: {
+        enabled: true // Enable data labels for better visibility
     },
-  ],
+    fill: {
+        type: 'gradient'
+    },
+    legend: {
+        formatter: (val, opts) => {
+            return `${val} - ${opts.w.globals.series[opts.seriesIndex]}`;
+        }
+    },
+    title: {
+        text: 'Total of Male and Female Students'
+    },
+    responsive: [
+        {
+            breakpoint: 480,
+            options: {
+                chart: {
+                    width: 200
+                },
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    ]
 });
 
 const items = ref([{ title: 'Action' }, { title: 'Another action' }, { title: 'Something else here' }]);
@@ -156,6 +156,78 @@ const chartOptions = computed(() => {
         }
     };
 });
+
+
+
+
+
+//delete Group
+// const showConfirmationDialog = (classesId: number) => {
+//     const swalWithBootstrapButtons = Swal.mixin({
+//         customClass: {
+//             confirmButton: 'btn btn-success mx-2',
+//             cancelButton: 'btn btn-danger mx-2'
+//         },
+//         buttonsStyling: false
+//     });
+
+//     swalWithBootstrapButtons
+//         .fire({
+//             title: 'Are you sure?',
+//             text: 'This action cannot be undone!',
+//             icon: 'warning',
+//             showCancelButton: true,
+//             confirmButtonText: 'Yes, delete it!',
+//             cancelButtonText: 'No, cancel!',
+//             reverseButtons: true
+//         })
+//         .then(async (result) => {
+//             if (result.isConfirmed) {
+//                 try {
+//                     const response = await axios.delete(`http://localhost:5000/classes/${classesId}`);
+//                     if (response.status === 200) {
+//                         swalWithBootstrapButtons.fire({
+//                             title: 'Deleted!',
+//                             text: 'The student has been deleted successfully.',
+//                             icon: 'success',
+//                             confirmButtonText: 'OK'
+//                         });
+//                         // Update the local list of class
+//                         classes.value = classes.value.filter((classes) => classes.id !== classesId);
+//                     } else {
+//                         swalWithBootstrapButtons.fire({
+//                             title: 'Failed!',
+//                             text: 'Failed to delete the teacher.',
+//                             icon: 'error',
+//                             confirmButtonText: 'OK',
+//                             customClass: {
+//                                 confirmButton: 'btn btn-danger'
+//                             }
+//                         });
+//                     }
+//                 } catch (error) {
+//                     swalWithBootstrapButtons.fire({
+//                         title: 'Error!',
+//                         text: 'Something went wrong during deletion.',
+//                         icon: 'error',
+//                         confirmButtonText: 'OK',
+//                         customClass: {
+//                             confirmButton: 'btn btn-danger'
+//                         }
+//                     });
+//                 }
+//             } else if (result.dismiss === Swal.DismissReason.cancel) {
+//                 swalWithBootstrapButtons.fire({
+//                     title: 'Cancelled',
+//                     icon: 'info',
+//                     confirmButtonText: 'OK',
+//                     customClass: {
+//                         confirmButton: 'btn btn-info    '
+//                     }
+//                 });
+//             }
+//         });
+// };
 </script>
 
 <template>
@@ -255,9 +327,14 @@ const chartOptions = computed(() => {
         <v-col cols="12" sm="12" lg="4">
             <v-Card style="border-radius: 20px; height: 20vh; background-color: #47b5ff; color: white">
                 <v-card elevation="0" style="background-color: #47b5ff; color: white">
-                    <v-btn icon color="inherit" style="background-color: #47b5ff; color: white; position: absolute; right: 0" flat>
-                        <ArrowUpRightIcon stroke-width="1.5" size="28" class="text-grey100" />
-                    </v-btn>
+                    <!-- <v-btn
+                        :style="{ backgroundColor: classItem.bgColor }"
+                        icon
+                        @click="showConfirmationDialog(classItem.id)"
+                        style="position: absolute; right: 10px; top: 10px; z-index: 10"
+                    > -->
+                        <TrashIcon stroke-width="1.5" size="24" />
+                    <!-- </v-btn> -->
                     <div class="inside-card">
                         <h4>Group B</h4>
                     </div>
@@ -272,25 +349,12 @@ const chartOptions = computed(() => {
                 </v-card>
             </v-Card>
         </v-col>
-        <v-col cols="12" sm="12" lg="4">
-            <v-Card style="border-radius: 20px; height: 20vh; background-color: #5893d4; color: white">
-                <v-card elevation="0" style="background-color: #5893d4; color: white">
-                    <v-btn icon color="inherit" style="background-color: #5893d4; color: white; position: absolute; right: 0" flat>
-                        <ArrowUpRightIcon stroke-width="1.5" size="28" class="text-grey100" />
-                    </v-btn>
-                    <div class="inside-card">
-                        <h4>Group B</h4>
-                    </div>
-                    <div class="total">
-                        <h1>300</h1>
-                        <div class="images">
-                            <img src="../../assets/images/profile/user-4.jpg" alt="" srcset="" />
-                            <img src="../../assets/images/profile/user-5.jpg" id="img2" alt="" srcset="" />
-                            <img src="../../assets/images/profile/user-6.jpg" alt="" srcset="" />
-                        </div>
-                    </div>
-                </v-card>
-            </v-Card>
+        <v-col cols="12" sm="12" lg="4" class="d-flex align-center justify-center">
+            <v-card class="d-flex align-center justify-center" style="height: 10vh; width: 10vh; border-radius: 50%">
+                <v-btn icon color="white" @click="openPopup" size="80" flat>
+                    <PlusIcon stroke-width="1.5" size="60" style="color: grey" />
+                </v-btn>
+            </v-card>
         </v-col>
         <v-col cols="12" sm="12" lg="6">
             <v-card elevation="10" style="border-radius: 20px">
@@ -324,10 +388,16 @@ const chartOptions = computed(() => {
             </v-card>
         </v-col>
         <v-col cols="12" sm="12" lg="6">
-            <v-card elevation="10" style="border-radius: 20px ; max-width:100% ; padding: 30px 20px 20px 20px; height: 100%;">
-                    <div>
-                        <apexchart style="transform: translate(10%,10%);" type="donut" :options="chartOptionss" :series="series"  width="500"></apexchart>
-                    </div>
+            <v-card elevation="10" style="border-radius: 20px; max-width: 100%; padding: 30px 20px 20px 20px; height: 100%">
+                <div>
+                    <apexchart
+                        style="transform: translate(10%, 10%)"
+                        type="donut"
+                        :options="chartOptionss"
+                        :series="series"
+                        width="500"
+                    ></apexchart>
+                </div>
             </v-card>
         </v-col>
     </v-row>
