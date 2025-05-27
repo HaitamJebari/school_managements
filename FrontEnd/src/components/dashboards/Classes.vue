@@ -75,7 +75,10 @@ const addClass = async () => {
         Swal.fire({
             icon: 'success',
             title: 'Class added successfully!',
-            confirmButtonText: 'OK'
+            confirmButtonText: 'OK',
+            customClass: {
+                confirmButton: 'btn btn-success' // Add a green class for the button
+            },
         });
 
         classForm.value = { name: '', number: '' };
@@ -144,6 +147,7 @@ const showConfirmationDialog = (classesId: number) => {
                         swalWithBootstrapButtons.fire({
                             title: 'Deleted!',
                             text: 'The student has been deleted successfully.',
+                            
                             icon: 'success',
                             confirmButtonText: 'OK'
                         });
@@ -183,11 +187,13 @@ const showConfirmationDialog = (classesId: number) => {
             }
         });
 };
+
+
 </script>
 <template>
     <v-row class="mt-5">
         <v-col v-for="(classItem, index) in classes" :key="classItem.id" cols="12" sm="12" lg="4">
-            <v-card :style="{ backgroundColor: classItem.bgColor }">
+            <v-card :style="{ backgroundColor: classItem.bgColor }" style="border-radius: 20px;">
                 <v-btn
                     :style="{ backgroundColor: classItem.bgColor }"
                     icon
@@ -201,7 +207,7 @@ const showConfirmationDialog = (classesId: number) => {
                     <h4>{{ classItem.name }} {{ classItem.number || 0 }}</h4>
                 </div>
                 <div class="total">
-                    <h1>500</h1>
+                    <h1>{{ Math.floor(Math.random() * 1000) }}</h1>
                     <div class="images">
                         <img src="../../assets/images/profile/user-4.jpg" alt="" srcset="" />
                         <img src="../../assets/images/profile/user-5.jpg" id="img2" alt="" srcset="" />
@@ -253,12 +259,6 @@ const showConfirmationDialog = (classesId: number) => {
 </template>
 
 <style>
-.chart-container {
-}
-h2 {
-    text-align: center;
-    margin-top: 10px;
-}
 .images {
     width: 50px;
     height: 50px;
@@ -291,7 +291,6 @@ h4 {
     padding: 2em;
     transform: translateY(20%);
 }
-
 .title {
     position: sticky;
     top: 0;
@@ -317,6 +316,8 @@ h4 {
     display: block;
     border-bottom: 2px solid #ccc;
 }
+
+
 .inputGroup {
     font-family: 'Segoe UI', sans-serif;
     margin: 1em 0 1em 0;
@@ -459,7 +460,7 @@ h4 {
 
 .popup-contentp {
     width: 67%;
-    height: 70vh;
+    height: 40vh;
     background: rgb(255, 255, 255); /* Transparent white background */
     padding: 20px;
     border-radius: 15px;

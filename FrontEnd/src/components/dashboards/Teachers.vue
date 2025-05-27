@@ -749,7 +749,7 @@ const filteredTeachers = computed(() => {
 
 .popup-contentp {
     width: 67%;
-    height: 70vh;
+    height: 50vh;
     background: rgb(255, 255, 255); /* Transparent white background */
     padding: 20px;
     border-radius: 15px;

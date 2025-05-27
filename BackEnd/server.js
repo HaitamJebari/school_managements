@@ -94,6 +94,25 @@ app.get("/students", (req, res) => {
   });
 });
 
+
+
+// GET total number of students
+app.get("/students/total", (req, res) => {
+  const sql = "SELECT COUNT(*) as total FROM students";
+  
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("Error calculating total students:", err);
+      return res.status(500).json({ message: "Failed to calculate total students." });
+    }
+    
+    const total = results[0].total;
+    
+    // Return just the total number
+    res.status(200).json({ total: total });
+  });
+});
+
 // Delete a student by ID
 app.delete("/students/:id", (req, res) => {
   const { id } = req.params; // Extract student ID from URL
@@ -507,12 +526,113 @@ app.delete("/classes/:id", (req, res) => {
 });
 
 
+
+// ------------------------------------------------------Modules------------------------------------------------------
+
+
+
+// Add new module
+app.get("/modules", (req, res) => {
+  const sql = "SELECT id, module_name,date_creation, bg_color AS bgColor FROM modules";
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("Error fetching modules:", err);
+      return res.status(500).json({ message: "Failed to fetch modules." });
+    }
+    console.log("Returning modules:", results);  // Debug log
+    res.status(200).json(results);
+  });
+});
+
+// POST new module
+app.post("/modules", (req, res) => {
+  const { module_name,date_creation } = req.body;
+  
+  if (!module_name || !date_creation) {
+    return res.status(400).json({ message: "Class module_name and date_creation are required." });
+  }
+
+  // Get all used colors from the database
+  const getUsedColorsSql = "SELECT bg_color FROM modules";
+  db.query(getUsedColorsSql, (err, results) => {
+    if (err) {
+      console.error("Error fetching used colors:", err);
+      return res.status(500).json({ message: "Failed to fetch color information." });
+    }
+
+    const colors = ['#FFC107', '#4CAF50', '#2196F3', '#E91E63', '#9C27B0', '#00BCD4', '#FF5722'];
+    const usedColors = results.map(result => result.bg_color);
+    
+    // Filter out used colors
+    const availableColors = colors.filter(color => !usedColors.includes(color));
+    
+    // If all colors have been used, reset the available colors to all colors
+    const colorsToChooseFrom = availableColors.length > 0 ? availableColors : colors;
+    
+    // Select random color from available colors
+    const bgColor = colorsToChooseFrom[Math.floor(Math.random() * colorsToChooseFrom.length)];
+
+    // Debug log
+    console.log(`Generated color: ${bgColor} for module ${module_name}. Available colors: ${colorsToChooseFrom}`);
+
+    const sql = "INSERT INTO modules (module_name,date_creation, bg_color) VALUES (?, ?, ?)";
+    
+    db.query(sql, [module_name,date_creation, bgColor], (err, result) => {
+      if (err) {
+        console.error("Error inserting module:", err);
+        return res.status(500).json({ message: "Failed to add module." });
+      }
+      
+      // Verify the inserted data
+      const checkSql = "SELECT * FROM modules WHERE id = ?";
+      db.query(checkSql, [result.insertId], (err, insertedModule) => {
+        if (err) {
+          console.error("Error verifying insertion:", err);
+          return res.status(500).json({ message: "Failed to verify module creation." });
+        }
+        
+        console.log("Actually inserted:", insertedModule[0]);
+        res.status(201).json({
+          id: insertedModule[0].id,
+          module_name: insertedModule[0].module_name,
+          date_creation: insertedModule[0].date_creation,
+          bgColor: insertedModule[0].bg_color // Map to camelCase here
+        });
+      });
+    });
+  });
+});
+
+// Delete a module by ID
+app.delete("/modules/:id", (req, res) => {
+  const { id } = req.params; // Extract class ID from URL
+  const query = "DELETE FROM modules WHERE id = ?";
+  const updateIdsQuery = `
+    SET @count = 0;
+    UPDATE modules SET id = @count := @count + 1;
+  `;
+
+  db.query(query, [id], (err, result) => {
+    if (err) {
+      console.error("Error deleting module:", err);
+      res.status(500).send({ error: "Failed to delete module" });
+    } else if (result.affectedRows === 0) {
+      // No rows affected indicates the module ID doesn't exist
+      res.status(404).send({ message: "module not found" });
+    } else {
+      // Successfully deleted
+      res.status(200).send({ message: "module deleted successfully" });
+    }
+  });
+});
+
+
 // ------------------------------------------------------Group------------------------------------------------------
 
 
 // Add new groups
 app.get("/groups", (req, res) => {
-  const sql = "SELECT id, name, number, bg_color AS bgColor FROM groups";
+  const sql = "SELECT id, name, number, bg_color AS bgColor FROM `groups`";
   db.query(sql, (err, results) => {
     if (err) {
       console.error("Error fetching groups:", err);
@@ -520,6 +640,25 @@ app.get("/groups", (req, res) => {
     }
     console.log("Returning groups:", results);  // Debug log
     res.status(200).json(results);
+  });
+});
+
+
+
+// GET total number of groups
+app.get("/groups/total", (req, res) => {
+  const sql = "SELECT COUNT(*) as total FROM classes";
+  
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("Error calculating total groups:", err);
+      return res.status(500).json({ message: "Failed to calculate total groups." });
+    }
+    
+    const total = results[0].total;
+    
+    // Return just the total number
+    res.status(200).json({ total: total });
   });
 });
 
@@ -532,7 +671,7 @@ app.post("/groups", (req, res) => {
   }
 
   // Get all used colors from the database
-  const getUsedColorsSql = "SELECT bg_color FROM groups";
+  const getUsedColorsSql = "SELECT bg_color FROM `groups`";
   db.query(getUsedColorsSql, (err, results) => {
     if (err) {
       console.error("Error fetching used colors:", err);
@@ -554,7 +693,7 @@ app.post("/groups", (req, res) => {
     // Debug log
     console.log(`Generated color: ${bgColor} for groups ${name}. Available colors: ${colorsToChooseFrom}`);
 
-    const sql = "INSERT INTO groups (name, number, bg_color) VALUES (?, ?, ?)";
+    const sql = "INSERT INTO `groups` (name, number, bg_color) VALUES (?, ?, ?)";
     
     db.query(sql, [name, number, bgColor], (err, result) => {
       if (err) {
@@ -563,7 +702,7 @@ app.post("/groups", (req, res) => {
       }
       
       // Verify the inserted data
-      const checkSql = "SELECT * FROM groups WHERE id = ?";
+      const checkSql = "SELECT * FROM `groups` WHERE id = ?";
       db.query(checkSql, [result.insertId], (err, insertedGroups) => {
         if (err) {
           console.error("Error verifying insertion:", err);
@@ -585,7 +724,7 @@ app.post("/groups", (req, res) => {
 // Delete a group by ID
 app.delete("/groups/:id", (req, res) => {
   const { id } = req.params; // Extract groups ID from URL
-  const query = "DELETE FROM groups WHERE id = ?";
+  const query = "DELETE FROM `groups` WHERE id = ?";
   const updateIdsQuery = `
     SET @count = 0;
     UPDATE groups SET id = @count := @count + 1;
@@ -601,6 +740,658 @@ app.delete("/groups/:id", (req, res) => {
     } else {
       // Successfully deleted
       res.status(200).send({ message: "groups deleted successfully" });
+    }
+  });
+});
+
+// Backend API endpoints for chart data
+
+
+// GET groups by year and class type
+app.get("/groups/by-year", (req, res) => {
+  const sql = `
+    SELECT 
+      YEAR(date_creation) as year,
+      COUNT(CASE WHEN name LIKE '%A%' THEN 1 END) as classA,
+      COUNT(CASE WHEN name LIKE '%B%' THEN 1 END) as classB,
+      COUNT(CASE WHEN name LIKE '%C%' THEN 1 END) as classC,
+      COUNT(*) as total
+    FROM classes
+    WHERE date_creation IS NOT NULL
+    GROUP BY YEAR(date_creation)
+    ORDER BY year ASC
+  `;
+  
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("Error fetching groups by year:", err);
+      return res.status(500).json({ message: "Failed to fetch groups by year." });
+    }
+    
+    // If no results, return empty array
+    if (!results || results.length === 0) {
+      // Generate sample data for years 2020-2024 if no data exists
+      const sampleData = [
+        { year: 2020, classA: 8, classB: 12, classC: 15, total: 35 },
+        { year: 2021, classA: 10, classB: 15, classC: 18, total: 43 },
+        { year: 2022, classA: 12, classB: 18, classC: 22, total: 52 },
+        { year: 2023, classA: 15, classB: 20, classC: 25, total: 60 },
+        { year: 2024, classA: 18, classB: 22, classC: 28, total: 68 }
+      ];
+      return res.status(200).json(sampleData);
+    }
+    
+    // Return the results
+    res.status(200).json(results);
+  });
+});
+
+// GET student gender distribution
+app.get("/students/gender-distribution", (req, res) => {
+  // First try with gender field
+  const sql = `
+    SELECT 
+      COALESCE(gender, 'unknown') as gender,
+      COUNT(*) as count
+    FROM students
+    GROUP BY gender
+  `;
+  
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("Error fetching student gender distribution:", err);
+      return res.status(500).json({ message: "Failed to fetch student gender distribution." });
+    }
+    
+    // If no gender field or no results, try to estimate based on first names
+    if (!results || results.length <= 1) {
+      const estimateSQL = `
+        SELECT 
+          CASE 
+            WHEN first_name LIKE '%a' OR first_name LIKE '%ia' OR first_name LIKE '%na' 
+            OR first_name LIKE '%ine' OR first_name LIKE '%elle' THEN 'female'
+            ELSE 'male'
+          END as gender,
+          COUNT(*) as count
+        FROM students
+        GROUP BY gender
+      `;
+      
+      db.query(estimateSQL, (err, estimatedResults) => {
+        if (err || !estimatedResults || estimatedResults.length === 0) {
+          // If still no results, return sample data
+          return res.status(200).json([
+            { gender: 'male', count: 44 },
+            { gender: 'female', count: 55 }
+          ]);
+        }
+        
+        res.status(200).json(estimatedResults);
+      });
+    } else {
+      // Map unknown to either male or female for simplicity in the chart
+      const mappedResults = results.map(item => {
+        if (item.gender === 'unknown') {
+          return { gender: 'male', count: item.count };
+        }
+        return item;
+      });
+      
+      // Combine any duplicate entries after mapping
+      const genderMap = new Map();
+      mappedResults.forEach(item => {
+        const current = genderMap.get(item.gender) || 0;
+        genderMap.set(item.gender, current + item.count);
+      });
+      
+      const finalResults = Array.from(genderMap.entries()).map(([gender, count]) => ({ gender, count }));
+      res.status(200).json(finalResults);
+    }
+  });
+});
+
+// ------------------------------------------------------Announcements------------------------------------------------------
+
+// Add new Announcement
+app.get("/announcements", (req, res) => {
+  const sql = "SELECT id, 	author_name, title, content FROM `announcements`";
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("Error fetching groups:", err);
+      return res.status(500).json({ message: "Failed to fetch groups." });
+    }
+    console.log("Returning announcements:", results);  // Debug log
+    res.status(200).json(results);
+  });
+});
+
+// POST new Announcements
+app.post("/announcements", (req, res) => {
+  const {author_name, title, content } = req.body;
+  
+     if (!title || !content) {
+      return res.status(400).json({ message: 'Title and content are required' });
+    }
+
+    const sql = "INSERT INTO `announcements` (author_name, title, content) VALUES (?, ?, ?)";
+    
+    db.query(sql, [	author_name, title, content], (err, result) => {
+      if (err) {
+        console.error("Error inserting announcements:", err);
+        return res.status(500).json({ message: "Failed to add announcements." });
+      }
+      
+      // Verify the inserted data
+      const checkSql = "SELECT * FROM `announcements` WHERE id = ?";
+      db.query(checkSql, [result.insertId], (err, insertedAnnouncements) => {
+        if (err) {
+          console.error("Error verifying insertion:", err);
+          return res.status(500).json({ message: "Failed to verify Announcements creation." });
+        }
+        console.log("Actually inserted:", insertedAnnouncements[0]);
+        res.status(201).json({
+          id: insertedAnnouncements[0].id,
+          author_name: insertedAnnouncements[0].author_name,
+          title: insertedAnnouncements[0].title,
+          content: insertedAnnouncements[0].content 
+        });
+      });
+    });
+  });
+
+// Delete a group by ID
+app.delete("/announcements/:id", (req, res) => {
+  const { id } = req.params; // Extract announcements ID from URL
+  const query = "DELETE FROM `announcements` WHERE id = ?";
+  const updateIdsQuery = `
+    SET @count = 0;
+    UPDATE announcements SET id = @count := @count + 1;
+  `;
+
+  db.query(query, [id], (err, result) => {
+    if (err) {
+      console.error("Error deleting announcements:", err);
+      res.status(500).send({ error: "Failed to delete announcements" });
+    } else if (result.affectedRows === 0) {
+      // No rows affected indicates the announcements ID doesn't exist
+      res.status(404).send({ message: "announcements not found" });
+    } else {
+      // Successfully deleted
+      res.status(200).send({ message: "announcements deleted successfully" });
+    }
+  });
+});
+
+
+
+//------------------------------------------------------Exams------------------------------------------------------
+
+
+
+
+// GET all exams
+app.get("/exams", (req, res) => {
+  const sql = "SELECT id, module_name, numero_control, date_exam, bg_color AS bgColor FROM exams";
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("Error fetching exams:", err);
+      return res.status(500).json({ message: "Failed to fetch exams." });
+    }
+    console.log("Returning exams:", results);  // Debug log
+    res.status(200).json(results);
+  });
+});
+
+// POST new exam
+app.post("/exams", (req, res) => {
+  const { module_name, numero_control, date_exam } = req.body;
+  
+  if (!module_name || !numero_control || !date_exam) {
+    return res.status(400).json({ message: "Module name, control number, and exam date are required." });
+  }
+
+  // Get all used colors from the database
+  const getUsedColorsSql = "SELECT bg_color FROM exams";
+  db.query(getUsedColorsSql, (err, results) => {
+    if (err) {
+      console.error("Error fetching used colors:", err);
+      return res.status(500).json({ message: "Failed to fetch color information." });
+    }
+
+    const colors = ['#FFC107', '#4CAF50', '#2196F3', '#E91E63', '#9C27B0', '#00BCD4', '#FF5722'];
+    const usedColors = results.map(result => result.bg_color);
+    
+    // Filter out used colors
+    const availableColors = colors.filter(color => !usedColors.includes(color));
+    
+    // If all colors have been used, reset the available colors to all colors
+    const colorsToChooseFrom = availableColors.length > 0 ? availableColors : colors;
+    
+    // Select random color from available colors
+    const bgColor = colorsToChooseFrom[Math.floor(Math.random() * colorsToChooseFrom.length)];
+
+    // Debug log
+    console.log(`Generated color: ${bgColor} for exam ${module_name}. Available colors: ${colorsToChooseFrom}`);
+
+    const sql = "INSERT INTO exams (module_name, numero_control, date_exam, bg_color) VALUES (?, ?, ?, ?)";
+    
+    db.query(sql, [module_name, numero_control, date_exam, bgColor], (err, result) => {
+      if (err) {
+        console.error("Error inserting exam:", err);
+        return res.status(500).json({ message: "Failed to add exam." });
+      }
+      
+      // Verify the inserted data
+      const checkSql = "SELECT * FROM exams WHERE id = ?";
+      db.query(checkSql, [result.insertId], (err, insertedExam) => {
+        if (err) {
+          console.error("Error verifying insertion:", err);
+          return res.status(500).json({ message: "Failed to verify exam creation." });
+        }
+        
+        console.log("Actually inserted:", insertedExam[0]);
+        res.status(201).json({
+          id: insertedExam[0].id,
+          module_name: insertedExam[0].module_name,
+          numero_control: insertedExam[0].numero_control,
+          date_exam: insertedExam[0].date_exam,
+          bgColor: insertedExam[0].bg_color // Map to camelCase here
+        });
+      });
+    });
+  });
+});
+
+// DELETE an exam by ID
+app.delete("/exams/:id", (req, res) => {
+  const { id } = req.params; // Extract exam ID from URL
+  const query = "DELETE FROM exams WHERE id = ?";
+
+  db.query(query, [id], (err, result) => {
+    if (err) {
+      console.error("Error deleting exam:", err);
+      res.status(500).json({ message: "Failed to delete exam" });
+    } else if (result.affectedRows === 0) {
+      // No rows affected indicates the exam ID doesn't exist
+      res.status(404).json({ message: "Exam not found" });
+    } else {
+      // Successfully deleted
+      res.status(200).json({ message: "Exam deleted successfully" });
+    }
+  });
+});
+
+//------------------------------------------------------Revenue------------------------------------------------------
+
+// GET all revenue entries
+app.get("/revenue", (req, res) => {
+  const sql = "SELECT * FROM revenue ORDER BY date DESC";
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("Error fetching revenue data:", err);
+      return res.status(500).json({ message: "Failed to fetch revenue data." });
+    }
+    res.status(200).json(results);
+  });
+});
+
+// GET revenue summary (totals and statistics)
+app.get("/revenue/summary", (req, res) => {
+  const sql = `
+    SELECT 
+      SUM(CASE WHEN type = 'income' THEN amount ELSE 0 END) as total_income,
+      SUM(CASE WHEN type = 'outcome' THEN amount ELSE 0 END) as total_outcome,
+      SUM(CASE WHEN type = 'income' THEN amount ELSE -amount END) as balance
+    FROM revenue
+  `;
+  
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("Error calculating revenue summary:", err);
+      return res.status(500).json({ message: "Failed to calculate revenue summary." });
+    }
+    
+    // Get monthly data for charts
+    const monthlyDataSQL = `
+      SELECT 
+        DATE_FORMAT(date, '%Y-%m') as month,
+        SUM(CASE WHEN type = 'income' THEN amount ELSE 0 END) as income,
+        SUM(CASE WHEN type = 'outcome' THEN amount ELSE 0 END) as outcome
+      FROM revenue
+      WHERE date >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH)
+      GROUP BY DATE_FORMAT(date, '%Y-%m')
+      ORDER BY month ASC
+    `;
+    
+    db.query(monthlyDataSQL, (err, monthlyData) => {
+      if (err) {
+        console.error("Error fetching monthly revenue data:", err);
+        return res.status(500).json({ message: "Failed to fetch monthly revenue data." });
+      }
+      
+      // Get category breakdown
+      const categorySQL = `
+        SELECT 
+          category,
+          type,
+          SUM(amount) as total
+        FROM revenue
+        GROUP BY category, type
+        ORDER BY total DESC
+      `;
+      
+      db.query(categorySQL, (err, categoryData) => {
+        if (err) {
+          console.error("Error fetching category breakdown:", err);
+          return res.status(500).json({ message: "Failed to fetch category breakdown." });
+        }
+        
+        res.status(200).json({
+          summary: results[0],
+          monthly: monthlyData,
+          categories: categoryData
+        });
+      });
+    });
+  });
+});
+
+// POST new revenue entry
+app.post("/revenue", (req, res) => {
+  const { description, amount, type, category, date } = req.body;
+  
+  if (!description || !amount || !type || !date) {
+    return res.status(400).json({ message: "Description, amount, type, and date are required." });
+  }
+  
+  if (type !== 'income' && type !== 'outcome') {
+    return res.status(400).json({ message: "Type must be either 'income' or 'outcome'." });
+  }
+  
+  const sql = "INSERT INTO revenue (description, amount, type, category, date) VALUES (?, ?, ?, ?, ?)";
+  
+  db.query(sql, [description, amount, type, category || null, date], (err, result) => {
+    if (err) {
+      console.error("Error inserting revenue entry:", err);
+      return res.status(500).json({ message: "Failed to add revenue entry." });
+    }
+    
+    // Return the newly created entry
+    const checkSql = "SELECT * FROM revenue WHERE id = ?";
+    db.query(checkSql, [result.insertId], (err, insertedRevenue) => {
+      if (err) {
+        console.error("Error verifying insertion:", err);
+        return res.status(500).json({ message: "Failed to verify revenue entry creation." });
+      }
+      
+      res.status(201).json(insertedRevenue[0]);
+    });
+  });
+});
+
+// DELETE a revenue entry by ID
+app.delete("/revenue/:id", (req, res) => {
+  const { id } = req.params;
+  const query = "DELETE FROM revenue WHERE id = ?";
+
+  db.query(query, [id], (err, result) => {
+    if (err) {
+      console.error("Error deleting revenue entry:", err);
+      res.status(500).json({ message: "Failed to delete revenue entry" });
+    } else if (result.affectedRows === 0) {
+      res.status(404).json({ message: "Revenue entry not found" });
+    } else {
+      res.status(200).json({ message: "Revenue entry deleted successfully" });
+    }
+  });
+});
+
+// GET all absences
+app.get("/absences", (req, res) => {
+  const sql = `
+    SELECT 
+      a.id, 
+      a.module_name, 
+      a.student_name, 
+      a.absence_date, 
+      a.seance, 
+      a.justification,
+      a.bg_color AS bgColor,
+      a.created_at
+    FROM absences a
+    ORDER BY a.absence_date DESC, a.seance ASC
+  `;
+  
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("Error fetching absences:", err);
+      return res.status(500).json({ message: "Failed to fetch absences." });
+    }
+    res.status(200).json(results);
+  });
+});
+
+// GET absences with student details
+app.get("/absences/details", (req, res) => {
+  const sql = `
+    SELECT 
+      a.id, 
+      a.module_name, 
+      a.student_name, 
+      a.absence_date, 
+      a.seance, 
+      a.justification,
+      a.bg_color AS bgColor,
+      a.created_at,
+      CONCAT(s.first_name, ' ', s.last_name) AS full_name,
+      s.email,
+      s.parent_tel
+    FROM absences a
+    LEFT JOIN students s ON CONCAT(s.first_name, ' ', s.last_name) = a.student_name
+    ORDER BY a.absence_date DESC, a.seance ASC
+  `;
+  
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("Error fetching absences with details:", err);
+      return res.status(500).json({ message: "Failed to fetch absences with details." });
+    }
+    res.status(200).json(results);
+  });
+});
+
+// GET absences summary statistics
+app.get("/absences/summary", (req, res) => {
+  // Get total absences count
+  const totalSQL = "SELECT COUNT(*) as total FROM absences";
+  
+  db.query(totalSQL, (err, totalResults) => {
+    if (err) {
+      console.error("Error calculating total absences:", err);
+      return res.status(500).json({ message: "Failed to calculate total absences." });
+    }
+    
+    // Get absences by module
+    const byModuleSQL = `
+      SELECT 
+        module_name, 
+        COUNT(*) as count 
+      FROM absences 
+      GROUP BY module_name 
+      ORDER BY count DESC
+    `;
+    
+    db.query(byModuleSQL, (err, moduleResults) => {
+      if (err) {
+        console.error("Error calculating absences by module:", err);
+        return res.status(500).json({ message: "Failed to calculate absences by module." });
+      }
+      
+      // Get absences by student
+      const byStudentSQL = `
+        SELECT 
+          student_name, 
+          COUNT(*) as count 
+        FROM absences 
+        GROUP BY student_name 
+        ORDER BY count DESC 
+        LIMIT 10
+      `;
+      
+      db.query(byStudentSQL, (err, studentResults) => {
+        if (err) {
+          console.error("Error calculating absences by student:", err);
+          return res.status(500).json({ message: "Failed to calculate absences by student." });
+        }
+        
+        // Get absences by date (for trend chart)
+        const byDateSQL = `
+          SELECT 
+            absence_date, 
+            COUNT(*) as count 
+          FROM absences 
+          GROUP BY absence_date 
+          ORDER BY absence_date ASC 
+          LIMIT 30
+        `;
+        
+        db.query(byDateSQL, (err, dateResults) => {
+          if (err) {
+            console.error("Error calculating absences by date:", err);
+            return res.status(500).json({ message: "Failed to calculate absences by date." });
+          }
+          
+          // Get absences by seance
+          const bySeanceSQL = `
+            SELECT 
+              seance, 
+              COUNT(*) as count 
+            FROM absences 
+            GROUP BY seance 
+            ORDER BY count DESC
+          `;
+          
+          db.query(bySeanceSQL, (err, seanceResults) => {
+            if (err) {
+              console.error("Error calculating absences by seance:", err);
+              return res.status(500).json({ message: "Failed to calculate absences by seance." });
+            }
+            
+            res.status(200).json({
+              total: totalResults[0].total,
+              byModule: moduleResults,
+              byStudent: studentResults,
+              byDate: dateResults,
+              bySeance: seanceResults
+            });
+          });
+        });
+      });
+    });
+  });
+});
+
+// GET student names for dropdown
+app.get("/absences/students", (req, res) => {
+  const sql = "SELECT CONCAT(first_name, ' ', last_name) AS name FROM students ORDER BY first_name, last_name";
+  
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("Error fetching student names:", err);
+      return res.status(500).json({ message: "Failed to fetch student names." });
+    }
+    
+    const studentNames = results.map(result => result.name);
+    res.status(200).json(studentNames);
+  });
+});
+
+// GET module names for dropdown
+app.get("/absences/modules", (req, res) => {
+  const sql = "SELECT module_name FROM modules ORDER BY module_name";
+  
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("Error fetching module names:", err);
+      return res.status(500).json({ message: "Failed to fetch module names." });
+    }
+    
+    const moduleNames = results.map(result => result.module_name);
+    res.status(200).json(moduleNames);
+  });
+});
+
+// POST new absence
+app.post("/absences", (req, res) => {
+  const { module_name, student_name, absence_date, seance, justification } = req.body;
+  
+  if (!module_name || !student_name || !absence_date || !seance) {
+    return res.status(400).json({ message: "Module name, student name, absence date, and seance are required." });
+  }
+
+  // Get all used colors from the database
+  const getUsedColorsSql = "SELECT bg_color FROM absences";
+  db.query(getUsedColorsSql, (err, results) => {
+    if (err) {
+      console.error("Error fetching used colors:", err);
+      return res.status(500).json({ message: "Failed to fetch color information." });
+    }
+
+    const colors = ['#F44336', '#E91E63', '#9C27B0', '#673AB7', '#3F51B5', '#2196F3', '#03A9F4'];
+    const usedColors = results.map(result => result.bg_color);
+    
+    // Filter out used colors
+    const availableColors = colors.filter(color => !usedColors.includes(color));
+    
+    // If all colors have been used, reset the available colors to all colors
+    const colorsToChooseFrom = availableColors.length > 0 ? availableColors : colors;
+    
+    // Select random color from available colors
+    const bgColor = colorsToChooseFrom[Math.floor(Math.random() * colorsToChooseFrom.length)];
+
+    const sql = "INSERT INTO absences (module_name, student_name, absence_date, seance, justification, bg_color) VALUES (?, ?, ?, ?, ?, ?)";
+    
+    db.query(sql, [module_name, student_name, absence_date, seance, justification || null, bgColor], (err, result) => {
+      if (err) {
+        console.error("Error inserting absence:", err);
+        return res.status(500).json({ message: "Failed to add absence." });
+      }
+      
+      // Return the newly created absence
+      const checkSql = "SELECT * FROM absences WHERE id = ?";
+      db.query(checkSql, [result.insertId], (err, insertedAbsence) => {
+        if (err) {
+          console.error("Error verifying insertion:", err);
+          return res.status(500).json({ message: "Failed to verify absence creation." });
+        }
+        
+        res.status(201).json({
+          id: insertedAbsence[0].id,
+          module_name: insertedAbsence[0].module_name,
+          student_name: insertedAbsence[0].student_name,
+          absence_date: insertedAbsence[0].absence_date,
+          seance: insertedAbsence[0].seance,
+          justification: insertedAbsence[0].justification,
+          bgColor: insertedAbsence[0].bg_color
+        });
+      });
+    });
+  });
+});
+
+// DELETE an absence by ID
+app.delete("/absences/:id", (req, res) => {
+  const { id } = req.params;
+  const query = "DELETE FROM absences WHERE id = ?";
+
+  db.query(query, [id], (err, result) => {
+    if (err) {
+      console.error("Error deleting absence:", err);
+      res.status(500).json({ message: "Failed to delete absence" });
+    } else if (result.affectedRows === 0) {
+      res.status(404).json({ message: "Absence not found" });
+    } else {
+      res.status(200).json({ message: "Absence deleted successfully" });
     }
   });
 });

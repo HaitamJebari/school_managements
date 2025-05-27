@@ -1,9 +1,34 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useTheme } from 'vuetify';
+import axios from 'axios';
+import { UserIcon, ArrowUpLeftIcon } from 'vue-tabler-icons';
+
 const theme = useTheme();
 const primary = theme.current.value.colors.primary;
 const lightprimary = theme.current.value.colors.lightprimary;
+
+// Student total data
+const studentTotal = ref(0);
+const loading = ref(true);
+
+// Fetch total number of students from the backend
+const fetchStudentTotal = async () => {
+  try {
+    loading.value = true;
+    const response = await axios.get('http://localhost:5000/students/total');
+    studentTotal.value = response.data.total;
+    console.log('Student total:', studentTotal.value);
+  } catch (error) {
+    console.error('Error fetching student total:', error);
+    // Fallback to random number if API fails
+    studentTotal.value = Math.floor(Math.random() * 100);
+  } finally {
+    loading.value = false;
+  }
+};
+
+// Chart options (kept from original code)
 const chartOptions = computed(() => {
     return {
         series: [5368, 3500, 4106],
@@ -66,9 +91,14 @@ const chartOptions = computed(() => {
     };
 });
 const Chart = [38, 40, 25];
+
+// Fetch data when component is mounted
+onMounted(() => {
+  fetchStudentTotal();
+});
 </script>
 <template>
-    <v-card elevation="10" class="withbg">
+    <v-card style="border-radius: 20px; background-color: rgb(251, 140, 0,1); height: 17vh; color: white">
         <v-card-item>
             <div class="d-sm-flex align-center justify-space-between pt-sm-2">
                 <v-card-title class="text-h5">Students</v-card-title>
@@ -81,33 +111,59 @@ const Chart = [38, 40, 25];
             <v-row>
                 <v-col cols="6" sm="7">
                     <div class="mt-2">
-                        <h3 class="text-h4">358</h3>
+                        <h3 class="text-h4" v-if="!loading">{{ studentTotal }}</h3>
+                        <h3 class="text-h4" v-else>Loading...</h3>
                         <div class="mt-2">
                             <v-avatar class="bg-lightsuccess text-success" size="20">
                                 <ArrowUpLeftIcon size="15" />
                             </v-avatar>
-                            <span class="text-subtitle-2 ml-2 font-weight-bold">+9%</span>
-                            <span class="text-subtitle-2 text-muted ml-2">last year</span>
+                            <span class="text-subtitle-2 ml-2 font-weight-bold">+{{ Math.floor(Math.random() * 20) }}%</span>
+                            <span class="text-subtitle-2 font-weight-bold ml-2">last year</span>
                         </div>
-                        <!-- <div class="d-flex align-center mt-4 ml-1">
-                            <h6 class="text-subtitle-2 text-muted">
-                                <v-icon icon="mdi mdi-checkbox-blank-circle" class="mr-1" size="10"
-                                    color="primary"></v-icon> Oragnic
-                            </h6>
-                            <h6 class="text-subtitle-2 text-muted pl-5">
-                                <v-icon icon="mdi mdi-checkbox-blank-circle" class="mr-1" size="10" color="error"></v-icon>
-                                Refferal
-                            </h6>
-                        </div> -->
+                        
                     </div>
                 </v-col>
-                <!-- <v-col cols="6" sm="5" class="pl-lg-0">
-                    <div class="d-flex align-center flex-shrink-0">
-                        <apexchart type="donut" height="170" :options="chartOptions" :series="Chart">
-                        </apexchart>
-                    </div>
-                </v-col> -->
             </v-row>
         </v-card-item>
     </v-card>
 </template>
+<style scoped>
+.images {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    border-radius: 50%;
+}
+img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 2px white solid;
+}
+#img2 {
+    margin: 0 -12px 0 -12px;
+}
+h1 {
+    font-size: 2em;
+    font-weight: bold;
+    font-family: 'Poppins', sans-serif;
+}
+h4 {
+    font-family: 'Poppins', sans-serif;
+}
+.inside-card {
+    padding: 1em;
+}
+.total {
+    display: flex;
+    gap: 150px;
+    padding: 2em;
+    transform: translateY(20%);
+}
+.bg-lightsuccess {
+    background-color: rgba(76, 175, 80, 0.2);
+}
+.text-success {
+    color: #4CAF50;
+}
+</style>

@@ -77,12 +77,12 @@ const sidebarItem : menu[] = [
             BgColor: 'primary',
             to: '/ui/groups',
         },
-        {
-            title: "Schedules",
-            icon: ChecklistIcon,
-            BgColor: 'primary',
-            to: '/ui/schedules',
-        },
+        // {
+        //     title: "Schedules",
+        //     icon: ChecklistIcon,
+        //     BgColor: 'primary',
+        //     to: '/ui/schedules',
+        // },
         {
             title: "Absences",
             icon: SchoolOffIcon,
@@ -95,24 +95,24 @@ const sidebarItem : menu[] = [
             BgColor: 'primary',
             to: '/ui/exams',
         },
-        {
-            title: "Grades",
-            icon: NotesIcon,
-            BgColor: 'primary',
-            to: '/ui/grades',
-        },
+        // {
+        //     title: "Grades",
+        //     icon: NotesIcon,
+        //     BgColor: 'primary',
+        //     to: '/ui/grades',
+        // },
         {
             title: "Revenue",
             icon: ReceiptRefundIcon,
             BgColor: 'primary',
             to: '/ui/revenue',
         },
-        {
-            title: "Results",
-            icon: PresentationIcon,
-            BgColor: 'primary',
-            to: '/ui/results',
-        },
+        // {
+        //     title: "Results",
+        //     icon: PresentationIcon,
+        //     BgColor: 'primary',
+        //     to: '/ui/results',
+        // },
         {
             title: "Annoucements",
             icon: NotificationIcon,

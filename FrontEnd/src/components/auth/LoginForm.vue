@@ -66,7 +66,7 @@ const handleLogin = async () => {
                     color="primary"
                 ></v-text-field>
             </v-col>
-            <v-col cols="12 " class="py-0">
+            <!-- <v-col cols="12 " class="py-0">
                 <div class="d-flex flex-wrap align-center w-100">
                     <div class="ml-sm-auto">
                         <RouterLink to="" class="text-primary text-decoration-none text-body-1 opacity-1 font-weight-medium">
@@ -74,7 +74,7 @@ const handleLogin = async () => {
                         >
                     </div>
                 </div>
-            </v-col>
+            </v-col> -->
             <v-col cols="12">
                 <v-btn
                     :loading="loading"
