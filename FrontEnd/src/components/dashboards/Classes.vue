@@ -146,7 +146,7 @@ const showConfirmationDialog = (classesId: number) => {
                     if (response.status === 200) {
                         swalWithBootstrapButtons.fire({
                             title: 'Deleted!',
-                            text: 'The student has been deleted successfully.',
+                            text: 'The Class has been deleted successfully.',
                             
                             icon: 'success',
                             confirmButtonText: 'OK'
@@ -192,6 +192,13 @@ const showConfirmationDialog = (classesId: number) => {
 </script>
 <template>
     <v-row class="mt-5">
+        <v-col cols="12" sm="12" lg="4" class="d-flex align-center justify-center">
+            <v-card class="d-flex align-center justify-center" style="height: 10vh; width: 10vh; border-radius: 50%">
+                <v-btn icon color="white" @click="openPopup" size="80" flat>
+                    <PlusIcon stroke-width="1.5" size="60" style="color: grey" />
+                </v-btn>
+            </v-card>
+        </v-col>
         <v-col v-for="(classItem, index) in classes" :key="classItem.id" cols="12" sm="12" lg="4">
             <v-card :style="{ backgroundColor: classItem.bgColor }" style="border-radius: 20px;">
                 <v-btn
@@ -207,7 +214,7 @@ const showConfirmationDialog = (classesId: number) => {
                     <h4>{{ classItem.name }} {{ classItem.number || 0 }}</h4>
                 </div>
                 <div class="total">
-                    <h1>{{ Math.floor(Math.random() * 1000) }}</h1>
+                    <h1>{{ Math.floor(Math.random() * 8) }}</h1>
                     <div class="images">
                         <img src="../../assets/images/profile/user-4.jpg" alt="" srcset="" />
                         <img src="../../assets/images/profile/user-5.jpg" id="img2" alt="" srcset="" />
@@ -218,11 +225,7 @@ const showConfirmationDialog = (classesId: number) => {
         </v-col>
 
         <v-col cols="12" sm="12" lg="4" class="d-flex align-center justify-center">
-            <v-card class="d-flex align-center justify-center" style="height: 10vh; width: 10vh; border-radius: 50%">
-                <v-btn icon color="white" @click="openPopup" size="80" flat>
-                    <PlusIcon stroke-width="1.5" size="60" style="color: grey" />
-                </v-btn>
-            </v-card>
+            
 
             <v-card elevation="0" v-if="showPopupp" class="popup-card">
                 <div class="popup-contentp">
@@ -460,7 +463,7 @@ h4 {
 
 .popup-contentp {
     width: 67%;
-    height: 40vh;
+    height: 37vh;
     background: rgb(255, 255, 255); /* Transparent white background */
     padding: 20px;
     border-radius: 15px;

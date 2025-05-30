@@ -102,7 +102,7 @@ const sidebarItem : menu[] = [
         //     to: '/ui/grades',
         // },
         {
-            title: "Revenue",
+            title: "Financials",
             icon: ReceiptRefundIcon,
             BgColor: 'primary',
             to: '/ui/revenue',

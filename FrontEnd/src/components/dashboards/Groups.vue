@@ -675,7 +675,7 @@ const showConfirmationDialog = (groupsId: number) => {
                     <h4>{{ groupItem.name }} {{ groupItem.number || 0 }}</h4>
                 </div>
                 <div class="total">
-                    <h1>{{ Math.floor(Math.random() * 1000) }}</h1>
+                    <h1>{{ Math.floor(Math.random() * 10) }}</h1>
                     <div class="images">
                         <img src="../../assets/images/profile/user-4.jpg" alt="" srcset="" />
                         <img src="../../assets/images/profile/user-5.jpg" id="img2" alt="" srcset="" />
@@ -685,7 +685,7 @@ const showConfirmationDialog = (groupsId: number) => {
             </v-card>
         </v-col>
        <v-col cols="12" sm="12" lg="4" class="d-flex align-center justify-center">
-            <v-card elevation="0" v-if="showPopupp" class="popup-card" style="z-index: 10;">
+            <v-card elevation="0" v-if="showPopupp" class="popup-card" >
                 <div class="popup-contentp">
                     <div style="display: flex; justify-content: space-between; align-items: center">
                         <v-card-title class="title" style="margin: 10px auto; text-align: center">
@@ -751,6 +751,155 @@ h4 {
     padding: 2em;
     transform: translateY(20%);
 }
+.title {
+    position: sticky;
+    top: 0;
+    width: 97%;
+    height: 60px;
+}
+
+.title h1 {
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 26px;
+    letter-spacing: 1px;
+
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    text-align: center;
+}
+
+.title h1:after,
+.title h1:before {
+    content: ' ';
+    display: block;
+    border-bottom: 2px solid #ccc;
+}
+
+
+.inputGroup {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 1em 0 1em 0;
+    max-width: 100%;
+    position: relative;
+}
+
+.inputGroup input {
+    font-size: 100%;
+    padding: 0.8em;
+    outline: none;
+    border: 2px solid rgb(200, 200, 200);
+    background-color: transparent;
+    border-radius: 20px;
+    width: 100%;
+}
+
+.inputGroup label {
+    font-size: 100%;
+    position: absolute;
+    left: 0;
+    padding: 0.8em;
+    margin-left: 0.5em;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    color: rgb(100, 100, 100);
+}
+
+.inputGroup :is(input:focus, input:valid) ~ label {
+    transform: translateY(-50%) scale(0.9);
+    margin: 0em;
+    margin-left: 1.3em;
+    padding: 0.4em;
+    background-color: white;
+}
+
+.inputGroup :is(input:focus, input:valid) {
+    border-color: rgb(150, 150, 200);
+}
+.animated-input {
+    font-size: 0.9rem;
+    background-color: rgba(136, 136, 136, 0.052);
+    padding-inline: 0.5em;
+    padding-block: 0.7em;
+    border-radius: 17px;
+    padding-left: 50px;
+}
+.animated-input:focus {
+    outline: none;
+}
+.animated-input:not(:placeholder-shown) ~ .reset {
+    opacity: 1;
+    visibility: visible;
+}
+/* Define the transition effect */
+.slide-enter-active,
+.slide-leave-active {
+    transition: all 0.3s ease;
+}
+.slide-enter {
+    transform: translateX(100%);
+    opacity: 0;
+}
+.slide-leave-to {
+    transform: translateX(100%);
+    opacity: 0;
+}
+
+/* Fade transition styles */
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.3s ease;
+}
+.fade-enter,
+.fade-leave-to {
+    opacity: 0;
+}
+/* Popup overlay */
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* Popup content */
+.popup-content {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    width: 300px;
+}
+
+.popup-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-around;
+}
+.popup-actions button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.popup-actions button:first-child {
+    background-color: #ff5252;
+    color: white;
+}
+
+.popup-actions button:last-child {
+    background-color: #ccc;
+    color: black;
+}
 .popup-card {
     position: fixed;
     top: 0;
@@ -769,7 +918,7 @@ h4 {
 
 .popup-contentp {
     width: 67%;
-    height: 40vh;
+    height: 37vh;
     background: rgb(255, 255, 255); /* Transparent white background */
     padding: 20px;
     border-radius: 15px;
@@ -781,36 +930,27 @@ h4 {
 }
 .formContainer {
     display: flex;
-    flex-direction: column;
-    gap: 1.5em;
+    gap: 20px; /* Space between the fieldsets */
+    align-items: stretch; /* Ensures fieldsets have the same height */
     margin-bottom: 2em;
 }
+form fieldset {
+    flex: 1; /* Ensures both fieldsets take up equal space */
+    border: 1px solid #ccc; /* Optional: add a border for clarity */
+    padding: 13px;
+    min-width: 0; /* Prevents overflow issues */
+}
+
 .inputGroup {
-    position: relative;
-    margin-bottom: 1em;
 }
-.inputGroup input, .inputGroup select {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-    transition: border-color 0.3s;
-}
-.inputGroup label {
-    position: absolute;
-    top: -10px;
-    left: 10px;
-    background-color: white;
-    padding: 0 5px;
-    font-size: 14px;
-    color: #666;
-}
-.inputGroup input:focus, .inputGroup select:focus {
-    border-color: #2196F3;
-    outline: none;
+
+label {
+    margin-bottom: 5px;
+    font-weight: bold;
 }
 #add {
-    margin-right: 10px;
+     width: 20%;
+    margin: 3px;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
 }
 </style>

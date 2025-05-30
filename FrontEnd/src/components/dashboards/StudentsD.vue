@@ -116,7 +116,7 @@ const filteredStudents = computed(() => {
                     <v-btn icon color="inherit" flat @click="toggleInput">
                         <SearchIcon stroke-width="1.5" size="24" class="text-grey100" />
                     </v-btn>
-                    <v-menu bottom left>
+                    <!-- <v-menu bottom left>
                         <template v-slot:activator="{ props }">
                             <v-btn icon color="inherit" v-bind="props" flat>
                                 <DotsVerticalIcon stroke-width="1.5" size="24" class="text-grey100" />
@@ -127,7 +127,7 @@ const filteredStudents = computed(() => {
                                 <v-list-item-title>{{ item.title }}</v-list-item-title>
                             </v-list-item>
                         </v-list>
-                    </v-menu>
+                    </v-menu> -->
                 </div>
             </div>
             <v-table class="month-table" style="max-height: 580px; ">

@@ -324,15 +324,15 @@ const filteredTeachers = computed(() => {
                                 <div class="formContainer">
                                     <fieldset class="field1">
                                         <div class="inputGroup">
-                                            <input type="text" v-model="form1.cin" required="" autocomplete="off" />
+                                            <input type="text" v-model="form1.cin" autocomplete="off" />
                                             <label for="name">Cin</label>
                                         </div>
                                         <div class="inputGroup">
-                                            <input type="text" v-model="form1.fullname" required="" autocomplete="off" />
+                                            <input type="text" v-model="form1.fullname" autocomplete="off" />
                                             <label for="name">Fullname</label>
                                         </div>
                                         <div class="inputGroup">
-                                            <input type="email" v-model="form1.email" required="" autocomplete="off" />
+                                            <input type="email" v-model="form1.email" autocomplete="off" />
                                             <label for="name">{{ t('Email') }}</label>
                                         </div>
                                     </fieldset>
@@ -386,12 +386,12 @@ const filteredTeachers = computed(() => {
                                         </div>
 
                                         <div class="inputGroup">
-                                            <input type="number" v-model="form1.tel" required="" autocomplete="off" />
+                                            <input type="number" v-model="form1.tel" autocomplete="off" />
                                             <label for="name">Tel</label>
                                         </div>
 
                                         <div class="inputGroup">
-                                            <input type="text" v-model="form1.adresse" required="" autocomplete="off" />
+                                            <input type="text" v-model="form1.adresse" autocomplete="off" />
                                             <label for="name">{{ t('Adresse') }}</label>
                                         </div>
                                     </fieldset>
@@ -401,7 +401,7 @@ const filteredTeachers = computed(() => {
                             </form>
                         </div>
                     </v-card>
-                    <v-menu bottom left>
+                    <!-- <v-menu bottom left>
                         <template v-slot:activator="{ props }">
                             <v-btn icon color="inherit" v-bind="props" flat>
                                 <DotsVerticalIcon stroke-width="1.5" size="24" class="text-grey100" />
@@ -412,7 +412,7 @@ const filteredTeachers = computed(() => {
                                 <v-list-item-title>{{ item.title }}</v-list-item-title>
                             </v-list-item>
                         </v-list>
-                    </v-menu>
+                    </v-menu> -->
                 </div>
             </div>
             <v-table class="month-table" style="max-height: 580px">
@@ -451,7 +451,6 @@ const filteredTeachers = computed(() => {
                                 <div>
                                     <!-- Button to trigger the popup -->
                                     <v-btn
-                                        class=""
                                         icon
                                         color="inherit"
                                         v-bind="props"
@@ -618,7 +617,7 @@ const filteredTeachers = computed(() => {
     width: 100%;
     border: none;
 }
-.el-date-picker label{
+.el-date-picker label {
     transform: translateY(-18%);
 }
 .el-date-picker__editor-wrap {
@@ -643,8 +642,6 @@ const filteredTeachers = computed(() => {
 .el-date-picker__editor-wrap:focus-within .el-input__inner {
     border-color: rgb(150, 150, 200);
 }
-
-
 
 .animated-input {
     font-size: 0.9rem;

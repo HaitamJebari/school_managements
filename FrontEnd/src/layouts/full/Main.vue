@@ -56,7 +56,7 @@ const handleLogout = () => {
         <div class="maxWidth">
             <v-app-bar elevation="0" height="70">
                 <div class="d-flex align-center justify-space-between w-100">
-                    <form class="form">
+                    <form class="form" >
                         <button>
                             <svg width="17" height="16" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="search">
                                 <path

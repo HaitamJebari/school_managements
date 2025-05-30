@@ -64,9 +64,9 @@ const isOpened = ref(false);
             <v-btn size="small" class="circle-button" color="primary" style="margin-right: 15px" flat @click="changeLanguage('fr')">
                 Français
             </v-btn>
-            <v-btn icon color="inherit" flat>
+            <!-- <v-btn icon color="inherit" flat>
                 <SettingsIcon stroke-width="1.5" size="24" class="text-grey100" />
-            </v-btn>
+            </v-btn> -->
             <v-btn icon color="inherit" flat @click="isOpened = true">
                 <CalendarIcon stroke-width="1.5" size="24" class="text-grey100" />
             </v-btn>

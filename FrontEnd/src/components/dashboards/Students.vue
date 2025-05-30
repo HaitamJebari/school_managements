@@ -341,44 +341,44 @@ const filteredStudents = computed(() => {
                                 <div class="formContainer">
                                     <fieldset class="field1">
                                         <div class="inputGroup">
-                                            <input type="text" v-model="form1.id"  autocomplete="off" />
+                                            <input type="text" v-model="form1.id" autocomplete="off" />
                                             <label for="name">{{ t('Id') }}</label>
                                         </div>
                                         <div class="inputGroup">
-                                            <input type="text" v-model="form1.first_name"  autocomplete="off" />
+                                            <input type="text" v-model="form1.first_name" autocomplete="off" />
                                             <label for="name">{{ t('First Name') }}</label>
                                         </div>
                                         <div class="inputGroup">
-                                            <input type="text" v-model="form1.last_name"  autocomplete="off" />
+                                            <input type="text" v-model="form1.last_name" autocomplete="off" />
                                             <label for="name">{{ t('Last Name') }}</label>
                                         </div>
                                         <div class="inputGroup">
-                                            <input type="text" v-model="form1.adresse"  autocomplete="off" />
+                                            <input type="text" v-model="form1.adresse" autocomplete="off" />
                                             <label for="name">{{ t('Adresse') }}</label>
                                         </div>
                                         <div class="inputGroup">
-                                            <input type="number" v-model="form1.age"  autocomplete="off" />
+                                            <input type="number" v-model="form1.age" autocomplete="off" />
                                             <label for="name">{{ t('Age') }}</label>
                                         </div>
                                     </fieldset>
                                     <fieldset class="field2">
                                         <div class="inputGroup">
-                                            <input type="text" v-model="form1.parent_name"  autocomplete="off" />
+                                            <input type="text" v-model="form1.parent_name" autocomplete="off" />
                                             <label for="name">{{ t('Parent') }}</label>
                                         </div>
                                         <div class="inputGroup">
-                                            <input type="number" v-model="form1.parent_tel"  autocomplete="off" />
+                                            <input type="number" v-model="form1.parent_tel" autocomplete="off" />
                                             <label for="name">{{ t('Parent Tel') }}</label>
                                         </div>
                                         <div class="inputGroup">
-                                            <input type="date" v-model="form1.inscription_date"  autocomplete="off" />
+                                            <input type="date" v-model="form1.inscription_date" autocomplete="off" />
                                         </div>
                                         <div class="inputGroup">
-                                            <input type="number" v-model="form1.price"  autocomplete="off" />
+                                            <input type="number" v-model="form1.price" autocomplete="off" />
                                             <label for="name">{{ t('Price') }}</label>
                                         </div>
                                         <div class="inputGroup">
-                                            <input type="email" v-model="form1.email"  autocomplete="off" />
+                                            <input type="email" v-model="form1.email" autocomplete="off" />
                                             <label for="name">{{ t('Email') }}</label>
                                         </div>
                                     </fieldset>
@@ -389,7 +389,7 @@ const filteredStudents = computed(() => {
                         </div>
                     </v-card>
 
-                    <v-menu bottom left>
+                    <!-- <v-menu bottom left>
                         <template v-slot:activator="{ props }">
                             <v-btn icon color="inherit" v-bind="props" flat>
                                 <DotsVerticalIcon stroke-width="1.5" size="24" class="text-grey100" />
@@ -400,10 +400,10 @@ const filteredStudents = computed(() => {
                                 <v-list-item-title>{{ item.title }}</v-list-item-title>
                             </v-list-item>
                         </v-list>
-                    </v-menu>
+                    </v-menu> -->
                 </div>
             </div>
-            <v-table class="month-table" style="max-height: 580px;">
+            <v-table class="month-table" style="max-height: 580px">
                 <thead>
                     <tr>
                         <th class="text-subtitle-1 font-weight-bold">{{ t('Id') }}</th>
@@ -432,7 +432,7 @@ const filteredStudents = computed(() => {
                         <td>{{ formatDate(student.inscription_date) }}</td>
                         <td>{{ student.price }}</td>
                         <td>
-                            <div class="d-flex align-center">
+                            <div class="d-flex justify-content-center">
                                 <v-btn class="d-flex align-center" icon color="inherit" v-bind="props" style="gap: 12px" flat>
                                     <PencilIcon stroke-width="1.5" size="24" class="text-grey100" @click="openUpdatePopup(student)" />
                                 </v-btn>

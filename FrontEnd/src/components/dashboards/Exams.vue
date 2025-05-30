@@ -308,13 +308,56 @@ const formatDate = (dateString: string): string => {
                             </fieldset>
                             <fieldset class="field3">
                                 <div class="inputGroup">
-                                    <input type="date" id="date_exam" v-model="examForm.date_exam" autocomplete="off" />
-                                    <label for="date_exam">{{ t('Exam Date') }}</label>
+                                    <div class="el-date-picker">
+                                                <el-date-picker
+                                                    v-model="examForm.date_exam"
+                                                    type="datetime"
+                                                    placeholder=" "
+                                                    format="YYYY-MM-DD HH:mm:ss"
+                                                    date-format="MMM DD, YYYY"
+                                                    time-format="HH:mm"
+                                                    class="custom-date-picker"
+                                                >
+                                                    <template #prev-month>
+                                                        <el-icon><CaretLeft /></el-icon>
+                                                    </template>
+                                                    <template #next-month>
+                                                        <el-icon><CaretRight /></el-icon>
+                                                    </template>
+                                                    <template #prev-year>
+                                                        <el-icon>
+                                                            <svg viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                                                                <g stroke-width="1" fill-rule="evenodd">
+                                                                    <g fill="currentColor">
+                                                                        <path
+                                                                            d="M8.73171,16.7949 C9.03264,17.0795 9.50733,17.0663 9.79196,16.7654 ..."
+                                                                        />
+                                                                    </g>
+                                                                </g>
+                                                            </svg>
+                                                        </el-icon>
+                                                    </template>
+                                                    <template #next-year>
+                                                        <el-icon>
+                                                            <svg viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                                                                <g stroke-width="1" fill-rule="evenodd">
+                                                                    <g fill="currentColor">
+                                                                        <path
+                                                                            d="M11.2654,3.20511 C10.9644,2.92049 10.4897,2.93371 10.2051,3.23464 ..."
+                                                                        />
+                                                                    </g>
+                                                                </g>
+                                                            </svg>
+                                                        </el-icon>
+                                                    </template>
+                                                </el-date-picker>
+                                                <label for="date-registration">Pick a Date</label>
+                                            </div>
                                 </div>
                             </fieldset>
                         </div>
-                        <v-btn color="primary" type="submit" class="add-btn">Add</v-btn>
-                        <v-btn class="cancel-btn" @click="resetForm">Cancel</v-btn>
+                        <v-btn color="primary" type="submit" id="add">Add</v-btn>
+                        <v-btn id="add" class="cancel-btn" @click="resetForm">Cancel</v-btn>
                     </form>
                 </div>
             </v-card>
@@ -548,5 +591,65 @@ p {
     padding-right: 30px;
 }
 
+#add {
+    width: 20%;
+    margin: 3px;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+}
+.inputGroup .el-date-picker {
+    font-size: 100%;
+    padding: 0.8em;
+    outline: none;
+    border: 2px solid rgb(200, 200, 200);
+    background-color: transparent;
+    border-radius: 20px;
+    width: 100%;
+    position: relative;
+}
+.inputGroup .el-date-picker {
+    font-size: 100%;
+    padding: 0.8em;
+    outline: none;
+    border: 2px solid rgb(200, 200, 200);
+    background-color: transparent;
+    border-radius: 20px;
+    width: 100%;
+    position: relative;
+}
 
+.el-date-picker {
+    font-size: 100%;
+    padding: 0.8em;
+    outline: none;
+    border: 2px solid rgb(200, 200, 200);
+    background-color: transparent;
+    border-radius: 20px;
+    width: 100%;
+    border: none;
+}
+.el-date-picker label {
+    transform: translateY(-18%);
+}
+.el-date-picker__editor-wrap {
+    padding: 0.8em;
+    border-radius: 20px;
+}
+
+.el-date-picker {
+    font-size: 100%;
+    padding: 0.8em;
+    outline: none;
+    border: 2px solid rgb(200, 200, 200);
+    background-color: transparent;
+    border-radius: 20px;
+    width: 100%;
+    border: none;
+}
+.el-date-picker label {
+    transform: translateY(-18%);
+}
+.el-date-picker__editor-wrap {
+    padding: 0.8em;
+    border-radius: 20px;
+}
 </style>
