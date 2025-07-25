@@ -6,9 +6,9 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "allowJs": true
+    "allowJs": true,
+    "verbatimModuleSyntax": true  // Add this to replace the deprecated options
   },
-
   "references": [
     { 
       "path": "./tsconfig.vite-config.json"
