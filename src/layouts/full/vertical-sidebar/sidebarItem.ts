@@ -9,7 +9,14 @@ import {
     ApertureIcon,
     UserPlusIcon,
     BriefcaseIcon,
-    SchoolIcon
+    SchoolIcon,
+    UsersIcon,
+    HexagonsIcon,
+    BuildingCarouselIcon,
+    SchoolOffIcon,
+    BrandSteamIcon,
+    ReceiptRefundIcon,
+    NotificationIcon
 } from 'vue-tabler-icons';
 
 export interface menu {
@@ -50,11 +57,56 @@ const sidebarItem: menu[] = [
         to: '/ui/teachers'
     },
     {
-            title:"Students",
-            icon: SchoolIcon,
-            BgColor: 'primary',
-            to: '/ui/students',
-        },
+        title: 'Students',
+        icon: SchoolIcon,
+        BgColor: 'primary',
+        to: '/ui/students'
+    },
+    {
+        title: 'Classes',
+        icon: UsersIcon,
+        BgColor: 'primary',
+        to: '/ui/classes'
+    },
+    {
+        title: 'Modules',
+        icon: HexagonsIcon,
+        BgColor: 'primary',
+        to: '/ui/modules'
+    },
+    {
+        title: 'Groups',
+        icon: BuildingCarouselIcon,
+        BgColor: 'primary',
+        to: '/ui/groups'
+    },
+
+    {
+        title: 'Absences',
+        icon: SchoolOffIcon,
+        BgColor: 'primary',
+        to: '/ui/absences'
+    },
+    {
+        title: 'Exams',
+        icon: BrandSteamIcon,
+        BgColor: 'primary',
+        to: '/ui/exams'
+    },
+
+    {
+        title: 'Financials',
+        icon: ReceiptRefundIcon,
+        BgColor: 'primary',
+        to: '/ui/financials'
+    },
+
+    {
+        title: 'Annoucements',
+        icon: NotificationIcon,
+        BgColor: 'primary',
+        to: '/ui/ann'
+    }
 ];
 
 export default sidebarItem;
