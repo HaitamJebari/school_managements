@@ -13,3 +13,14 @@ export const router = createRouter({
         AuthRoutes
     ]
 });
+
+// ✅ Global auth guard
+router.beforeEach((to, from, next) => {
+    const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+  
+    if (to.meta.requiresAuth && !isAuthenticated) {
+      next('/auth/login');
+    } else {
+      next();
+    }
+  });

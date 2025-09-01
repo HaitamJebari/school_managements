@@ -1,44 +1,41 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import ProfitExpanse from '@/components/dashboards/ProfitExpense.vue';
-import TrafficDistribution from '@/components/dashboards/TrafficDistribution.vue';
-import ProductSales from '@/components/dashboards/ProductSales.vue';
-import UpcommingSchedule from '@/components/dashboards/UpcommingSchedule.vue';
-import TopPayingClients from '@/components/dashboards/TopPayingClients.vue';
-import ProductCards from '@/components/dashboards/ProductCards.vue';
+import StudentsD from '@/components/dashboards/StudentsD.vue';
+import TotalS from '@/components/dashboards/TotalS.vue';
+import TotalG from '@/components/dashboards/TotalG.vue';
+import TeachersD from '@/components/dashboards/TeachersD.vue';
+import Revenuedd from '@/components/dashboards/Revenuedd.vue';
+
 </script>
 
 <template>
     <v-row>
-        <v-col cols="12" sm="12" lg="8">
-            <ProfitExpanse />
+
+        <v-col cols="12" sm="12" lg="4">
+            <div class="mb-6">
+                <TotalS />
+            </div>
         </v-col>
         <v-col cols="12" sm="12" lg="4">
             <div class="mb-6">
-                <TrafficDistribution />
-            </div>
-            <div>
-                <ProductSales />
+                <TotalG/>
             </div>
         </v-col>
         <v-col cols="12" sm="12" lg="4">
-            <UpcommingSchedule />
-        </v-col>
-        <v-col cols="12" sm="12" lg="8">
-            <TopPayingClients />
+            <div>
+                <Revenuedd />
+            </div>
         </v-col>
         <v-col cols="12" sm="12" lg="12">
-            <ProductCards />
+            <StudentsD />
+        </v-col>
+        <v-col cols="12" sm="12" lg="12">
+            <TeachersD />
         </v-col>
         <v-col class="text-center mt-2 d-md-flex justify-md-space-between">
-            <p class="text-muted mb-2 mb-md-0">
-                Destributed by
-                <a flat variant="text" href="https://www.themewagon.com/" target="_blank" class="pl-1 text-primary">ThemeWagon</a>
-            </p>
-
             <p class="text-muted">
                 Design and Developed by
-                <a flat variant="text" href="https://www.wrappixel.com/" target="_blank" class="pl-1 text-primary">wrappixel.com</a>
+                <a flat variant="text" href="https://github.com/HaitamJebari" target="_blank" class="pl-1 text-primary">Haitam Jebari</a>
             </p>
         </v-col>
     </v-row>

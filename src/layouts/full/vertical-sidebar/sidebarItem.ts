@@ -45,12 +45,6 @@ const sidebarItem: menu[] = [
     },
     //   { header: 'Ui components' },
     {
-        title: 'Alert',
-        icon: AlertCircleIcon,
-        BgColor: 'primary',
-        to: '/ui/alerts'
-    },
-    {
         title: 'Teachers',
         icon: BriefcaseIcon,
         BgColor: 'primary',
