@@ -11,6 +11,7 @@ import ProfileDD from './vertical-header/ProfileDD.vue';
 import { router } from '@/router';
 const sidebarMenu = shallowRef(sidebarItems);
 const sDrawer = ref(true);
+const searchQuery = ref('')
 
 const handleLogout = () => {
     localStorage.removeItem('isAuthenticated');
@@ -69,7 +70,7 @@ const handleLogout = () => {
                             </svg>
                         </button>
 
-                        <input class="input" placeholder="Type your text" v-model="searchQuery" required="" type="text" />
+                        <input class="input" placeholder="Type your text" v-model="searchQuery" required type="text" />
 
                         <button class="reset" type="reset">
                             <svg

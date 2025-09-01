@@ -39,7 +39,10 @@ const handleLogin = async () => {
             confirmButtonColor: 'red',
             didOpen: () => {
                 const confirmBtn = Swal.getConfirmButton();
-                confirmBtn.style.color = 'white'; 
+                // Add null check to fix the TypeScript error
+                if (confirmBtn) {
+                    confirmBtn.style.color = 'white'; 
+                }
             }
         });
     } finally {
