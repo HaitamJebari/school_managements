@@ -334,8 +334,17 @@ const filteredStudents = computed(() => {
 </script>
 
 <template>
-    <v-card elevation="10" class="pb-2 mt-4">
-        <v-card-item class="pa-6">
+    <v-row>
+    <v-col cols="12" sm="12" lg="12">
+            <v-card elevation="10" style="border-radius: 20px ; height: 4em;">
+                <v-card-item >
+                    <h3 class="d-flex align-center justify-space-between">Students Management</h3>
+                </v-card-item>
+            </v-card>
+        </v-col>
+        <v-col cols="12" sm="12" lg="12">
+            <v-card elevation="10" cols="12" sm="12" lg="12" class="pb-2" style="height: 72.6vh;">
+                <v-card-item class="pa-6">
             <div class="d-flex align-center justify-space-between">
                 <div>
                     <h5 class="text-h5 mb-1 font-weight-semibold">{{ t('Students') }}</h5>
@@ -576,7 +585,9 @@ const filteredStudents = computed(() => {
                 </form>
             </div>
         </v-card>
-    </v-card>
+            </v-card>
+        </v-col>
+    </v-row>
 </template>
 <style scoped>
 .demo-datetime-picker-icon {

@@ -11,23 +11,23 @@ import { CaretLeft, CaretRight } from '@element-plus/icons-vue';
 
 // Define interfaces
 interface Teacher {
-  id: number;
-  cin: string;
-  fullname: string;
-  email: string;
-  date_registration: string;
-  tel: string | null;
-  adresse: string;
+    id: number;
+    cin: string;
+    fullname: string;
+    email: string;
+    date_registration: string;
+    tel: string | null;
+    adresse: string;
 }
 
 interface TeacherForm {
-  id?: number;
-  cin: string;
-  fullname: string;
-  email: string;
-  date_registration: string;
-  tel: string | null;
-  adresse: string;
+    id?: number;
+    cin: string;
+    fullname: string;
+    email: string;
+    date_registration: string;
+    tel: string | null;
+    adresse: string;
 }
 
 const value1 = ref('');
@@ -313,215 +313,234 @@ const filteredTeachers = computed(() => {
 });
 </script>
 <template>
-    <v-card elevation="10" class="pb-2 mt-4">
-        <v-card-item class="pa-6">
-            <div class="d-flex align-center justify-space-between">
-                <div>
-                    <h5 class="text-h5 mb-1 font-weight-semibold">{{ t('Teachers') }}</h5>
-                </div>
-                <div>
-                    <!-- Transition for sliding effect -->
-                    <transition name="slide">
-                        <!-- Input field that appears conditionally -->
-                        <input v-if="showInput" type="text" v-model="searchQuery" class="animated-input" placeholder="Search here..." />
-                    </transition>
-                    <v-btn icon color="inherit" @click="toggleInput" flat>
-                        <SearchIcon stroke-width="1.5" size="24" class="text-grey100" />
-                    </v-btn>
-                    <!-- Button to trigger popup -->
-                    <v-btn icon color="inherit" @click="openPopup" flat>
-                        <PlusIcon stroke-width="1.5" size="24" class="text-grey100" />
-                    </v-btn>
-                    <!-- Popup Card -->
-                    <v-card elevation="0" v-if="showPopupp" class="popup-card">
-                        <div class="popup-contentp">
-                            <div style="display: flex; justify-content: space-between; align-items: center">
-                                <v-card-title class="title" style="margin: 10px auto; text-align: center">
-                                    <h1>Add New Teacher</h1>
-                                </v-card-title>
-                                <v-btn icon color="inherit" @click="closePopup" flat style="transform: translateY(-30px)">
-                                    <XIcon stroke-width="1.5" size="24" class="text-grey100" />
-                                </v-btn>
-                            </div>
-                            <form @submit.prevent="submitForm">
-                                <div class="formContainer">
-                                    <fieldset class="field1">
-                                        <div class="inputGroup">
-                                            <input type="text" v-model="form1.cin" autocomplete="off" />
-                                            <label for="name">{{ t('Cin') }}</label>
-                                        </div>
-                                        <div class="inputGroup">
-                                            <input type="text" v-model="form1.fullname" autocomplete="off" />
-                                            <label for="name">{{ t('Fullname') }}</label>
-                                        </div>
-                                        <div class="inputGroup">
-                                            <input type="email" v-model="form1.email" autocomplete="off" />
-                                            <label for="name">{{ t('Email') }}</label>
-                                        </div>
-                                    </fieldset>
-                                    <fieldset class="field2">
-                                        <div class="inputGroup">
-                                            <div class="el-date-picker">
-                                                <el-date-picker
-                                                    v-model="form1.date_registration"
-                                                    type="datetime"
-                                                    placeholder=" "
-                                                    format="YYYY-MM-DD HH:mm:ss"
-                                                    date-format="MMM DD, YYYY"
-                                                    time-format="HH:mm"
-                                                    class="custom-date-picker"
-                                                >
-                                                    <template #prev-month>
-                                                        <el-icon><CaretLeft /></el-icon>
-                                                    </template>
-                                                    <template #next-month>
-                                                        <el-icon><CaretRight /></el-icon>
-                                                    </template>
-                                                    <template #prev-year>
-                                                        <el-icon>
-                                                            <svg viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                                                                <g stroke-width="1" fill-rule="evenodd">
-                                                                    <g fill="currentColor">
-                                                                        <path
-                                                                            d="M8.73171,16.7949 C9.03264,17.0795 9.50733,17.0663 9.79196,16.7654 ..."
-                                                                        />
-                                                                    </g>
-                                                                </g>
-                                                            </svg>
-                                                        </el-icon>
-                                                    </template>
-                                                    <template #next-year>
-                                                        <el-icon>
-                                                            <svg viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                                                                <g stroke-width="1" fill-rule="evenodd">
-                                                                    <g fill="currentColor">
-                                                                        <path
-                                                                            d="M11.2654,3.20511 C10.9644,2.92049 10.4897,2.93371 10.2051,3.23464 ..."
-                                                                        />
-                                                                    </g>
-                                                                </g>
-                                                            </svg>
-                                                        </el-icon>
-                                                    </template>
-                                                </el-date-picker>
-                                                <label for="date-registration">Pick a Date</label>
-                                            </div>
-                                        </div>
-
-                                        <div class="inputGroup">
-                                            <input type="number" v-model="form1.tel" autocomplete="off" />
-                                            <label for="name">Tel</label>
-                                        </div>
-
-                                        <div class="inputGroup">
-                                            <input type="text" v-model="form1.adresse" autocomplete="off" />
-                                            <label for="name">{{ t('Adresse') }}</label>
-                                        </div>
-                                    </fieldset>
-                                </div>
-                                <v-btn color="primary" type="submit" id="add">Add</v-btn>
-                                <v-btn id="add" @click="resetForm1">Cancel</v-btn>
-                            </form>
+    <v-row>
+        <v-col cols="12" sm="12" lg="12">
+            <v-card elevation="10" style="border-radius: 20px ; height: 4em;">
+                <v-card-item >
+                    <h3 class="d-flex align-center justify-space-between">Teachers Management</h3>
+                </v-card-item>
+            </v-card>
+        </v-col>
+        <v-col cols="12" sm="12" lg="12">
+            <v-card elevation="10" cols="12" sm="12" lg="12" class="pb-2" style="height: 72.6vh;">
+                <v-card-item class="pa-6">
+                    <div class="d-flex align-center justify-space-between">
+                        <div>
+                            <h5 class="text-h5 mb-1 font-weight-semibold">{{ t('Teachers') }}</h5>
                         </div>
-                    </v-card>
-                </div>
-            </div>
-            <v-table class="month-table" style="max-height: 580px">
-                <thead>
-                    <tr>
-                        <th class="text-subtitle-1 font-weight-bold">{{ t('Cin') }}</th>
-                        <th class="text-subtitle-1 font-weight-bold">{{ t('Fullname') }}</th>
-                        <th class="text-subtitle-1 font-weight-bold">{{ t('Email') }}</th>
-                        <th class="text-subtitle-1 font-weight-bold">{{ t('Date Registration') }}</th>
-                        <th class="text-subtitle-1 font-weight-bold">{{ t('Tel') }}</th>
-                        <th class="text-subtitle-1 font-weight-bold">{{ t('Adresse') }}</th>
-                        <th style="text-align: center">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="teacher in filteredTeachers" :key="teacher.id">
-                        <td>{{ teacher.cin }}</td>
-                        <td>{{ teacher.fullname }}</td>
-                        <td>{{ teacher.email }}</td>
-                        <td>{{ formatDate(teacher.date_registration) }}</td>
-                        <td>{{ teacher.tel }}</td>
-                        <td>{{ teacher.adresse }}</td>
-                        <td>
-                            <div class="d-flex justify-content-center">
-                                <v-btn
-                                    class="d-flex align-center"
-                                    icon
-                                    color="inherit"
-                                    @click="openUpdatePopup(teacher)"
-                                    style="gap: 12px"
-                                    flat
-                                >
-                                    <PencilIcon stroke-width="1.5" size="24" class="text-grey100" />
-                                </v-btn>
-                                <div>
-                                    <!-- Button to trigger the popup -->
-                                    <v-btn
-                                        icon
-                                        color="inherit"
-                                        style="gap: 12px"
-                                        @click="showConfirmationDialog(teacher.id)"
-                                        flat
-                                    >
-                                        <TrashIcon stroke-width="1.5" size="24" class="text-grey100" />
-                                    </v-btn>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </v-table>
-        </v-card-item>
-        <v-card elevation="0" v-if="showUpdateDialog" class="popup-card">
-            <div class="popup-contentp">
-                <div style="display: flex; justify-content: space-between; align-items: center">
-                    <v-card-title class="title" style="margin: 10px auto; text-align: center">
-                        <h1>Edit Teacher</h1>
-                    </v-card-title>
-                    <v-btn icon color="inherit" @click="closePopup_up" flat style="transform: translateY(-30px)">
-                        <XIcon stroke-width="1.5" size="24" class="text-grey100" />
-                    </v-btn>
-                </div>
-                <form @submit.prevent="updateTeacher(form2.id!)">
-                    <div class="formContainer">
-                        <fieldset class="field1">
-                            <div class="inputGroup">
-                                <input type="text" v-model="form2.cin"  autocomplete="off" />
-                                <label for="name">Cin</label>
-                            </div>
-                            <div class="inputGroup">
-                                <input type="text" v-model="form2.fullname"  autocomplete="off" />
-                                <label for="name">Fullname</label>
-                            </div>
-                            <div class="inputGroup">
-                                <input type="email" v-model="form2.email"  autocomplete="off" />
-                                <label for="name">{{ t('Email') }}</label>
-                            </div>
-                        </fieldset>
-                        <fieldset class="field2">
-                            <div class="inputGroup">
-                                <input type="date" v-model="formattedDate"  autocomplete="off" />
-                            </div>
-                            <div class="inputGroup">
-                                <input type="number" v-model="form2.tel"  autocomplete="off" />
-                            </div>
+                        <div>
+                            <!-- Transition for sliding effect -->
+                            <transition name="slide">
+                                <!-- Input field that appears conditionally -->
+                                <input
+                                    v-if="showInput"
+                                    type="text"
+                                    v-model="searchQuery"
+                                    class="animated-input"
+                                    placeholder="Search here..."
+                                />
+                            </transition>
+                            <v-btn icon color="inherit" @click="toggleInput" flat>
+                                <SearchIcon stroke-width="1.5" size="24" class="text-grey100" />
+                            </v-btn>
+                            <!-- Button to trigger popup -->
+                            <v-btn icon color="inherit" @click="openPopup" flat>
+                                <PlusIcon stroke-width="1.5" size="24" class="text-grey100" />
+                            </v-btn>
+                            <!-- Popup Card -->
+                            <v-card elevation="0" v-if="showPopupp" class="popup-card">
+                                <div class="popup-contentp">
+                                    <div style="display: flex; justify-content: space-between; align-items: center">
+                                        <v-card-title class="title" style="margin: 10px auto; text-align: center">
+                                            <h1>Add New Teacher</h1>
+                                        </v-card-title>
+                                        <v-btn icon color="inherit" @click="closePopup" flat style="transform: translateY(-30px)">
+                                            <XIcon stroke-width="1.5" size="24" class="text-grey100" />
+                                        </v-btn>
+                                    </div>
+                                    <form @submit.prevent="submitForm">
+                                        <div class="formContainer">
+                                            <fieldset class="field1">
+                                                <div class="inputGroup">
+                                                    <input type="text" v-model="form1.cin" autocomplete="off" />
+                                                    <label for="name">{{ t('Cin') }}</label>
+                                                </div>
+                                                <div class="inputGroup">
+                                                    <input type="text" v-model="form1.fullname" autocomplete="off" />
+                                                    <label for="name">{{ t('Fullname') }}</label>
+                                                </div>
+                                                <div class="inputGroup">
+                                                    <input type="email" v-model="form1.email" autocomplete="off" />
+                                                    <label for="name">{{ t('Email') }}</label>
+                                                </div>
+                                            </fieldset>
+                                            <fieldset class="field2">
+                                                <div class="inputGroup">
+                                                    <div class="el-date-picker">
+                                                        <el-date-picker
+                                                            v-model="form1.date_registration"
+                                                            type="datetime"
+                                                            placeholder=" "
+                                                            format="YYYY-MM-DD HH:mm:ss"
+                                                            date-format="MMM DD, YYYY"
+                                                            time-format="HH:mm"
+                                                            class="custom-date-picker"
+                                                        >
+                                                            <template #prev-month>
+                                                                <el-icon><CaretLeft /></el-icon>
+                                                            </template>
+                                                            <template #next-month>
+                                                                <el-icon><CaretRight /></el-icon>
+                                                            </template>
+                                                            <template #prev-year>
+                                                                <el-icon>
+                                                                    <svg
+                                                                        viewBox="0 0 20 20"
+                                                                        version="1.1"
+                                                                        xmlns="http://www.w3.org/2000/svg"
+                                                                    >
+                                                                        <g stroke-width="1" fill-rule="evenodd">
+                                                                            <g fill="currentColor">
+                                                                                <path
+                                                                                    d="M8.73171,16.7949 C9.03264,17.0795 9.50733,17.0663 9.79196,16.7654 ..."
+                                                                                />
+                                                                            </g>
+                                                                        </g>
+                                                                    </svg>
+                                                                </el-icon>
+                                                            </template>
+                                                            <template #next-year>
+                                                                <el-icon>
+                                                                    <svg
+                                                                        viewBox="0 0 20 20"
+                                                                        version="1.1"
+                                                                        xmlns="http://www.w3.org/2000/svg"
+                                                                    >
+                                                                        <g stroke-width="1" fill-rule="evenodd">
+                                                                            <g fill="currentColor">
+                                                                                <path
+                                                                                    d="M11.2654,3.20511 C10.9644,2.92049 10.4897,2.93371 10.2051,3.23464 ..."
+                                                                                />
+                                                                            </g>
+                                                                        </g>
+                                                                    </svg>
+                                                                </el-icon>
+                                                            </template>
+                                                        </el-date-picker>
+                                                        <label for="date-registration">Pick a Date</label>
+                                                    </div>
+                                                </div>
 
-                            <div class="inputGroup">
-                                <input type="text" v-model="form2.adresse"  autocomplete="off" />
-                                <label for="name">{{ t('Adresse') }}</label>
-                            </div>
-                        </fieldset>
+                                                <div class="inputGroup">
+                                                    <input type="number" v-model="form1.tel" autocomplete="off" />
+                                                    <label for="name">Tel</label>
+                                                </div>
+
+                                                <div class="inputGroup">
+                                                    <input type="text" v-model="form1.adresse" autocomplete="off" />
+                                                    <label for="name">{{ t('Adresse') }}</label>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                        <v-btn color="primary" type="submit" id="add">Add</v-btn>
+                                        <v-btn id="add" @click="resetForm1">Cancel</v-btn>
+                                    </form>
+                                </div>
+                            </v-card>
+                        </div>
                     </div>
-                    <v-btn type="submit" color="primary" id="add" @click="updateTeacher(form2.id!)">Update</v-btn>
-                    <v-btn id="add" @click="resetForm2">Cancel</v-btn>
-                </form>
-            </div>
-        </v-card>
-    </v-card>
+                    <v-table class="month-table" style="max-height: 580px">
+                        <thead>
+                            <tr>
+                                <th class="text-subtitle-1 font-weight-bold">{{ t('Cin') }}</th>
+                                <th class="text-subtitle-1 font-weight-bold">{{ t('Fullname') }}</th>
+                                <th class="text-subtitle-1 font-weight-bold">{{ t('Email') }}</th>
+                                <th class="text-subtitle-1 font-weight-bold">{{ t('Date Registration') }}</th>
+                                <th class="text-subtitle-1 font-weight-bold">{{ t('Tel') }}</th>
+                                <th class="text-subtitle-1 font-weight-bold">{{ t('Adresse') }}</th>
+                                <th style="text-align: center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="teacher in filteredTeachers" :key="teacher.id">
+                                <td>{{ teacher.cin }}</td>
+                                <td>{{ teacher.fullname }}</td>
+                                <td>{{ teacher.email }}</td>
+                                <td>{{ formatDate(teacher.date_registration) }}</td>
+                                <td>{{ teacher.tel }}</td>
+                                <td>{{ teacher.adresse }}</td>
+                                <td>
+                                    <div class="d-flex justify-content-center">
+                                        <v-btn
+                                            class="d-flex align-center"
+                                            icon
+                                            color="inherit"
+                                            @click="openUpdatePopup(teacher)"
+                                            style="gap: 12px"
+                                            flat
+                                        >
+                                            <PencilIcon stroke-width="1.5" size="24" class="text-grey100" />
+                                        </v-btn>
+                                        <div>
+                                            <!-- Button to trigger the popup -->
+                                            <v-btn icon color="inherit" style="gap: 12px" @click="showConfirmationDialog(teacher.id)" flat>
+                                                <TrashIcon stroke-width="1.5" size="24" class="text-grey100" />
+                                            </v-btn>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </v-table>
+                </v-card-item>
+                <v-card elevation="0" v-if="showUpdateDialog" class="popup-card">
+                    <div class="popup-contentp">
+                        <div style="display: flex; justify-content: space-between; align-items: center">
+                            <v-card-title class="title" style="margin: 10px auto; text-align: center">
+                                <h1>Edit Teacher</h1>
+                            </v-card-title>
+                            <v-btn icon color="inherit" @click="closePopup_up" flat style="transform: translateY(-30px)">
+                                <XIcon stroke-width="1.5" size="24" class="text-grey100" />
+                            </v-btn>
+                        </div>
+                        <form @submit.prevent="updateTeacher(form2.id!)">
+                            <div class="formContainer">
+                                <fieldset class="field1">
+                                    <div class="inputGroup">
+                                        <input type="text" v-model="form2.cin" autocomplete="off" />
+                                        <label for="name">Cin</label>
+                                    </div>
+                                    <div class="inputGroup">
+                                        <input type="text" v-model="form2.fullname" autocomplete="off" />
+                                        <label for="name">Fullname</label>
+                                    </div>
+                                    <div class="inputGroup">
+                                        <input type="email" v-model="form2.email" autocomplete="off" />
+                                        <label for="name">{{ t('Email') }}</label>
+                                    </div>
+                                </fieldset>
+                                <fieldset class="field2">
+                                    <div class="inputGroup">
+                                        <input type="date" v-model="formattedDate" autocomplete="off" />
+                                    </div>
+                                    <div class="inputGroup">
+                                        <input type="number" v-model="form2.tel" autocomplete="off" />
+                                    </div>
+
+                                    <div class="inputGroup">
+                                        <input type="text" v-model="form2.adresse" autocomplete="off" />
+                                        <label for="name">{{ t('Adresse') }}</label>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <v-btn type="submit" color="primary" id="add" @click="updateTeacher(form2.id!)">Update</v-btn>
+                            <v-btn id="add" @click="resetForm2">Cancel</v-btn>
+                        </form>
+                    </div>
+                </v-card>
+            </v-card>
+        </v-col>
+    </v-row>
 </template>
 
 <style scoped>

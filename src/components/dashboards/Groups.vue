@@ -490,6 +490,13 @@ const showConfirmationDialog = (groupsId: number) => {
 
 <template>
   <v-row>
+    <v-col cols="12" sm="12" lg="12">
+            <v-card elevation="10" style="border-radius: 20px ; height: 4em;">
+                <v-card-item >
+                    <h3 class="d-flex align-center justify-space-between">Groups Management</h3>
+                </v-card-item>
+            </v-card>
+        </v-col>
     <v-col cols="12" sm="12" lg="6" class="mt-5">
       <v-card elevation="10" style="border-radius: 20px">
         <v-card-item>

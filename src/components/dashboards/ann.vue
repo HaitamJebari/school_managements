@@ -323,6 +323,7 @@ const getInitials = (name: string) => {
 </script>
 
 <template>
+    
     <div class="announcements-container">
         <!-- Header with search and actions -->
         <v-card elevation="3" class="header-card mb-6">

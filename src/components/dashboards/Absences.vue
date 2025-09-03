@@ -10,36 +10,36 @@ import { CaretLeft, CaretRight } from '@element-plus/icons-vue';
 
 // Define interfaces
 interface Absence {
-  id: number;
-  module_name: string;
-  student_name: string;
-  absence_date: string;
-  seance: string;
-  justification: string;
+    id: number;
+    module_name: string;
+    student_name: string;
+    absence_date: string;
+    seance: string;
+    justification: string;
 }
 
 interface AbsenceForm {
-  module_name: string;
-  student_name: string;
-  absence_date: string;
-  seance: string;
-  justification: string;
+    module_name: string;
+    student_name: string;
+    absence_date: string;
+    seance: string;
+    justification: string;
 }
 
 interface SummaryItem {
-  module_name?: string;
-  student_name?: string;
-  absence_date?: string;
-  seance?: string;
-  count: number;
+    module_name?: string;
+    student_name?: string;
+    absence_date?: string;
+    seance?: string;
+    count: number;
 }
 
 interface Summary {
-  total: number;
-  byModule: SummaryItem[];
-  byStudent: SummaryItem[];
-  byDate: SummaryItem[];
-  bySeance: SummaryItem[];
+    total: number;
+    byModule: SummaryItem[];
+    byStudent: SummaryItem[];
+    byDate: SummaryItem[];
+    bySeance: SummaryItem[];
 }
 
 const { locale, t } = useI18n();
@@ -241,9 +241,9 @@ const addAbsence = async () => {
         Swal.fire({
             icon: 'success',
             title: 'Absence recorded successfully!',
-             customClass: {
+            customClass: {
                 confirmButton: 'btn btn-success'
-            },
+            }
         });
 
         // Reset form and refresh data
@@ -297,7 +297,7 @@ const deleteAbsence = (id: number) => {
                             title: 'Deleted!',
                             text: 'The absence record has been deleted successfully.',
                             icon: 'success',
-                            confirmButtonText: 'OK',
+                            confirmButtonText: 'OK'
                         });
                         // Update the local data
                         await fetchAbsencesData();
@@ -638,12 +638,12 @@ onMounted(async () => {
 <template>
     <v-row>
         <!-- Header Card -->
-        <v-col cols="12" sm="12" lg="12" class="mt-5">
-            <v-card elevation="10" style="border-radius: 20px">
+        <v-col cols="12" sm="12" lg="12" >
+            <v-card elevation="10" style="border-radius: 20px ; height: 4em;">
                 <v-card-item>
                     <div class="d-flex align-center justify-space-between">
                         <div>
-                            <h5 class="text-h5 mb-1 font-weight-semibold">Absences Management</h5>
+                            <h3 class="d-flex align-center justify-space-between">Absences Management</h3>
                         </div>
                         <div>
                             <v-btn icon color="white" @click="openPopup" size="40" flat>
@@ -1064,9 +1064,8 @@ p {
     outline: none;
 }
 #add {
-     width: 20%;
+    width: 20%;
     margin: 3px;
     box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
 }
 </style>
-
