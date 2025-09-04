@@ -1191,11 +1191,30 @@ app.get("/absences/details", (req, res) => {
     ORDER BY a.absence_date DESC, a.seance ASC
   `;
   
-  db.query(sql, (err, results) => {
+   db.query(sql, (err, results) => {
     if (err) {
-      console.error("Error fetching absences with details:", err);
-      return res.status(500).json({ message: "Failed to fetch absences with details." });
+      console.error("❌ Database error in /absences endpoint:", err);
+      console.error("Error code:", err.code);
+      console.error("Error message:", err.message);
+      console.error("Error sqlMessage:", err.sqlMessage);
+      
+      // Check if table doesn't exist (common issue)
+      if (err.code === 'ER_NO_SUCH_TABLE') {
+        return res.status(500).json({ 
+          message: "Absences table doesn't exist in database",
+          error: err.sqlMessage,
+          solution: "Run CREATE TABLE statement for absences table"
+        });
+      }
+      
+      return res.status(500).json({ 
+        message: "Database query failed",
+        error: err.sqlMessage || err.message,
+        code: err.code
+      });
     }
+    
+    console.log(`✅ Successfully fetched ${results.length} absences`);
     res.status(200).json(results);
   });
 });

@@ -9,39 +9,39 @@ import { CaretLeft, CaretRight } from '@element-plus/icons-vue';
 
 // Define interfaces
 interface RevenueItem {
-  id: number;
-  description: string;
-  amount: number;
-  type: 'income' | 'outcome';
-  category: string;
-  date: string;
+    id: number;
+    description: string;
+    amount: number;
+    type: 'income' | 'outcome';
+    category: string;
+    date: string;
 }
 
 interface RevenueSummary {
-  total_income: number;
-  total_outcome: number;
-  balance: number;
-  income_in_outcome: number;
+    total_income: number;
+    total_outcome: number;
+    balance: number;
+    income_in_outcome: number;
 }
 
 interface MonthlyDataItem {
-  month: string;
-  income: string;
-  outcome: string;
+    month: string;
+    income: string;
+    outcome: string;
 }
 
 interface CategoryDataItem {
-  category: string;
-  type: 'income' | 'outcome';
-  total: string;
+    category: string;
+    type: 'income' | 'outcome';
+    total: string;
 }
 
 interface RevenueForm {
-  description: string;
-  amount: string;
-  type: 'income' | 'outcome';
-  category: string;
-  date: string;
+    description: string;
+    amount: string;
+    type: 'income' | 'outcome';
+    category: string;
+    date: string;
 }
 
 const { locale, t } = useI18n();
@@ -53,60 +53,60 @@ const isLoading = ref(false);
 
 // Revenue form
 const revenueForm = ref<RevenueForm>({
-  description: '',
-  amount: '',
-  type: 'income',
-  category: '',
-  date: new Date().toISOString().substr(0, 10)
+    description: '',
+    amount: '',
+    type: 'income',
+    category: '',
+    date: new Date().toISOString().substr(0, 10)
 });
 
 // Category options
 const categoryOptions = [
-  'Cafeteria',
-  'Sponsorships',
-  'Donations',
-  'Parents',
-  'Tuition Fees',
-  'Books & Supplies',
-  'Salaries',
-  'Utilities',
-  'Maintenance',
-  'Events',
-  'Transportation',
-  'Equipment',
-  'Marketing',
-  'Other'
+    'Cafeteria',
+    'Sponsorships',
+    'Donations',
+    'Parents',
+    'Tuition Fees',
+    'Books & Supplies',
+    'Salaries',
+    'Utilities',
+    'Maintenance',
+    'Events',
+    'Transportation',
+    'Equipment',
+    'Marketing',
+    'Other'
 ];
 
 // Revenue data
 const revenueData = ref<RevenueItem[]>([]);
 const summary = ref<RevenueSummary>({
-  total_income: 0,
-  total_outcome: 0,
-  balance: 0,
-  income_in_outcome: 0
+    total_income: 0,
+    total_outcome: 0,
+    balance: 0,
+    income_in_outcome: 0
 });
 const monthlyData = ref<MonthlyDataItem[]>([]);
 const categoryData = ref<CategoryDataItem[]>([]);
 
 // Computed properties for filtered data
 const filteredRevenueData = computed(() => {
-  if (activeTab.value === 'all') {
-    return revenueData.value;
-  } else {
-    return revenueData.value.filter((item) => item.type === activeTab.value);
-  }
+    if (activeTab.value === 'all') {
+        return revenueData.value;
+    } else {
+        return revenueData.value.filter((item) => item.type === activeTab.value);
+    }
 });
 
 // Open popup method
 const openPopup = async () => {
-  showPopupp.value = true;
-  revenueForm.value.date = new Date().toISOString().substr(0, 10);
+    showPopupp.value = true;
+    revenueForm.value.date = new Date().toISOString().substr(0, 10);
 };
 
 // Close popup method
 const closePopup = () => {
-  showPopupp.value = false;
+    showPopupp.value = false;
 };
 
 const theme = useTheme();
@@ -116,624 +116,616 @@ const success = '#4CAF50';
 
 // Fetch revenue data
 const fetchRevenueData = async () => {
-  try {
-    isLoading.value = true;
-    const response = await axios.get('http://localhost:5000/revenue');
-    revenueData.value = response.data;
-    console.log('Revenue data:', revenueData.value);
-  } catch (error) {
-    console.error('Error fetching revenue data:', error);
-    Swal.fire({
-      icon: 'error',
-      title: 'Loading Error',
-      text: 'Failed to load revenue data. Please refresh the page.',
-      confirmButtonText: 'OK'
-    });
-  } finally {
-    isLoading.value = false;
-  }
+    try {
+        isLoading.value = true;
+        const response = await axios.get('http://localhost:5000/revenue');
+        revenueData.value = response.data;
+        console.log('Revenue data:', revenueData.value);
+    } catch (error) {
+        console.error('Error fetching revenue data:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Loading Error',
+            text: 'Failed to load revenue data. Please refresh the page.',
+            confirmButtonText: 'OK'
+        });
+    } finally {
+        isLoading.value = false;
+    }
 };
 
 // Fetch revenue summary
 const fetchRevenueSummary = async () => {
-  try {
-    isLoading.value = true;
-    const response = await axios.get('http://localhost:5000/revenue/summary');
-    summary.value = response.data.summary;
-    monthlyData.value = response.data.monthly;
-    categoryData.value = response.data.categories;
-
-    // Also fetch income that should be in outcome
     try {
-      const incomeInOutcomeResponse = await axios.get('http://localhost:5000/revenue/income-in-outcome');
-      summary.value.income_in_outcome = incomeInOutcomeResponse.data.total_income_for_outcome;
-    } catch (error) {
-      console.error('Error fetching income in outcome:', error);
-      summary.value.income_in_outcome = 0;
-    }
+        isLoading.value = true;
+        const response = await axios.get('http://localhost:5000/revenue/summary');
+        summary.value = response.data.summary;
+        monthlyData.value = response.data.monthly;
+        categoryData.value = response.data.categories;
 
-    console.log('Revenue summary:', summary.value);
-    console.log('Monthly data:', monthlyData.value);
-    console.log('Category data:', categoryData.value);
-  } catch (error) {
-    console.error('Error fetching revenue summary:', error);
-    Swal.fire({
-      icon: 'error',
-      title: 'Loading Error',
-      text: 'Failed to load revenue summary. Please refresh the page.',
-      confirmButtonText: 'OK'
-    });
-  } finally {
-    isLoading.value = false;
-  }
+        // Also fetch income that should be in outcome
+        try {
+            const incomeInOutcomeResponse = await axios.get('http://localhost:5000/revenue/income-in-outcome');
+            summary.value.income_in_outcome = incomeInOutcomeResponse.data.total_income_for_outcome;
+        } catch (error) {
+            console.error('Error fetching income in outcome:', error);
+            summary.value.income_in_outcome = 0;
+        }
+
+        console.log('Revenue summary:', summary.value);
+        console.log('Monthly data:', monthlyData.value);
+        console.log('Category data:', categoryData.value);
+    } catch (error) {
+        console.error('Error fetching revenue summary:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Loading Error',
+            text: 'Failed to load revenue summary. Please refresh the page.',
+            confirmButtonText: 'OK'
+        });
+    } finally {
+        isLoading.value = false;
+    }
 };
 
 // Add new revenue entry
 const addRevenue = async () => {
-  if (!revenueForm.value.description || !revenueForm.value.amount || !revenueForm.value.date) {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Validation Error',
-      text: 'Description, amount, and date are required',
-      confirmButtonText: 'OK'
-    });
-    return;
-  }
+    if (!revenueForm.value.description || !revenueForm.value.amount || !revenueForm.value.date) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Validation Error',
+            text: 'Description, amount, and date are required',
+            confirmButtonText: 'OK'
+        });
+        return;
+    }
 
-  try {
-    isLoading.value = true;
-    const response = await axios.post('http://localhost:5000/revenue', {
-      description: revenueForm.value.description,
-      amount: parseFloat(revenueForm.value.amount),
-      type: revenueForm.value.type,
-      category: revenueForm.value.category,
-      date: revenueForm.value.date
-    });
+    try {
+        isLoading.value = true;
+        const response = await axios.post('http://localhost:5000/revenue', {
+            description: revenueForm.value.description,
+            amount: parseFloat(revenueForm.value.amount),
+            type: revenueForm.value.type,
+            category: revenueForm.value.category,
+            date: revenueForm.value.date
+        });
 
-    Swal.fire({
-      icon: 'success',
-      title: 'Revenue entry added successfully!',
-      text:
-        revenueForm.value.type === 'income'
-          ? 'Income entry added and will be reflected in both income and outcome calculations.'
-          : 'Revenue entry added successfully.',
-      customClass: {
-        confirmButton: 'btn btn-success'
-      }
-    });
+        Swal.fire({
+            icon: 'success',
+            title: 'Revenue entry added successfully!',
+            text:
+                revenueForm.value.type === 'income'
+                    ? 'Income entry added and will be reflected in both income and outcome calculations.'
+                    : 'Revenue entry added successfully.',
+            customClass: {
+                confirmButton: 'btn btn-success'
+            }
+        });
 
-    // Reset form and refresh data
-    revenueForm.value = {
-      description: '',
-      amount: '',
-      type: 'income',
-      category: '',
-      date: new Date().toISOString().substr(0, 10)
-    };
-    closePopup();
-    await fetchRevenueData();
-    await fetchRevenueSummary();
-  } catch (error: any) {
-    console.error('Error adding revenue entry:', error);
-    Swal.fire({
-      icon: 'error',
-      title: 'Failed to add revenue entry',
-      text: error.response?.data?.message || 'An error occurred',
-      confirmButtonText: 'OK'
-    });
-  } finally {
-    isLoading.value = false;
-  }
+        // Reset form and refresh data
+        revenueForm.value = {
+            description: '',
+            amount: '',
+            type: 'income',
+            category: '',
+            date: new Date().toISOString().substr(0, 10)
+        };
+        closePopup();
+        await fetchRevenueData();
+        await fetchRevenueSummary();
+    } catch (error: any) {
+        console.error('Error adding revenue entry:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Failed to add revenue entry',
+            text: error.response?.data?.message || 'An error occurred',
+            confirmButtonText: 'OK'
+        });
+    } finally {
+        isLoading.value = false;
+    }
 };
 
 // Delete revenue entry
 const deleteRevenue = (id: number) => {
-  const swalWithBootstrapButtons = Swal.mixin({
-    customClass: {
-      confirmButton: 'btn btn-success mx-2',
-      cancelButton: 'btn btn-danger mx-2'
-    },
-    buttonsStyling: false
-  });
-
-  swalWithBootstrapButtons
-    .fire({
-      title: 'Are you sure?',
-      text: 'This action cannot be undone!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'No, cancel!',
-      reverseButtons: true
-    })
-    .then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          isLoading.value = true;
-          const response = await axios.delete(`http://localhost:5000/revenue/${id}`);
-          if (response.status === 200) {
-            swalWithBootstrapButtons.fire({
-              title: 'Deleted!',
-              text: response.data.message || 'The revenue entry has been deleted successfully.',
-              icon: 'success',
-              confirmButtonText: 'OK'
-            });
-            // Update the local data
-            await fetchRevenueData();
-            await fetchRevenueSummary();
-          } else {
-            swalWithBootstrapButtons.fire({
-              title: 'Failed!',
-              text: 'Failed to delete the revenue entry.',
-              icon: 'error',
-              confirmButtonText: 'OK',
-              customClass: {
-                confirmButton: 'btn btn-danger'
-              }
-            });
-          }
-        } catch (error: any) {
-          swalWithBootstrapButtons.fire({
-            title: 'Error!',
-            text: 'Something went wrong during deletion.',
-            icon: 'error',
-            confirmButtonText: 'OK',
-            customClass: {
-              confirmButton: 'btn btn-danger'
-            }
-          });
-        } finally {
-          isLoading.value = false;
-        }
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        swalWithBootstrapButtons.fire({
-          title: 'Cancelled',
-          icon: 'info',
-          confirmButtonText: 'OK',
-          customClass: {
-            confirmButton: 'btn btn-info'
-          }
-        });
-      }
+    const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+            confirmButton: 'btn btn-success mx-2',
+            cancelButton: 'btn btn-danger mx-2'
+        },
+        buttonsStyling: false
     });
+
+    swalWithBootstrapButtons
+        .fire({
+            title: 'Are you sure?',
+            text: 'This action cannot be undone!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, cancel!',
+            reverseButtons: true
+        })
+        .then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    isLoading.value = true;
+                    const response = await axios.delete(`http://localhost:5000/revenue/${id}`);
+                    if (response.status === 200) {
+                        swalWithBootstrapButtons.fire({
+                            title: 'Deleted!',
+                            text: response.data.message || 'The revenue entry has been deleted successfully.',
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        });
+                        // Update the local data
+                        await fetchRevenueData();
+                        await fetchRevenueSummary();
+                    } else {
+                        swalWithBootstrapButtons.fire({
+                            title: 'Failed!',
+                            text: 'Failed to delete the revenue entry.',
+                            icon: 'error',
+                            confirmButtonText: 'OK',
+                            customClass: {
+                                confirmButton: 'btn btn-danger'
+                            }
+                        });
+                    }
+                } catch (error: any) {
+                    swalWithBootstrapButtons.fire({
+                        title: 'Error!',
+                        text: 'Something went wrong during deletion.',
+                        icon: 'error',
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            confirmButton: 'btn btn-danger'
+                        }
+                    });
+                } finally {
+                    isLoading.value = false;
+                }
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                swalWithBootstrapButtons.fire({
+                    title: 'Cancelled',
+                    icon: 'info',
+                    confirmButtonText: 'OK',
+                    customClass: {
+                        confirmButton: 'btn btn-info'
+                    }
+                });
+            }
+        });
 };
 
 // Format currency
 const formatCurrency = (value: number) => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD'
-  }).format(value);
+    return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD'
+    }).format(value);
 };
 
 // Format date
 const formatDate = (dateString: string) => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString();
+    const date = new Date(dateString);
+    return date.toLocaleDateString();
 };
 
 // Chart options for monthly trend
 const monthlyChartOptions = computed(() => {
-  const months = monthlyData.value.map((item) => item.month);
-  const incomeData = monthlyData.value.map((item) => parseFloat(item.income));
-  const outcomeData = monthlyData.value.map((item) => parseFloat(item.outcome));
+    const months = monthlyData.value.map((item) => item.month);
+    const incomeData = monthlyData.value.map((item) => parseFloat(item.income));
+    const outcomeData = monthlyData.value.map((item) => parseFloat(item.outcome));
 
-  return {
-    series: [
-      {
-        name: 'Income',
-        data: incomeData
-      },
-      {
-        name: 'Outcome',
-        data: outcomeData
-      }
-    ],
-    chartOptions: {
-      chart: {
-        type: 'area',
-        height: 350,
-        toolbar: {
-          show: false
+    return {
+        series: [
+            {
+                name: 'Income',
+                data: incomeData
+            },
+            {
+                name: 'Outcome',
+                data: outcomeData
+            }
+        ],
+        chartOptions: {
+            chart: {
+                type: 'area',
+                height: 350,
+                toolbar: {
+                    show: false
+                }
+            },
+            colors: [success, error],
+            dataLabels: {
+                enabled: false
+            },
+            stroke: {
+                curve: 'smooth',
+                width: 2
+            },
+            fill: {
+                type: 'gradient',
+                gradient: {
+                    shadeIntensity: 1,
+                    opacityFrom: 0.7,
+                    opacityTo: 0.3,
+                    stops: [0, 90, 100]
+                }
+            },
+            xaxis: {
+                categories: months,
+                labels: {
+                    style: {
+                        colors: '#a1aab2'
+                    }
+                }
+            },
+            yaxis: {
+                labels: {
+                    style: {
+                        colors: '#a1aab2'
+                    },
+                    formatter: function (value: number) {
+                        return '$' + value.toFixed(0);
+                    }
+                }
+            },
+            tooltip: {
+                y: {
+                    formatter: function (value: number) {
+                        return '$' + value.toFixed(2);
+                    }
+                }
+            }
         }
-      },
-      colors: [success, error],
-      dataLabels: {
-        enabled: false
-      },
-      stroke: {
-        curve: 'smooth',
-        width: 2
-      },
-      fill: {
-        type: 'gradient',
-        gradient: {
-          shadeIntensity: 1,
-          opacityFrom: 0.7,
-          opacityTo: 0.3,
-          stops: [0, 90, 100]
-        }
-      },
-      xaxis: {
-        categories: months,
-        labels: {
-          style: {
-            colors: '#a1aab2'
-          }
-        }
-      },
-      yaxis: {
-        labels: {
-          style: {
-            colors: '#a1aab2'
-          },
-          formatter: function (value: number) {
-            return '$' + value.toFixed(0);
-          }
-        }
-      },
-      tooltip: {
-        y: {
-          formatter: function (value: number) {
-            return '$' + value.toFixed(2);
-          }
-        }
-      }
-    }
-  };
+    };
 });
 
 // Chart options for category breakdown
 const categoryChartOptions = computed(() => {
-  // Process category data
-  const incomeCategories = categoryData.value
-    .filter((item) => item.type === 'income')
-    .map((item) => ({ name: item.category || 'Uncategorized', value: parseFloat(item.total) }));
+    // Process category data
+    const incomeCategories = categoryData.value
+        .filter((item) => item.type === 'income')
+        .map((item) => ({ name: item.category || 'Uncategorized', value: parseFloat(item.total) }));
 
-  const outcomeCategories = categoryData.value
-    .filter((item) => item.type === 'outcome')
-    .map((item) => ({ name: item.category || 'Uncategorized', value: parseFloat(item.total) }));
+    const outcomeCategories = categoryData.value
+        .filter((item) => item.type === 'outcome')
+        .map((item) => ({ name: item.category || 'Uncategorized', value: parseFloat(item.total) }));
 
-  return {
-    incomePieOptions: {
-      series: incomeCategories.map((item) => item.value),
-      chartOptions: {
-        chart: {
-          type: 'donut',
-          height: 240
-        },
-        labels: incomeCategories.map((item) => item.name),
-        colors: ['#4CAF50', '#8BC34A', '#CDDC39', '#FFC107', '#FF9800', '#FF5722'],
-        legend: {
-          position: 'bottom'
-        },
-        dataLabels: {
-          enabled: false
-        },
-        tooltip: {
-          y: {
-            formatter: function (value: number) {
-              return '$' + value.toFixed(2);
+    return {
+        incomePieOptions: {
+            series: incomeCategories.map((item) => item.value),
+            chartOptions: {
+                chart: {
+                    type: 'donut',
+                    height: 240
+                },
+                labels: incomeCategories.map((item) => item.name),
+                colors: ['#4CAF50', '#8BC34A', '#CDDC39', '#FFC107', '#FF9800', '#FF5722'],
+                legend: {
+                    position: 'bottom'
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                tooltip: {
+                    y: {
+                        formatter: function (value: number) {
+                            return '$' + value.toFixed(2);
+                        }
+                    }
+                }
             }
-          }
-        }
-      }
-    },
-    outcomePieOptions: {
-      series: outcomeCategories.map((item) => item.value),
-      chartOptions: {
-        chart: {
-          type: 'donut',
-          height: 240
         },
-        labels: outcomeCategories.map((item) => item.name),
-        colors: ['#F44336', '#E91E63', '#9C27B0', '#673AB7', '#3F51B5', '#2196F3'],
-        legend: {
-          position: 'bottom'
-        },
-        dataLabels: {
-          enabled: false
-        },
-        tooltip: {
-          y: {
-            formatter: function (value: number) {
-              return '$' + value.toFixed(2);
+        outcomePieOptions: {
+            series: outcomeCategories.map((item) => item.value),
+            chartOptions: {
+                chart: {
+                    type: 'donut',
+                    height: 240
+                },
+                labels: outcomeCategories.map((item) => item.name),
+                colors: ['#F44336', '#E91E63', '#9C27B0', '#673AB7', '#3F51B5', '#2196F3'],
+                legend: {
+                    position: 'bottom'
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                tooltip: {
+                    y: {
+                        formatter: function (value: number) {
+                            return '$' + value.toFixed(2);
+                        }
+                    }
+                }
             }
-          }
         }
-      }
-    }
-  };
+    };
 });
 
 // Submit form
 const submitForm = () => {
-  addRevenue();
+    addRevenue();
 };
 
 // Reset form
 const resetForm = () => {
-  revenueForm.value = {
-    description: '',
-    amount: '',
-    type: 'income',
-    category: '',
-    date: new Date().toISOString().substr(0, 10)
-  };
+    revenueForm.value = {
+        description: '',
+        amount: '',
+        type: 'income',
+        category: '',
+        date: new Date().toISOString().substr(0, 10)
+    };
 };
 
 // Set active tab
 const setActiveTab = (tab: string) => {
-  activeTab.value = tab;
+    activeTab.value = tab;
 };
 
 // Computed property for combined outcome total (including income)
 const combinedOutcomeTotal = computed(() => {
-  return summary.value.total_outcome + summary.value.income_in_outcome;
+    return summary.value.total_outcome + summary.value.income_in_outcome;
 });
 
 onMounted(async () => {
-  await fetchRevenueData();
-  await fetchRevenueSummary();
+    await fetchRevenueData();
+    await fetchRevenueSummary();
 });
 </script>
 
 <template>
-  <v-row>
-    <!-- Loading overlay -->
-    <v-overlay v-model="isLoading" class="align-center justify-center">
-      <v-progress-circular indeterminate size="64"></v-progress-circular>
-    </v-overlay>
+    <v-row>
+        <!-- Loading overlay -->
+        <v-overlay v-model="isLoading" class="align-center justify-center">
+            <v-progress-circular indeterminate size="64"></v-progress-circular>
+        </v-overlay>
 
-    <!-- Header Card -->
-    <v-col cols="12" sm="12" lg="12" class="mt-5">
-      <v-card elevation="10" style="border-radius: 20px">
-        <v-card-item>
-          <div class="d-flex align-center justify-space-between">
-            <div>
-              <h5 class="text-h5 mb-1 font-weight-semibold">Financials Management</h5>
-            </div>
-            <div>
-              <!-- Add Button -->
-              <v-btn icon color="white" @click="openPopup" size="40" flat>
-                <PlusIcon stroke-width="1.5" size="40" style="color: black" />
-              </v-btn>
-            </div>
-          </div>
-        </v-card-item>
-      </v-card>
-    </v-col>
+        <!-- Header Card -->
+        <v-col cols="12" sm="12" lg="12">
+            <v-card elevation="10" style="border-radius: 20px; height: 4em">
+                <div class="d-flex align-center justify-space-between">
+                    <v-card-item>
+                        <h3 class="d-flex align-center justify-space-between">Financials Management</h3>
+                    </v-card-item>
+                    <v-card-item>
+                        <v-btn icon color="white" @click="openPopup" size="30" flat>
+                            <PlusIcon stroke-width="1.5" size="30" style="color: black" />
+                        </v-btn>
+                    </v-card-item>
+                </div>
+            </v-card>
+        </v-col>
 
-    <!-- Summary Cards -->
-    <v-col cols="12" sm="12" md="4">
-      <v-card elevation="10" style="border-radius: 20px; background-color: #4caf50; color: white">
-        <v-card-item>
-          <div class="d-flex align-center">
-            <div class="mr-4">
-              <CashIcon stroke-width="1.5" size="48" />
-            </div>
-            <div>
-              <h6 class="text-subtitle-1 mb-1">Total Income</h6>
-              <h4 class="text-h4 font-weight-bold">{{ formatCurrency(summary.total_income) }}</h4>
-            </div>
-          </div>
-        </v-card-item>
-      </v-card>
-    </v-col>
+        <!-- Summary Cards -->
+        <v-col cols="12" sm="12" md="4">
+            <v-card elevation="10" style="border-radius: 20px; background-color: #4caf50; color: white">
+                <v-card-item>
+                    <div class="d-flex align-center">
+                        <div class="mr-4">
+                            <CashIcon stroke-width="1.5" size="48" />
+                        </div>
+                        <div>
+                            <h6 class="text-subtitle-1 mb-1">Total Income</h6>
+                            <h4 class="text-h4 font-weight-bold">{{ formatCurrency(summary.total_income) }}</h4>
+                        </div>
+                    </div>
+                </v-card-item>
+            </v-card>
+        </v-col>
 
-    <v-col cols="12" sm="12" md="4">
-      <v-card elevation="10" style="border-radius: 20px; background-color: #f44336; color: white">
-        <v-card-item>
-          <div class="d-flex align-center">
-            <div class="mr-4">
-              <CreditCardIcon stroke-width="1.5" size="48" />
-            </div>
-            <div>
-              <h6 class="text-subtitle-1 mb-1">Total Outcome</h6>
-              <h4 class="text-h4 font-weight-bold">{{ formatCurrency(summary.total_outcome) }}</h4>
-              <p class="text-caption" v-if="summary.income_in_outcome > 0">
-                Including income: {{ formatCurrency(combinedOutcomeTotal) }}
-              </p>
-            </div>
-          </div>
-        </v-card-item>
-      </v-card>
-    </v-col>
+        <v-col cols="12" sm="12" md="4">
+            <v-card elevation="10" style="border-radius: 20px; background-color: #f44336; color: white">
+                <v-card-item>
+                    <div class="d-flex align-center">
+                        <div class="mr-4">
+                            <CreditCardIcon stroke-width="1.5" size="48" />
+                        </div>
+                        <div>
+                            <h6 class="text-subtitle-1 mb-1">Total Outcome</h6>
+                            <h4 class="text-h4 font-weight-bold">{{ formatCurrency(summary.total_outcome) }}</h4>
+                            <p class="text-caption" v-if="summary.income_in_outcome > 0">
+                                Including income: {{ formatCurrency(combinedOutcomeTotal) }}
+                            </p>
+                        </div>
+                    </div>
+                </v-card-item>
+            </v-card>
+        </v-col>
 
-    <v-col cols="12" sm="12" md="4">
-      <v-card elevation="10" style="border-radius: 20px; background-color: #2196f3; color: white">
-        <v-card-item>
-          <div class="d-flex align-center">
-            <div class="mr-4">
-              <WalletIcon stroke-width="1.5" size="48" />
-            </div>
-            <div>
-              <h6 class="text-subtitle-1 mb-1">Balance</h6>
-              <h4 class="text-h4 font-weight-bold">{{ formatCurrency(summary.balance) }}</h4>
-            </div>
-          </div>
-        </v-card-item>
-      </v-card>
-    </v-col>
+        <v-col cols="12" sm="12" md="4">
+            <v-card elevation="10" style="border-radius: 20px; background-color: #2196f3; color: white">
+                <v-card-item>
+                    <div class="d-flex align-center">
+                        <div class="mr-4">
+                            <WalletIcon stroke-width="1.5" size="48" />
+                        </div>
+                        <div>
+                            <h6 class="text-subtitle-1 mb-1">Balance</h6>
+                            <h4 class="text-h4 font-weight-bold">{{ formatCurrency(summary.balance) }}</h4>
+                        </div>
+                    </div>
+                </v-card-item>
+            </v-card>
+        </v-col>
 
-    <!-- Monthly Trend Chart -->
-    <v-col cols="12" sm="12" lg="8">
-      <v-card elevation="10" style="border-radius: 20px">
-        <v-card-item>
-          <div class="d-flex align-center justify-space-between mb-4">
-            <div>
-              <h5 class="text-h6 font-weight-semibold">Monthly Financials Trend</h5>
-            </div>
-          </div>
-          <div v-if="monthlyData.length > 0">
-            <apexchart
-              type="area"
-              height="350"
-              :options="monthlyChartOptions.chartOptions"
-              :series="monthlyChartOptions.series"
-            ></apexchart>
-          </div>
-          <div v-else class="text-center py-8">
-            <p>No monthly data available</p>
-          </div>
-        </v-card-item>
-      </v-card>
-    </v-col>
+        <!-- Monthly Trend Chart -->
+        <v-col cols="12" sm="12" lg="8">
+            <v-card elevation="10" style="border-radius: 20px">
+                <v-card-item>
+                    <div class="d-flex align-center justify-space-between mb-4">
+                        <div>
+                            <h5 class="text-h6 font-weight-semibold">Monthly Financials Trend</h5>
+                        </div>
+                    </div>
+                    <div v-if="monthlyData.length > 0">
+                        <apexchart
+                            type="area"
+                            height="350"
+                            :options="monthlyChartOptions.chartOptions"
+                            :series="monthlyChartOptions.series"
+                        ></apexchart>
+                    </div>
+                    <div v-else class="text-center py-8">
+                        <p>No monthly data available</p>
+                    </div>
+                </v-card-item>
+            </v-card>
+        </v-col>
 
-    <!-- Category Breakdown Charts -->
-    <v-col cols="12" sm="12" lg="4">
-      <v-card elevation="10" style="border-radius: 20px">
-        <v-card-item>
-          <div v-if="categoryData.length > 0">
-            <div class="mb-6">
-              <apexchart
-                type="donut"
-                height="240"
-                :options="categoryChartOptions.incomePieOptions.chartOptions"
-                :series="categoryChartOptions.incomePieOptions.series"
-              ></apexchart>
-            </div>
-            <div>
-              <apexchart
-                type="donut"
-                height="240"
-                :options="categoryChartOptions.outcomePieOptions.chartOptions"
-                :series="categoryChartOptions.outcomePieOptions.series"
-              ></apexchart>
-            </div>
-            </div>
-          <div v-else class="text-center py-8">
-            <p>No category data available</p>
-          </div>
-        </v-card-item>
-      </v-card>
-    </v-col>
+        <!-- Category Breakdown Charts -->
+        <v-col cols="12" sm="12" lg="4">
+            <v-card elevation="10" style="border-radius: 20px">
+                <v-card-item>
+                    <div v-if="categoryData.length > 0">
+                        <div class="mb-6">
+                            <apexchart
+                                type="donut"
+                                height="240"
+                                :options="categoryChartOptions.incomePieOptions.chartOptions"
+                                :series="categoryChartOptions.incomePieOptions.series"
+                            ></apexchart>
+                        </div>
+                        <div>
+                            <apexchart
+                                type="donut"
+                                height="240"
+                                :options="categoryChartOptions.outcomePieOptions.chartOptions"
+                                :series="categoryChartOptions.outcomePieOptions.series"
+                            ></apexchart>
+                        </div>
+                    </div>
+                    <div v-else class="text-center py-8">
+                        <p>No category data available</p>
+                    </div>
+                </v-card-item>
+            </v-card>
+        </v-col>
 
-    <!-- Revenue Entries Tabs -->
-    <v-col cols="12">
-      <v-card elevation="10" style="border-radius: 20px">
-        <v-card-item>
-          <div class="d-flex align-center justify-space-between mb-4">
-            <div>
-              <h5 class="text-h6 font-weight-semibold">Financials Entries</h5>
-            </div>
-            <div>
-              <v-btn-toggle v-model="activeTab" mandatory>
-                <v-btn value="all" color="primary" variant="text">All</v-btn>
-                <v-btn value="income" color="success" variant="text">Income</v-btn>
-                <v-btn value="outcome" color="error" variant="text">Outcome</v-btn>
-              </v-btn-toggle>
-            </div>
-          </div>
+        <!-- Revenue Entries Tabs -->
+        <v-col cols="12">
+            <v-card elevation="10" style="border-radius: 20px">
+                <v-card-item>
+                    <div class="d-flex align-center justify-space-between mb-4">
+                        <div>
+                            <h5 class="text-h6 font-weight-semibold">Financials Entries</h5>
+                        </div>
+                        <div>
+                            <v-btn-toggle v-model="activeTab" mandatory>
+                                <v-btn value="all" color="primary" variant="text">All</v-btn>
+                                <v-btn value="income" color="success" variant="text">Income</v-btn>
+                                <v-btn value="outcome" color="error" variant="text">Outcome</v-btn>
+                            </v-btn-toggle>
+                        </div>
+                    </div>
 
-          <v-table>
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Description</th>
-                <th>Category</th>
-                <th>Amount</th>
-                <th>Type</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="item in filteredRevenueData" :key="item.id">
-                <td>{{ formatDate(item.date) }}</td>
-                <td>{{ item.description }}</td>
-                <td>{{ item.category || 'Uncategorized' }}</td>
-                <td :class="item.type === 'income' ? 'text-success' : 'text-error'">
-                  {{ formatCurrency(item.amount) }}
-                </td>
-                <td>
-                  <v-chip :color="item.type === 'income' ? 'success' : 'error'" text-color="white" size="small">
-                    {{ item.type }}
-                  </v-chip>
-                </td>
-                <td>
-                  <v-btn icon variant="text" color="error" @click="deleteRevenue(item.id)">
-                    <TrashIcon stroke-width="1.5" size="20" />
-                  </v-btn>
-                </td>
-              </tr>
-              <tr v-if="filteredRevenueData.length === 0">
-                <td colspan="6" class="text-center py-4">No entries found</td>
-              </tr>
-            </tbody>
-          </v-table>
-        </v-card-item>
-      </v-card>
-    </v-col>
+                    <v-table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Description</th>
+                                <th>Category</th>
+                                <th>Amount</th>
+                                <th>Type</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="item in filteredRevenueData" :key="item.id">
+                                <td>{{ formatDate(item.date) }}</td>
+                                <td>{{ item.description }}</td>
+                                <td>{{ item.category || 'Uncategorized' }}</td>
+                                <td :class="item.type === 'income' ? 'text-success' : 'text-error'">
+                                    {{ formatCurrency(item.amount) }}
+                                </td>
+                                <td>
+                                    <v-chip :color="item.type === 'income' ? 'success' : 'error'" text-color="white" size="small">
+                                        {{ item.type }}
+                                    </v-chip>
+                                </td>
+                                <td>
+                                    <v-btn icon variant="text" color="error" @click="deleteRevenue(item.id)">
+                                        <TrashIcon stroke-width="1.5" size="20" />
+                                    </v-btn>
+                                </td>
+                            </tr>
+                            <tr v-if="filteredRevenueData.length === 0">
+                                <td colspan="6" class="text-center py-4">No entries found</td>
+                            </tr>
+                        </tbody>
+                    </v-table>
+                </v-card-item>
+            </v-card>
+        </v-col>
 
-    <!-- Add Revenue Popup -->
-    <v-col cols="12" sm="12" lg="4" class="d-flex align-center justify-center">
-      <v-card elevation="0" v-if="showPopupp" class="popup-card" style="z-index: 10">
-        <div class="popup-contentp">
-          <div style="display: flex; justify-content: space-between; align-items: center">
-            <v-card-title class="title" style="margin: 10px auto; text-align: center">
-              <h1>Add Income / Outcome</h1>
-            </v-card-title>
-            <v-btn icon color="inherit" @click="closePopup" flat style="transform: translateY(-30px)">
-              <XIcon stroke-width="1.5" size="24" class="text-grey100" />
-            </v-btn>
-          </div>
-          <form @submit.prevent="submitForm">
-            <fieldset class="field1">
-              <div class="inputGroup">
-                <input type="text" id="Description" v-model="revenueForm.description" autocomplete="off" />
-                <label for="Description">Description</label>
-              </div>
-            </fieldset>
-            <fieldset class="field2">
-              <div class="inputGroup">
-                <input type="number" id="Amount" v-model="revenueForm.amount" autocomplete="off" />
-                <label for="Amount">Amount</label>
-              </div>
-            </fieldset>
-            <fieldset class="field3">
-              <div class="inputGroup">
-                <select id="type" v-model="revenueForm.type" class="select-input">
-                  <option value="" disabled>Select Type</option>
-                  <option value="income">Income</option>
-                  <option value="outcome">Outcome</option>
-                </select>
-                <label for="type">Type</label>
-              </div>
-            </fieldset>
-            <fieldset class="field3">
-              <div class="inputGroup">
-                <select id="category" v-model="revenueForm.category" class="select-input">
-                  <option value="" disabled>Select Category</option>
-                  <option v-for="(option, index) in categoryOptions" :key="index" :value="option">
-                    {{ option }}
-                  </option>
-                </select>
-                <label for="category">Category</label>
-              </div>
-            </fieldset>
-            <fieldset class="field3">
-              <div class="inputGroup">
-                <input type="date" v-model="revenueForm.date" autocomplete="off" />
-                <label for="date">Date</label>
-              </div>
-            </fieldset>
+        <!-- Add Revenue Popup -->
+        <v-col cols="12" sm="12" lg="4" class="d-flex align-center justify-center">
+            <v-card elevation="0" v-if="showPopupp" class="popup-card" style="z-index: 10">
+                <div class="popup-contentp">
+                    <div style="display: flex; justify-content: space-between; align-items: center">
+                        <v-card-title class="title" style="margin: 10px auto; text-align: center">
+                            <h1>Add Income / Outcome</h1>
+                        </v-card-title>
+                        <v-btn icon color="inherit" @click="closePopup" flat style="transform: translateY(-30px)">
+                            <XIcon stroke-width="1.5" size="24" class="text-grey100" />
+                        </v-btn>
+                    </div>
+                    <form @submit.prevent="submitForm">
+                        <fieldset class="field1">
+                            <div class="inputGroup">
+                                <input type="text" id="Description" v-model="revenueForm.description" autocomplete="off" />
+                                <label for="Description">Description</label>
+                            </div>
+                        </fieldset>
+                        <fieldset class="field2">
+                            <div class="inputGroup">
+                                <input type="number" id="Amount" v-model="revenueForm.amount" autocomplete="off" />
+                                <label for="Amount">Amount</label>
+                            </div>
+                        </fieldset>
+                        <fieldset class="field3">
+                            <div class="inputGroup">
+                                <select id="type" v-model="revenueForm.type" class="select-input">
+                                    <option value="" disabled>Select Type</option>
+                                    <option value="income">Income</option>
+                                    <option value="outcome">Outcome</option>
+                                </select>
+                                <label for="type">Type</label>
+                            </div>
+                        </fieldset>
+                        <fieldset class="field3">
+                            <div class="inputGroup">
+                                <select id="category" v-model="revenueForm.category" class="select-input">
+                                    <option value="" disabled>Select Category</option>
+                                    <option v-for="(option, index) in categoryOptions" :key="index" :value="option">
+                                        {{ option }}
+                                    </option>
+                                </select>
+                                <label for="category">Category</label>
+                            </div>
+                        </fieldset>
+                        <fieldset class="field3">
+                            <div class="inputGroup">
+                                <input type="date" v-model="revenueForm.date" autocomplete="off" />
+                                <label for="date">Date</label>
+                            </div>
+                        </fieldset>
 
-            <v-btn
-              :color="revenueForm.type === 'income' ? 'primary' : 'error'"
-              type="submit"
-              id="add"
-            >
-              Add {{ revenueForm.type === 'income' ? 'Income' : 'Outcome' }}
-            </v-btn>
-            <v-btn id="add" class="cancel-btn" @click="resetForm">Cancel</v-btn>
-          </form>
-        </div>
-      </v-card>
-    </v-col>
-  </v-row>
+                        <v-btn :color="revenueForm.type === 'income' ? 'primary' : 'error'" type="submit" id="add">
+                            Add {{ revenueForm.type === 'income' ? 'Income' : 'Outcome' }}
+                        </v-btn>
+                        <v-btn id="add" class="cancel-btn" @click="resetForm">Cancel</v-btn>
+                    </form>
+                </div>
+            </v-card>
+        </v-col>
+    </v-row>
 </template>
 <style scoped>
-
 .inside-card {
     padding: 1em;
 }
@@ -751,7 +743,6 @@ p {
     font-family: 'Poppins', sans-serif;
     margin: 0.3em 0;
 }
-
 
 .total {
     display: flex;
@@ -870,7 +861,8 @@ p {
     max-width: 100%;
     position: relative;
 }
-.inputGroup input, .inputGroup .select-input {
+.inputGroup input,
+.inputGroup .select-input {
     width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
@@ -888,8 +880,9 @@ p {
     font-size: 14px;
     color: #666;
 }
-.inputGroup input:focus, .inputGroup .select-input:focus {
-    border-color: #2196F3;
+.inputGroup input:focus,
+.inputGroup .select-input:focus {
+    border-color: #2196f3;
     outline: none;
 }
 .inputGroup :is(input:focus, input:valid) ~ label {
@@ -1021,4 +1014,3 @@ p {
     border-radius: 20px;
 }
 </style>
-

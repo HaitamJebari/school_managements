@@ -639,19 +639,17 @@ onMounted(async () => {
     <v-row>
         <!-- Header Card -->
         <v-col cols="12" sm="12" lg="12" >
-            <v-card elevation="10" style="border-radius: 20px ; height: 4em;">
-                <v-card-item>
+            <v-card elevation="10" style="border-radius: 20px ; height: 4em;">                
                     <div class="d-flex align-center justify-space-between">
-                        <div>
+                        <v-card-item>
                             <h3 class="d-flex align-center justify-space-between">Absences Management</h3>
-                        </div>
-                        <div>
-                            <v-btn icon color="white" @click="openPopup" size="40" flat>
-                                <PlusIcon stroke-width="1.5" size="40" style="color: black" />
+                        </v-card-item>
+                        <v-card-item>
+                            <v-btn icon color="white" @click="openPopup" size="30" flat>
+                                <PlusIcon stroke-width="1.5" size="30" style="color: black" />
                             </v-btn>
-                        </div>
-                    </div>
-                </v-card-item>
+                        </v-card-item>
+                    </div>                
             </v-card>
         </v-col>
 

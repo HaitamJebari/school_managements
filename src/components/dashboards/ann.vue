@@ -323,187 +323,180 @@ const getInitials = (name: string) => {
 </script>
 
 <template>
-    
-    <div class="announcements-container">
+    <v-row>
+        <v-col cols="12" sm="12" lg="12">
+            <v-card elevation="10" style="border-radius: 20px; height: 4em ">
+                <v-card-item>
+                    <h3 class="d-flex align-center justify-space-between">Announcements Management</h3>
+                </v-card-item>
+            </v-card>
+        </v-col>
         <!-- Header with search and actions -->
-        <v-card elevation="3" class="header-card mb-6">
-            <v-card-item>
-                <div class="d-flex flex-wrap align-center justify-space-between gap-4">
-                    <!-- Left side: Title and search -->
-                    <div class="d-flex flex-column flex-sm-row align-start align-sm-center gap-4">
-                        <div class="search-container">
-                            <div class="search-wrapper">
-                                <SearchIcon class="search-icon" />
-                                <input v-model="searchQuery" type="text" placeholder="Search announcements..." class="search-input" />
+        <v-col cols="12" sm="12" lg="12">
+            <v-card elevation="3" class="header-card mb-6">
+                <v-card-item>
+                    <div class="d-flex flex-wrap align-center justify-space-between gap-4">
+                        <!-- Left side: Title and search -->
+                        <div class="d-flex flex-column flex-sm-row align-start align-sm-center gap-4">
+                            <div class="search-container">
+                                <div class="search-wrapper">
+                                    <SearchIcon class="search-icon" />
+                                    <input v-model="searchQuery" type="text" placeholder="Search announcements..." class="search-input" />
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Right side: Actions -->
-                    <div class="d-flex align-center gap-3">
-                        <div class="selection-controls d-flex align-center" v-if="announcements.length > 0">
-                            <v-btn
-                                v-if="selectedAnnouncements.length > 0"
-                                color="error"
-                                variant="tonal"
-                                size="small"
-                                class="ms-2"
-                                @click="deleteSelectedAnnouncements"
-                                :loading="loading"
-                            >
-                                <TrashIcon class="me-1" size="16" />
-                                Delete ({{ selectedAnnouncements.length }})
+                        <!-- Right side: Actions -->
+                        <div class="d-flex align-center gap-3">
+                            <div class="selection-controls d-flex align-center" v-if="announcements.length > 0">
+                                <v-btn
+                                    v-if="selectedAnnouncements.length > 0"
+                                    color="error"
+                                    variant="tonal"
+                                    size="small"
+                                    class="ms-2"
+                                    @click="deleteSelectedAnnouncements"
+                                    :loading="loading"
+                                >
+                                    <TrashIcon class="me-1" size="16" />
+                                    Delete ({{ selectedAnnouncements.length }})
+                                </v-btn>
+                            </div>
+
+                            <v-btn color="primary" variant="elevated" @click="openPopup" :loading="loading" class="add-btn">
+                                <PlusIcon class="me-1" size="18" />
+                                New Announcement
                             </v-btn>
                         </div>
+                    </div>
+                </v-card-item>
+            </v-card>
 
-                        <v-btn color="primary" variant="elevated" @click="openPopup" :loading="loading" class="add-btn">
-                            <PlusIcon class="me-1" size="18" />
+            <!-- Loading indicator -->
+            <div v-if="loading" class="text-center py-8">
+                <v-progress-circular indeterminate color="primary" size="50"></v-progress-circular>
+                <p class="mt-4 text-body-1">Loading announcements...</p>
+            </div>
+
+            <!-- Empty state -->
+            <v-card v-else-if="announcements.length === 0" elevation="1" class="empty-state text-center py-8">
+                <v-card-item>
+                    <div class="d-flex flex-column align-center">
+                        <v-icon icon="mdi-bell-off" size="64" color="grey-lighten-1" class="mb-4"></v-icon>
+                        <h3 class="text-h5 font-weight-medium mb-2">No Announcements Yet</h3>
+                        <p class="text-body-1 text-grey mb-4">Create your first announcement to get started</p>
+                        <v-btn color="primary" @click="openPopup">
+                            <PlusIcon class="me-1" />
                             New Announcement
                         </v-btn>
                     </div>
-                </div>
-            </v-card-item>
-        </v-card>
+                </v-card-item>
+            </v-card>
 
-        <!-- Loading indicator -->
-        <div v-if="loading" class="text-center py-8">
-            <v-progress-circular indeterminate color="primary" size="50"></v-progress-circular>
-            <p class="mt-4 text-body-1">Loading announcements...</p>
-        </div>
-
-        <!-- Empty state -->
-        <v-card v-else-if="announcements.length === 0" elevation="1" class="empty-state text-center py-8">
-            <v-card-item>
-                <div class="d-flex flex-column align-center">
-                    <v-icon icon="mdi-bell-off" size="64" color="grey-lighten-1" class="mb-4"></v-icon>
-                    <h3 class="text-h5 font-weight-medium mb-2">No Announcements Yet</h3>
-                    <p class="text-body-1 text-grey mb-4">Create your first announcement to get started</p>
-                    <v-btn color="primary" @click="openPopup">
-                        <PlusIcon class="me-1" />
-                        New Announcement
-                    </v-btn>
-                </div>
-            </v-card-item>
-        </v-card>
-
-        <!-- Announcements list -->
-        <div v-else class="announcements-list">
-            <v-card
-                v-for="announcement in filteredAnnouncements"
-                :key="announcement.id"
-                elevation="2"
-                class="announcement-card mb-4"
-                :class="{ selected: announcement.selected }"
-            >
-                <div class="d-flex">
-                    <!-- Selection checkbox -->
-                    <div class="selection-column pa-4 d-flex align-start">
-                        <v-checkbox
-                            v-model="announcement.selected"
-                            @change="toggleSelection(announcement.id)"
-                            density="compact"
-                            hide-details
-                            color="primary"
-                        ></v-checkbox>
-                    </div>
-
-                    <!-- Avatar -->
-                    <div class="avatar-column pa-4 d-flex justify-center">
-                        <div :class="['avatar-circle', getAvatarColor(announcement.author_name)]">
-                            {{ getInitials(announcement.author_name) }}
+            <!-- Announcements list -->
+            <div v-else class="announcements-list">
+                <v-card
+                    v-for="announcement in filteredAnnouncements"
+                    :key="announcement.id"
+                    elevation="2"
+                    class="announcement-card mb-4"
+                    :class="{ selected: announcement.selected }"
+                >
+                    <div class="d-flex">
+                        <!-- Selection checkbox -->
+                        <div class="selection-column pa-4 d-flex align-start">
+                            <v-checkbox
+                                v-model="announcement.selected"
+                                @change="toggleSelection(announcement.id)"
+                                density="compact"
+                                hide-details
+                                color="primary"
+                            ></v-checkbox>
                         </div>
-                    </div>
 
-                    <!-- Content -->
-                    <div class="content-column pa-4">
-                        <div class="d-flex justify-space-between align-center mb-2">
-                            <h3 class="text-h6 font-weight-bold mb-0">{{ announcement.title }}</h3>
-
-                            <div class="d-flex">
-                                <v-btn
-                                    icon
-                                    variant="text"
-                                    size="small"
-                                    color="error"
-                                    @click="showConfirmationDialog(announcement.id)"
-                                    class="ms-2"
-                                >
-                                    <TrashIcon size="18" />
-                                </v-btn>
+                        <!-- Avatar -->
+                        <div class="avatar-column pa-4 d-flex justify-center">
+                            <div :class="['avatar-circle', getAvatarColor(announcement.author_name)]">
+                                {{ getInitials(announcement.author_name) }}
                             </div>
                         </div>
 
-                        <div class="d-flex align-center mb-3">
-                            <UserIcon size="16" class="text-grey me-1" />
-                            <span class="text-subtitle-2 font-weight-medium me-4">{{ announcement.author_name }}</span>
+                        <!-- Content -->
+                        <div class="content-column pa-4">
+                            <div class="d-flex justify-space-between align-center mb-2">
+                                <h3 class="text-h6 font-weight-bold mb-0">{{ announcement.title }}</h3>
+
+                                <div class="d-flex">
+                                    <v-btn
+                                        icon
+                                        variant="text"
+                                        size="small"
+                                        color="error"
+                                        @click="showConfirmationDialog(announcement.id)"
+                                        class="ms-2"
+                                    >
+                                        <TrashIcon size="18" />
+                                    </v-btn>
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-center mb-3">
+                                <UserIcon size="16" class="text-grey me-1" />
+                                <span class="text-subtitle-2 font-weight-medium me-4">{{ announcement.author_name }}</span>
+                            </div>
+
+                            <p class="announcement-content text-body-1">
+                                {{ announcement.content }}
+                            </p>
                         </div>
-
-                        <p class="announcement-content text-body-1">
-                            {{ announcement.content }}
-                        </p>
                     </div>
-                </div>
-            </v-card>
-        </div>
+                </v-card>
+            </div>
 
-        <!-- Add Announcement Dialog -->
-        <v-col cols="12" sm="12" lg="4" class="d-flex align-center justify-center">
-            <v-card elevation="0" v-if="showPopup" class="popup-card" style="z-index: 10">
-                <div class="popup-contentp">
-                    <div style="display: flex; justify-content: space-between; align-items: center">
-                        <v-card-title class="title" style="margin: 10px auto; text-align: center">
-                            <h1>Add New Announcement</h1>
-                        </v-card-title>
-                        <v-btn icon color="inherit" @click="closePopup" flat style="transform: translateY(-30px)">
-                            <XIcon stroke-width="1.5" size="24" class="text-grey100" />
-                        </v-btn>
-                    </div>
-                    <form @submit.prevent="submitForm">
-                        <div class="formContainer">
-                            <fieldset class="field1">
-                                <div class="inputGroup">
-                                    <input
-                                        type="text"
-                                        id="author_name"
-                                        v-model="announcementForm.author_name"
-                                        autocomplete="off"
-                                    />
-                                    <label for="author_name">Author Name</label>
-                                </div>
-                            </fieldset>
-
-                            <fieldset class="field2">
-                                <div class="inputGroup">
-                                    <input
-                                        type="text"
-                                        id="title"
-                                        v-model="announcementForm.title"
-                                        autocomplete="off"
-                                    />
-                                    <label for="title">Title</label>
-                                </div>
-                            </fieldset>
-
-                            <fieldset class="field3">
-                                <div class="inputGroup">
-                                    <input
-                                        type="text"
-                                        id="content"
-                                        v-model="announcementForm.content"
-                                        autocomplete="off"
-                                    />
-                                    <label for="content">Content</label>
-                                </div>
-                            </fieldset>
+            <!-- Add Announcement Dialog -->
+            <v-col cols="12" sm="12" lg="4" class="d-flex align-center justify-center">
+                <v-card elevation="0" v-if="showPopup" class="popup-card" style="z-index: 10">
+                    <div class="popup-contentp">
+                        <div style="display: flex; justify-content: space-between; align-items: center">
+                            <v-card-title class="title" style="margin: 10px auto; text-align: center">
+                                <h1>Add New Announcement</h1>
+                            </v-card-title>
+                            <v-btn icon color="inherit" @click="closePopup" flat style="transform: translateY(-30px)">
+                                <XIcon stroke-width="1.5" size="24" class="text-grey100" />
+                            </v-btn>
                         </div>
+                        <form @submit.prevent="submitForm">
+                            <div class="formContainer">
+                                <fieldset class="field1">
+                                    <div class="inputGroup">
+                                        <input type="text" id="author_name" v-model="announcementForm.author_name" autocomplete="off" />
+                                        <label for="author_name">Author Name</label>
+                                    </div>
+                                </fieldset>
 
-                        <v-btn color="primary" type="submit" id="add">Publish Announcement</v-btn>
-                        <v-btn id="add" class="cancel-btn" @click="resetForm">Cancel</v-btn>
-                    </form>
-                </div>
-            </v-card>
+                                <fieldset class="field2">
+                                    <div class="inputGroup">
+                                        <input type="text" id="title" v-model="announcementForm.title" autocomplete="off" />
+                                        <label for="title">Title</label>
+                                    </div>
+                                </fieldset>
+
+                                <fieldset class="field3">
+                                    <div class="inputGroup">
+                                        <input type="text" id="content" v-model="announcementForm.content" autocomplete="off" />
+                                        <label for="content">Content</label>
+                                    </div>
+                                </fieldset>
+                            </div>
+
+                            <v-btn color="primary" type="submit" id="add">Publish Announcement</v-btn>
+                            <v-btn id="add" class="cancel-btn" @click="resetForm">Cancel</v-btn>
+                        </form>
+                    </div>
+                </v-card>
+            </v-col>
         </v-col>
-    </div>
+    </v-row>
 </template>
 <style scoped>
 .announcements-container {
@@ -941,4 +934,3 @@ p {
     border-radius: 20px;
 }
 </style>
-
