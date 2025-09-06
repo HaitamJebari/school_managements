@@ -193,24 +193,29 @@ const toggleSelectAll = () => {
 
 // Delete announcement
 const showConfirmationDialog = (announcementId: number) => {
-    Swal.fire({
-        title: 'Delete Announcement?',
+    const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+            confirmButton: 'btn btn-success mx-2',
+            cancelButton: 'btn btn-danger mx-2'
+        },
+        buttonsStyling: false
+    });
+
+    swalWithBootstrapButtons.fire({
+        title: 'Are you sure?',
         text: 'This action cannot be undone!',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Yes, delete it!',
-        cancelButtonText: 'Cancel',
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
+        cancelButtonText: 'No, cancel!',
         reverseButtons: true
     }).then(async (result) => {
         if (result.isConfirmed) {
             try {
-                loading.value = true;
                 const response = await axios.delete(`http://localhost:5000/announcements/${announcementId}`);
 
                 if (response.status === 200) {
-                    Swal.fire({
+                    swalWithBootstrapButtons.fire({
                         title: 'Deleted!',
                         text: 'The announcement has been deleted successfully.',
                         icon: 'success',
@@ -223,26 +228,38 @@ const showConfirmationDialog = (announcementId: number) => {
                     isSelectedAll.value =
                         selectedAnnouncements.value.length === announcements.value.length && announcements.value.length > 0;
                 } else {
-                    Swal.fire({
+                    swalWithBootstrapButtons.fire({
                         title: 'Failed!',
                         text: 'Failed to delete the announcement.',
                         icon: 'error',
-                        confirmButtonText: 'OK'
+                        confirmButtonText: 'OK',
+                        customClass: {
+                                confirmButton: 'btn btn-danger'
+                            }
                     });
                 }
             } catch (error: any) {
-                console.error('Error deleting announcement:', error);
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'Something went wrong during deletion.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
+                    swalWithBootstrapButtons.fire({
+                        title: 'Error!',
+                        text: 'Something went wrong during deletion.',
+                        icon: 'error',
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            confirmButton: 'btn btn-danger'
+                        }
+                    });
+                }
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                swalWithBootstrapButtons.fire({
+                    title: 'Cancelled',
+                    icon: 'info',
+                    confirmButtonText: 'OK',
+                    customClass: {
+                        confirmButton: 'btn btn-info    '
+                    }
                 });
-            } finally {
-                loading.value = false;
             }
-        }
-    });
+        });
 };
 
 // Delete selected announcements
@@ -325,9 +342,9 @@ const getInitials = (name: string) => {
 <template>
     <v-row>
         <v-col cols="12" sm="12" lg="12">
-            <v-card elevation="10" style="border-radius: 20px; height: 4em ">
+            <v-card elevation="10" style="border-radius: 20px; height: 4em">
                 <v-card-item>
-                    <h3 class="d-flex align-center justify-space-between">Announcements Management</h3>
+                    <h4 class="d-flex align-center justify-space-between">Announcements Management</h4>
                 </v-card-item>
             </v-card>
         </v-col>

@@ -564,7 +564,7 @@ const filteredStudents = computed(() => {
                                 <label for="name">{{ t('Parent') }}</label>
                             </div>
                             <div class="inputGroup">
-                                <input type="number" v-model="form2.parent_tel" required autocomplete="off" />
+                                <input type="text" v-model="form2.parent_tel" required autocomplete="off" />
                                 <label for="name">{{ t('Parent Tel') }}</label>
                             </div>
                             <div class="inputGroup">

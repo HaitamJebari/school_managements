@@ -185,7 +185,7 @@ const showConfirmationDialog = (modulesId: number) => {
     <v-col cols="12" sm="12" lg="12">
             <v-card elevation="10" style="border-radius: 20px ; height: 4em;">
                 <v-card-item >
-                    <h3 class="d-flex align-center justify-space-between">Modules Management</h3>
+                    <h4 class="d-flex align-center justify-space-between">Modules Management</h4>
                 </v-card-item>
             </v-card>
         </v-col>
@@ -510,7 +510,7 @@ h4 {
 
 .popup-contentp {
     width: 67%;
-    height: 40vh;
+    height: 35vh;
     background: rgb(255, 255, 255); /* Transparent white background */
     padding: 20px;
     border-radius: 15px;

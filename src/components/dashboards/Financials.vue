@@ -488,15 +488,11 @@ onMounted(async () => {
         <!-- Header Card -->
         <v-col cols="12" sm="12" lg="12">
             <v-card elevation="10" style="border-radius: 20px; height: 4em">
-                <div class="d-flex align-center justify-space-between">
-                    <v-card-item>
-                        <h3 class="d-flex align-center justify-space-between">Financials Management</h3>
-                    </v-card-item>
-                    <v-card-item>
-                        <v-btn icon color="white" @click="openPopup" size="30" flat>
-                            <PlusIcon stroke-width="1.5" size="30" style="color: black" />
-                        </v-btn>
-                    </v-card-item>
+                <div class="d-flex align-center justify-space-between px-4" style="height: 100%">
+                    <h4 class="m-0">Financials Management</h4>
+                    <v-btn icon @click="openPopup" size="32" variant="text">
+                        <PlusIcon stroke-width="1.5" size="35"  />
+                    </v-btn>
                 </div>
             </v-card>
         </v-col>

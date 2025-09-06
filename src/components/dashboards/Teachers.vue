@@ -149,7 +149,7 @@ const showConfirmationDialog = (teacherId: number) => {
                             title: 'Deleted!',
                             text: 'The teacher has been deleted successfully.',
                             icon: 'success',
-                            confirmButtonText: 'OK' // Corrected text for the button
+                            confirmButtonText: 'OK' 
                         });
                         // Update the local list of teachers
                         teachers.value = teachers.value.filter((teacher) => teacher.id !== teacherId);
@@ -432,7 +432,7 @@ const filteredTeachers = computed(() => {
                                                 </div>
 
                                                 <div class="inputGroup">
-                                                    <input type="tel" v-model="form1.tel" autocomplete="off" />
+                                                    <input type="text" v-model="form1.tel" autocomplete="off" />
                                                     <label for="tel">Tel</label>
                                                 </div>
 
