@@ -95,9 +95,9 @@ onMounted(() => {
         <v-card-item>
             <div class="d-sm-flex align-center justify-space-between pt-sm-2">
                 <v-card-title class="text-h5">{{ t('Groups') }}</v-card-title>
-                <v-btn size="small" icon class="bg-info">
-                    <v-avatar size="20" class="text-surface">
-                        <UsersIcon size="20" />
+                <v-btn size="small" icon style="background-color: rgb(33, 150 , 243);">
+                    <v-avatar size="30" >
+                        <UsersIcon size="30" />
                     </v-avatar>
                 </v-btn>
             </div>
@@ -107,7 +107,7 @@ onMounted(() => {
                         <h3 class="text-h4" v-if="!loading">{{ groupTotal }}</h3>
                         <h3 class="text-h4" v-else>Loading...</h3>
                         <div class="mt-2">
-                            <v-avatar class="bg-lightsuccess text-success" size="20">
+                            <v-avatar class="text-success" size="30">
                                 <ArrowUpLeftIcon size="15" />
                             </v-avatar>
                             <span class="text-subtitle-2 ml-2 font-weight-bold">+{{ Math.floor(Math.random() * 20) }}%</span>

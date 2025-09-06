@@ -8,7 +8,7 @@ import { useI18n } from 'vue-i18n';
 import { CaretLeft, CaretRight } from '@element-plus/icons-vue';
 
 // Define interfaces
-interface RevenueItem {
+interface financialsItem {
     id: number;
     description: string;
     amount: number;
@@ -17,7 +17,7 @@ interface RevenueItem {
     date: string;
 }
 
-interface RevenueSummary {
+interface financialsSummary {
     total_income: number;
     total_outcome: number;
     balance: number;
@@ -36,7 +36,7 @@ interface CategoryDataItem {
     total: string;
 }
 
-interface RevenueForm {
+interface financialsForm {
     description: string;
     amount: string;
     type: 'income' | 'outcome';
@@ -51,8 +51,8 @@ const showPopupp = ref(false);
 const activeTab = ref('all'); // 'all', 'income', 'outcome'
 const isLoading = ref(false);
 
-// Revenue form
-const revenueForm = ref<RevenueForm>({
+// financials form
+const financialsForm = ref<financialsForm>({
     description: '',
     amount: '',
     type: 'income',
@@ -78,9 +78,9 @@ const categoryOptions = [
     'Other'
 ];
 
-// Revenue data
-const revenueData = ref<RevenueItem[]>([]);
-const summary = ref<RevenueSummary>({
+// financials data
+const financialsData = ref<financialsItem[]>([]);
+const summary = ref<financialsSummary>({
     total_income: 0,
     total_outcome: 0,
     balance: 0,
@@ -90,18 +90,18 @@ const monthlyData = ref<MonthlyDataItem[]>([]);
 const categoryData = ref<CategoryDataItem[]>([]);
 
 // Computed properties for filtered data
-const filteredRevenueData = computed(() => {
+const filteredfinancialsData = computed(() => {
     if (activeTab.value === 'all') {
-        return revenueData.value;
+        return financialsData.value;
     } else {
-        return revenueData.value.filter((item) => item.type === activeTab.value);
+        return financialsData.value.filter((item) => item.type === activeTab.value);
     }
 });
 
 // Open popup method
 const openPopup = async () => {
     showPopupp.value = true;
-    revenueForm.value.date = new Date().toISOString().substr(0, 10);
+    financialsForm.value.date = new Date().toISOString().substr(0, 10);
 };
 
 // Close popup method
@@ -114,19 +114,19 @@ const primary = theme.current.value.colors.primary;
 const error = theme.current.value.colors.error;
 const success = '#4CAF50';
 
-// Fetch revenue data
-const fetchRevenueData = async () => {
+// Fetch financials data
+const fetchfinancialsData = async () => {
     try {
         isLoading.value = true;
-        const response = await axios.get('http://localhost:5000/revenue');
-        revenueData.value = response.data;
-        console.log('Revenue data:', revenueData.value);
+        const response = await axios.get('http://localhost:5000/financials');
+        financialsData.value = response.data;
+        console.log('financials data:', financialsData.value);
     } catch (error) {
-        console.error('Error fetching revenue data:', error);
+        console.error('Error fetching financials data:', error);
         Swal.fire({
             icon: 'error',
             title: 'Loading Error',
-            text: 'Failed to load revenue data. Please refresh the page.',
+            text: 'Failed to load financials data. Please refresh the page.',
             confirmButtonText: 'OK'
         });
     } finally {
@@ -134,33 +134,39 @@ const fetchRevenueData = async () => {
     }
 };
 
-// Fetch revenue summary
-const fetchRevenueSummary = async () => {
+// Fetch financials summary
+const fetchfinancialsSummary = async () => {
+    const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+            confirmButton: 'btn btn-danger mx-2',
+        },
+        buttonsStyling: false
+    });
     try {
         isLoading.value = true;
-        const response = await axios.get('http://localhost:5000/revenue/summary');
+        const response = await axios.get('http://localhost:5000/financials/summary');
         summary.value = response.data.summary;
         monthlyData.value = response.data.monthly;
         categoryData.value = response.data.categories;
 
         // Also fetch income that should be in outcome
         try {
-            const incomeInOutcomeResponse = await axios.get('http://localhost:5000/revenue/income-in-outcome');
+            const incomeInOutcomeResponse = await axios.get('http://localhost:5000/financials/income-in-outcome');
             summary.value.income_in_outcome = incomeInOutcomeResponse.data.total_income_for_outcome;
         } catch (error) {
             console.error('Error fetching income in outcome:', error);
             summary.value.income_in_outcome = 0;
         }
 
-        console.log('Revenue summary:', summary.value);
+        console.log('financials summary:', summary.value);
         console.log('Monthly data:', monthlyData.value);
         console.log('Category data:', categoryData.value);
     } catch (error) {
-        console.error('Error fetching revenue summary:', error);
-        Swal.fire({
+        console.error('Error fetching financials summary:', error);
+        swalWithBootstrapButtons.fire({
             icon: 'error',
             title: 'Loading Error',
-            text: 'Failed to load revenue summary. Please refresh the page.',
+            text: 'Failed to load financials summary. Please refresh the page.',
             confirmButtonText: 'OK'
         });
     } finally {
@@ -168,9 +174,9 @@ const fetchRevenueSummary = async () => {
     }
 };
 
-// Add new revenue entry
-const addRevenue = async () => {
-    if (!revenueForm.value.description || !revenueForm.value.amount || !revenueForm.value.date) {
+// Add new financials entry
+const addfinancials = async () => {
+    if (!financialsForm.value.description || !financialsForm.value.amount || !financialsForm.value.date) {
         Swal.fire({
             icon: 'warning',
             title: 'Validation Error',
@@ -182,28 +188,28 @@ const addRevenue = async () => {
 
     try {
         isLoading.value = true;
-        const response = await axios.post('http://localhost:5000/revenue', {
-            description: revenueForm.value.description,
-            amount: parseFloat(revenueForm.value.amount),
-            type: revenueForm.value.type,
-            category: revenueForm.value.category,
-            date: revenueForm.value.date
+        const response = await axios.post('http://localhost:5000/financials', {
+            description: financialsForm.value.description,
+            amount: parseFloat(financialsForm.value.amount),
+            type: financialsForm.value.type,
+            category: financialsForm.value.category,
+            date: financialsForm.value.date
         });
 
         Swal.fire({
             icon: 'success',
-            title: 'Revenue entry added successfully!',
+            title: 'financials entry added successfully!',
             text:
-                revenueForm.value.type === 'income'
+                financialsForm.value.type === 'income'
                     ? 'Income entry added and will be reflected in both income and outcome calculations.'
-                    : 'Revenue entry added successfully.',
+                    : 'financials entry added successfully.',
             customClass: {
                 confirmButton: 'btn btn-success'
             }
         });
 
         // Reset form and refresh data
-        revenueForm.value = {
+        financialsForm.value = {
             description: '',
             amount: '',
             type: 'income',
@@ -211,13 +217,13 @@ const addRevenue = async () => {
             date: new Date().toISOString().substr(0, 10)
         };
         closePopup();
-        await fetchRevenueData();
-        await fetchRevenueSummary();
+        await fetchfinancialsData();
+        await fetchfinancialsSummary();
     } catch (error: any) {
-        console.error('Error adding revenue entry:', error);
+        console.error('Error adding financials entry:', error);
         Swal.fire({
             icon: 'error',
-            title: 'Failed to add revenue entry',
+            title: 'Failed to add financials entry',
             text: error.response?.data?.message || 'An error occurred',
             confirmButtonText: 'OK'
         });
@@ -226,8 +232,8 @@ const addRevenue = async () => {
     }
 };
 
-// Delete revenue entry
-const deleteRevenue = (id: number) => {
+// Delete financials entry
+const deletefinancials = (id: number) => {
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
             confirmButton: 'btn btn-success mx-2',
@@ -250,21 +256,21 @@ const deleteRevenue = (id: number) => {
             if (result.isConfirmed) {
                 try {
                     isLoading.value = true;
-                    const response = await axios.delete(`http://localhost:5000/revenue/${id}`);
+                    const response = await axios.delete(`http://localhost:5000/financials/${id}`);
                     if (response.status === 200) {
                         swalWithBootstrapButtons.fire({
                             title: 'Deleted!',
-                            text: response.data.message || 'The revenue entry has been deleted successfully.',
+                            text: response.data.message || 'The financials entry has been deleted successfully.',
                             icon: 'success',
                             confirmButtonText: 'OK'
                         });
                         // Update the local data
-                        await fetchRevenueData();
-                        await fetchRevenueSummary();
+                        await fetchfinancialsData();
+                        await fetchfinancialsSummary();
                     } else {
                         swalWithBootstrapButtons.fire({
                             title: 'Failed!',
-                            text: 'Failed to delete the revenue entry.',
+                            text: 'Failed to delete the financials entry.',
                             icon: 'error',
                             confirmButtonText: 'OK',
                             customClass: {
@@ -448,12 +454,12 @@ const categoryChartOptions = computed(() => {
 
 // Submit form
 const submitForm = () => {
-    addRevenue();
+    addfinancials();
 };
 
 // Reset form
 const resetForm = () => {
-    revenueForm.value = {
+    financialsForm.value = {
         description: '',
         amount: '',
         type: 'income',
@@ -473,8 +479,8 @@ const combinedOutcomeTotal = computed(() => {
 });
 
 onMounted(async () => {
-    await fetchRevenueData();
-    await fetchRevenueSummary();
+    await fetchfinancialsData();
+    await fetchfinancialsSummary();
 });
 </script>
 
@@ -524,9 +530,7 @@ onMounted(async () => {
                         <div>
                             <h6 class="text-subtitle-1 mb-1">Total Outcome</h6>
                             <h4 class="text-h4 font-weight-bold">{{ formatCurrency(summary.total_outcome) }}</h4>
-                            <p class="text-caption" v-if="summary.income_in_outcome > 0">
-                                Including income: {{ formatCurrency(combinedOutcomeTotal) }}
-                            </p>
+                           
                         </div>
                     </div>
                 </v-card-item>
@@ -581,7 +585,7 @@ onMounted(async () => {
                         <div class="mb-6">
                             <apexchart
                                 type="donut"
-                                height="240"
+                                height="195"
                                 :options="categoryChartOptions.incomePieOptions.chartOptions"
                                 :series="categoryChartOptions.incomePieOptions.series"
                             ></apexchart>
@@ -589,7 +593,7 @@ onMounted(async () => {
                         <div>
                             <apexchart
                                 type="donut"
-                                height="240"
+                                height="195"
                                 :options="categoryChartOptions.outcomePieOptions.chartOptions"
                                 :series="categoryChartOptions.outcomePieOptions.series"
                             ></apexchart>
@@ -602,7 +606,7 @@ onMounted(async () => {
             </v-card>
         </v-col>
 
-        <!-- Revenue Entries Tabs -->
+        <!-- financials Entries Tabs -->
         <v-col cols="12">
             <v-card elevation="10" style="border-radius: 20px">
                 <v-card-item>
@@ -631,7 +635,7 @@ onMounted(async () => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="item in filteredRevenueData" :key="item.id">
+                            <tr v-for="item in filteredfinancialsData" :key="item.id">
                                 <td>{{ formatDate(item.date) }}</td>
                                 <td>{{ item.description }}</td>
                                 <td>{{ item.category || 'Uncategorized' }}</td>
@@ -644,12 +648,12 @@ onMounted(async () => {
                                     </v-chip>
                                 </td>
                                 <td>
-                                    <v-btn icon variant="text" color="error" @click="deleteRevenue(item.id)">
+                                    <v-btn icon variant="text" color="error" @click="deletefinancials(item.id)">
                                         <TrashIcon stroke-width="1.5" size="20" />
                                     </v-btn>
                                 </td>
                             </tr>
-                            <tr v-if="filteredRevenueData.length === 0">
+                            <tr v-if="filteredfinancialsData.length === 0">
                                 <td colspan="6" class="text-center py-4">No entries found</td>
                             </tr>
                         </tbody>
@@ -658,7 +662,7 @@ onMounted(async () => {
             </v-card>
         </v-col>
 
-        <!-- Add Revenue Popup -->
+        <!-- Add financials Popup -->
         <v-col cols="12" sm="12" lg="4" class="d-flex align-center justify-center">
             <v-card elevation="0" v-if="showPopupp" class="popup-card" style="z-index: 10">
                 <div class="popup-contentp">
@@ -673,19 +677,19 @@ onMounted(async () => {
                     <form @submit.prevent="submitForm">
                         <fieldset class="field1">
                             <div class="inputGroup">
-                                <input type="text" id="Description" v-model="revenueForm.description" autocomplete="off" />
+                                <input type="text" id="Description" v-model="financialsForm.description" autocomplete="off" />
                                 <label for="Description">Description</label>
                             </div>
                         </fieldset>
                         <fieldset class="field2">
                             <div class="inputGroup">
-                                <input type="number" id="Amount" v-model="revenueForm.amount" autocomplete="off" />
+                                <input type="number" id="Amount" v-model="financialsForm.amount" autocomplete="off" />
                                 <label for="Amount">Amount</label>
                             </div>
                         </fieldset>
                         <fieldset class="field3">
                             <div class="inputGroup">
-                                <select id="type" v-model="revenueForm.type" class="select-input">
+                                <select id="type" v-model="financialsForm.type" class="select-input">
                                     <option value="" disabled>Select Type</option>
                                     <option value="income">Income</option>
                                     <option value="outcome">Outcome</option>
@@ -695,7 +699,7 @@ onMounted(async () => {
                         </fieldset>
                         <fieldset class="field3">
                             <div class="inputGroup">
-                                <select id="category" v-model="revenueForm.category" class="select-input">
+                                <select id="category" v-model="financialsForm.category" class="select-input">
                                     <option value="" disabled>Select Category</option>
                                     <option v-for="(option, index) in categoryOptions" :key="index" :value="option">
                                         {{ option }}
@@ -706,13 +710,13 @@ onMounted(async () => {
                         </fieldset>
                         <fieldset class="field3">
                             <div class="inputGroup">
-                                <input type="date" v-model="revenueForm.date" autocomplete="off" />
+                                <input type="date" v-model="financialsForm.date" autocomplete="off" />
                                 <label for="date">Date</label>
                             </div>
                         </fieldset>
 
-                        <v-btn :color="revenueForm.type === 'income' ? 'primary' : 'error'" type="submit" id="add">
-                            Add {{ revenueForm.type === 'income' ? 'Income' : 'Outcome' }}
+                        <v-btn :color="financialsForm.type === 'income' ? 'primary' : 'error'" type="submit" id="add">
+                            Add {{ financialsForm.type === 'income' ? 'Income' : 'Outcome' }}
                         </v-btn>
                         <v-btn id="add" class="cancel-btn" @click="resetForm">Cancel</v-btn>
                     </form>

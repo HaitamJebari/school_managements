@@ -142,7 +142,6 @@ const closePopup = () => {
     showPopupp.value = false;
 };
 
-const items = ref([{ title: 'Action' }, { title: 'Another action' }, { title: 'Something else here' }]);
 
 const theme = useTheme();
 const primary = theme.current.value.colors.primary;
@@ -151,13 +150,19 @@ const warning = '#FFC107';
 
 // Fetch absences data
 const fetchAbsencesData = async () => {
+    const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+            confirmButton: 'btn btn-danger mx-2',
+        },
+        buttonsStyling: false
+    });
     try {
         const response = await axios.get('http://localhost:5000/absences');
         absencesData.value = response.data;
         console.log('Absences data:', absencesData.value);
     } catch (error) {
         console.error('Error fetching absences data:', error);
-        Swal.fire({
+        swalWithBootstrapButtons.fire({
             icon: 'error',
             title: 'Loading Error',
             text: 'Failed to load absences data. Please refresh the page.',
@@ -767,7 +772,7 @@ onMounted(async () => {
                                 density="compact"
                                 hide-details
                                 class="mr-4"
-                                style="max-width: 200px"
+                                style="width: 15em"
                             ></v-text-field>
                             <v-btn-toggle v-model="activeTab" mandatory>
                                 <v-btn value="all" color="primary" variant="text">All</v-btn>

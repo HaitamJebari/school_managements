@@ -103,10 +103,10 @@ onMounted(() => {
     <v-card style="border-radius: 20px; background-color: rgb(251, 140, 0,1); height: 17vh; color: white">
         <v-card-item>
             <div class="d-sm-flex align-center justify-space-between pt-sm-2">
-                <v-card-title class="text-h5">{{ t('Students') }}</v-card-title>
-                <v-btn size="small" icon class="bg-warning">
-                    <v-avatar size="20" class="text-surface">
-                        <UserIcon size="20" />
+                <v-card-title class="text-h5">Students</v-card-title>
+                <v-btn size="small" icon style="background-color: rgb(251, 140, 0,1);">
+                    <v-avatar size="30">
+                        <UserIcon size="30" />
                     </v-avatar>
                 </v-btn>
             </div>
@@ -116,8 +116,8 @@ onMounted(() => {
                         <h3 class="text-h4" v-if="!loading">{{ studentTotal }}</h3>
                         <h3 class="text-h4" v-else>Loading...</h3>
                         <div class="mt-2">
-                            <v-avatar class="bg-lightsuccess text-success" size="20">
-                                <ArrowUpLeftIcon size="15" />
+                            <v-avatar class="text-success" size="30">
+                                <ArrowUpLeftIcon size="20" />
                             </v-avatar>
                             <span class="text-subtitle-2 ml-2 font-weight-bold">+{{ Math.floor(Math.random() * 20) }}%</span>
                             <span class="text-subtitle-2 font-weight-bold ml-2">last year</span>

@@ -2,7 +2,7 @@
 import StudentsD from '@/components/dashboards/StudentsD.vue';
 import TeachersD from '@/components/dashboards/TeachersD.vue';
 import Revenuedd from '@/components/dashboards/Revenuedd.vue';
-import TotalS from '@/components/dashboards/TotalG.vue';
+import TotalS from '@/components/dashboards/TotalS.vue';
 import TotalG from '@/components/dashboards/TotalG.vue';
 
 </script>

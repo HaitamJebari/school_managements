@@ -1021,83 +1021,79 @@ app.delete("/exams/:id", (req, res) => {
   });
 });
 
-//------------------------------------------------------Revenue------------------------------------------------------
+//------------------------------------------------------financials------------------------------------------------------
 
-// GET all revenue entries
-app.get("/revenue", (req, res) => {
-  const sql = "SELECT * FROM revenue ORDER BY date DESC";
+// GET all financials entries
+app.get("/financials", (req, res) => {
+  const sql = "SELECT * FROM financials ORDER BY date DESC";
   db.query(sql, (err, results) => {
     if (err) {
-      console.error("Error fetching revenue data:", err);
-      return res.status(500).json({ message: "Failed to fetch revenue data." });
+      console.error("Error fetching financials data:", err);
+      return res.status(500).json({ message: "Failed to fetch financials data." });
     }
     res.status(200).json(results);
   });
 });
 
-// GET revenue summary (totals and statistics)
-app.get("/revenue/summary", (req, res) => {
-  const sql = `
-    SELECT 
-      SUM(CASE WHEN type = 'income' THEN amount ELSE 0 END) as total_income,
-      SUM(CASE WHEN type = 'outcome' THEN amount ELSE 0 END) as total_outcome,
-      SUM(CASE WHEN type = 'income' THEN amount ELSE -amount END) as balance
-    FROM revenue
+// GET financials summary (totals and statistics)
+app.get("/financials/summary", (req, res) => {
+  const summarySql = `
+    SELECT
+      COALESCE(SUM(CASE WHEN type='income' THEN amount END), 0) AS total_income,
+      COALESCE(SUM(CASE WHEN type='outcome' THEN amount END), 0) AS total_outcome,
+      COALESCE(SUM(CASE WHEN type='income' THEN amount END), 0) -
+      COALESCE(SUM(CASE WHEN type='outcome' THEN amount END), 0) AS balance
+    FROM financials
   `;
-  
-  db.query(sql, (err, results) => {
+
+  const monthlySql = `
+    SELECT DATE_FORMAT(date, '%Y-%m') AS month,
+           COALESCE(SUM(CASE WHEN type='income' THEN amount END), 0) AS income,
+           COALESCE(SUM(CASE WHEN type='outcome' THEN amount END), 0) AS outcome
+    FROM financials
+    GROUP BY DATE_FORMAT(date, '%Y-%m')
+    ORDER BY DATE_FORMAT(date, '%Y-%m') ASC
+  `;
+
+  const categorySql = `
+    SELECT category,
+           type,
+           COALESCE(SUM(amount), 0) AS total
+    FROM financials
+    GROUP BY category, type
+  `;
+
+  db.query(summarySql, (err, summaryResult) => {
     if (err) {
-      console.error("Error calculating revenue summary:", err);
-      return res.status(500).json({ message: "Failed to calculate revenue summary." });
+      console.error("Error fetching financials summary:", err.sqlMessage || err);
+      return res.status(500).json({ message: "Failed to fetch summary." });
     }
-    
-    // Get monthly data for charts
-    const monthlyDataSQL = `
-      SELECT 
-        DATE_FORMAT(date, '%Y-%m') as month,
-        SUM(CASE WHEN type = 'income' THEN amount ELSE 0 END) as income,
-        SUM(CASE WHEN type = 'outcome' THEN amount ELSE 0 END) as outcome
-      FROM revenue
-      WHERE date >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH)
-      GROUP BY DATE_FORMAT(date, '%Y-%m')
-      ORDER BY month ASC
-    `;
-    
-    db.query(monthlyDataSQL, (err, monthlyData) => {
+
+    db.query(monthlySql, (err, monthlyResult) => {
       if (err) {
-        console.error("Error fetching monthly revenue data:", err);
-        return res.status(500).json({ message: "Failed to fetch monthly revenue data." });
+        console.error("Error fetching monthly data:", err.sqlMessage || err);
+        return res.status(500).json({ message: "Failed to fetch monthly data." });
       }
-      
-      // Get category breakdown
-      const categorySQL = `
-        SELECT 
-          category,
-          type,
-          SUM(amount) as total
-        FROM revenue
-        GROUP BY category, type
-        ORDER BY total DESC
-      `;
-      
-      db.query(categorySQL, (err, categoryData) => {
+
+      db.query(categorySql, (err, categoryResult) => {
         if (err) {
-          console.error("Error fetching category breakdown:", err);
-          return res.status(500).json({ message: "Failed to fetch category breakdown." });
+          console.error("Error fetching category data:", err.sqlMessage || err);
+          return res.status(500).json({ message: "Failed to fetch category data." });
         }
-        
-        res.status(200).json({
-          summary: results[0],
-          monthly: monthlyData,
-          categories: categoryData
+
+        res.json({
+          summary: summaryResult[0],
+          monthly: monthlyResult,
+          categories: categoryResult
         });
       });
     });
   });
 });
 
-// POST new revenue entry
-app.post("/revenue", (req, res) => {
+
+// POST new financials entry
+app.post("/financials", (req, res) => {
   const { description, amount, type, category, date } = req.body;
   
   if (!description || !amount || !type || !date) {
@@ -1108,45 +1104,59 @@ app.post("/revenue", (req, res) => {
     return res.status(400).json({ message: "Type must be either 'income' or 'outcome'." });
   }
   
-  const sql = "INSERT INTO revenue (description, amount, type, category, date) VALUES (?, ?, ?, ?, ?)";
+  const sql = "INSERT INTO financials (description, amount, type, category, date) VALUES (?, ?, ?, ?, ?)";
   
   db.query(sql, [description, amount, type, category || null, date], (err, result) => {
     if (err) {
-      console.error("Error inserting revenue entry:", err);
-      return res.status(500).json({ message: "Failed to add revenue entry." });
+      console.error("Error inserting financials entry:", err);
+      return res.status(500).json({ message: "Failed to add financials entry." });
     }
     
     // Return the newly created entry
-    const checkSql = "SELECT * FROM revenue WHERE id = ?";
-    db.query(checkSql, [result.insertId], (err, insertedRevenue) => {
+    const checkSql = "SELECT * FROM financials WHERE id = ?";
+    db.query(checkSql, [result.insertId], (err, insertedfinancials) => {
       if (err) {
         console.error("Error verifying insertion:", err);
-        return res.status(500).json({ message: "Failed to verify revenue entry creation." });
+        return res.status(500).json({ message: "Failed to verify financials entry creation." });
       }
       
-      res.status(201).json(insertedRevenue[0]);
+      res.status(201).json(insertedfinancials[0]);
     });
   });
 });
 
-// DELETE a revenue entry by ID
-app.delete("/revenue/:id", (req, res) => {
+// DELETE a financials entry by ID
+app.delete("/financials/:id", (req, res) => {
   const { id } = req.params;
-  const query = "DELETE FROM revenue WHERE id = ?";
+  const query = "DELETE FROM financials WHERE id = ?";
 
   db.query(query, [id], (err, result) => {
     if (err) {
-      console.error("Error deleting revenue entry:", err);
-      res.status(500).json({ message: "Failed to delete revenue entry" });
+      console.error("Error deleting financials entry:", err);
+      res.status(500).json({ message: "Failed to delete financials entry" });
     } else if (result.affectedRows === 0) {
-      res.status(404).json({ message: "Revenue entry not found" });
+      res.status(404).json({ message: "financials entry not found" });
     } else {
-      res.status(200).json({ message: "Revenue entry deleted successfully" });
+      res.status(200).json({ message: "financials entry deleted successfully" });
     }
   });
 });
 
-
+// GET income that is considered in outcome
+app.get("/financials/income-in-outcome", (req, res) => {
+  const sql = `
+    SELECT COALESCE(SUM(amount), 0) AS total_income_for_outcome
+    FROM financials
+    WHERE type = 'income'
+  `;
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.error("Error fetching income for outcome:", err.sqlMessage || err);
+      return res.status(500).json({ message: "Failed to fetch income for outcome." });
+    }
+    res.json(result[0]);
+  });
+});
 
 
 // GET all absences
@@ -1159,8 +1169,7 @@ app.get("/absences", (req, res) => {
       a.absence_date, 
       a.seance, 
       a.justification,
-      a.bg_color AS bgColor,
-      a.created_at
+      a.bg_color AS bgColor
     FROM absences a
     ORDER BY a.absence_date DESC, a.seance ASC
   `;
@@ -1185,7 +1194,6 @@ app.get("/absences/details", (req, res) => {
       a.seance, 
       a.justification,
       a.bg_color AS bgColor,
-      a.created_at,
       CONCAT(s.first_name, ' ', s.last_name) AS full_name,
       s.email,
       s.parent_tel
