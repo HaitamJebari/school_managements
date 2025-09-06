@@ -1146,6 +1146,9 @@ app.delete("/revenue/:id", (req, res) => {
   });
 });
 
+
+
+
 // GET all absences
 app.get("/absences", (req, res) => {
   const sql = `

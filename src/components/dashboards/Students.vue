@@ -338,7 +338,7 @@ const filteredStudents = computed(() => {
     <v-col cols="12" sm="12" lg="12">
             <v-card elevation="10" style="border-radius: 20px ; height: 4em;">
                 <v-card-item >
-                    <h3 class="d-flex align-center justify-space-between">Students Management</h3>
+                    <h4 class="d-flex align-center justify-space-between">Students Management</h4>
                 </v-card-item>
             </v-card>
         </v-col>
@@ -404,7 +404,7 @@ const filteredStudents = computed(() => {
                                             <label for="name">{{ t('Parent') }}</label>
                                         </div>
                                         <div class="inputGroup">
-                                            <input type="number" v-model="form1.parent_tel" autocomplete="off" />
+                                            <input type="text" v-model="form1.parent_tel" autocomplete="off" />
                                             <label for="name">{{ t('Parent Tel') }}</label>
                                         </div>
                                         <div class="inputGroup">

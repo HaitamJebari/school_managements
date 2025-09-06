@@ -315,14 +315,14 @@ const filteredTeachers = computed(() => {
 <template>
     <v-row>
         <v-col cols="12" sm="12" lg="12">
-            <v-card elevation="10" style="border-radius: 20px ; height: 4em;">
-                <v-card-item >
-                    <h3 class="d-flex align-center justify-space-between">Teachers Management</h3>
+            <v-card elevation="10" style="border-radius: 20px; height: 4em">
+                <v-card-item>
+                    <h4 class="d-flex align-center justify-space-between">Teachers Management</h4>
                 </v-card-item>
             </v-card>
         </v-col>
         <v-col cols="12" sm="12" lg="12">
-            <v-card elevation="10" cols="12" sm="12" lg="12" class="pb-2" style="height: 72.6vh;">
+            <v-card elevation="10" cols="12" sm="12" lg="12" class="pb-2" style="height: 72.6vh">
                 <v-card-item class="pa-6">
                     <div class="d-flex align-center justify-space-between">
                         <div>
@@ -432,8 +432,8 @@ const filteredTeachers = computed(() => {
                                                 </div>
 
                                                 <div class="inputGroup">
-                                                    <input type="number" v-model="form1.tel" autocomplete="off" />
-                                                    <label for="name">Tel</label>
+                                                    <input type="tel" v-model="form1.tel" autocomplete="off" />
+                                                    <label for="tel">Tel</label>
                                                 </div>
 
                                                 <div class="inputGroup">
@@ -522,9 +522,11 @@ const filteredTeachers = computed(() => {
                                 <fieldset class="field2">
                                     <div class="inputGroup">
                                         <input type="date" v-model="formattedDate" autocomplete="off" />
+                                        <label for="name">{{ t('Date') }}</label>
                                     </div>
                                     <div class="inputGroup">
-                                        <input type="number" v-model="form2.tel" autocomplete="off" />
+                                        <input type="text" v-model="form2.tel" autocomplete="off" />
+                                        <label for="name">{{ t('Tel') }}</label>
                                     </div>
 
                                     <div class="inputGroup">
