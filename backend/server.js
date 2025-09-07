@@ -3,6 +3,7 @@ const mysql = require("mysql2");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const bcrypt = require("bcryptjs");
+require('dotenv').config();
 
 const app = express();
 app.use(cors());
@@ -12,11 +13,20 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Create MySQL connection
 const db = mysql.createConnection({
-  host: "localhost", 
-  user: "root", 
-  password: "", 
-  database: "school_managements", 
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  port: process.env.DB_PORT || 3306,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
 });
+
+// // Get a promise-based interface from the pool
+// const promisePool = pool.promise();
+
+// module.exports = promisePool;
 
 // Connect to MySQL
 db.connect((err) => {
