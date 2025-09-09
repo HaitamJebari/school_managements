@@ -13,6 +13,7 @@ app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+const API_BASE = process.env.API_BASE_URL;
 // Create MySQL connection
 const db = mysql.createConnection({
   host: process.env.DB_HOST,
@@ -43,7 +44,7 @@ db.connect((err) => {
   console.log("Connected to MySQL database");
 });
 // Register route
-app.post("https://school-management-cyan-seven.vercel.app/register", async (req, res) => {
+app.post(`${API_BASE}/register`, async (req, res) => {
   const { username, password } = req.body;
 
   if (!username || !password)
@@ -72,7 +73,7 @@ app.post("https://school-management-cyan-seven.vercel.app/register", async (req,
 });
 
 // Login route
-app.post("https://school-management-cyan-seven.vercel.app/login", (req, res) => {
+app.post(`${API_BASE}/login`, (req, res) => {
   const { username, password } = req.body;
 
   if (!username || !password)
@@ -98,7 +99,7 @@ app.post("https://school-management-cyan-seven.vercel.app/login", (req, res) => 
 // ------------------------------------------------------Students------------------------------------------------------
 
 // Get students data
-app.get("https://school-management-cyan-seven.vercel.app/students", (req, res) => {
+app.get(`${API_BASE}/students`, (req, res) => {
   const query = "SELECT * FROM students";
   db.query(query, (err, results) => {
     if (err) {
@@ -113,7 +114,7 @@ app.get("https://school-management-cyan-seven.vercel.app/students", (req, res) =
 
 
 // GET total number of students
-app.get("https://school-management-cyan-seven.vercel.app/students/total", (req, res) => {
+app.get(`${API_BASE}/students/total`, (req, res) => {
   const sql = "SELECT COUNT(*) as total FROM students";
   
   db.query(sql, (err, results) => {
@@ -130,7 +131,7 @@ app.get("https://school-management-cyan-seven.vercel.app/students/total", (req, 
 });
 
 // Delete a student by ID
-app.delete("https://school-management-cyan-seven.vercel.app/students/:id", (req, res) => {
+app.delete(`${API_BASE}/students/:id`, (req, res) => {
   const { id } = req.params; // Extract student ID from URL
   const query = "DELETE FROM students WHERE id = ?";
   const updateIdsQuery = `
@@ -153,7 +154,7 @@ app.delete("https://school-management-cyan-seven.vercel.app/students/:id", (req,
 });
 
 // Update a student by ID
-app.put("https://school-management-cyan-seven.vercel.app/students/:id", (req, res) => {
+app.put(`${API_BASE}/students/:id`, (req, res) => {
   const { id } = req.params;
   const {
     first_name,
@@ -211,7 +212,7 @@ app.put("https://school-management-cyan-seven.vercel.app/students/:id", (req, re
 
 //Add new student
 
-app.post("https://school-management-cyan-seven.vercel.app/add", (req, res) => {
+app.post(`${API_BASE}/add`, (req, res) => {
   const {
     id,
     first_name,
@@ -280,7 +281,7 @@ app.post("https://school-management-cyan-seven.vercel.app/add", (req, res) => {
 });
 
 //Search students
-app.get("https://school-management-cyan-seven.vercel.app/search", (req, res) => {
+app.get(`${API_BASE}/search`, (req, res) => {
   const { query } = req.query;
 
   if (!query) {
@@ -307,7 +308,7 @@ app.get("https://school-management-cyan-seven.vercel.app/search", (req, res) => 
 // ------------------------------------------------------Teachers------------------------------------------------------
 
 // Get teachers data
-app.get("https://school-management-cyan-seven.vercel.app/teachers", (req, res) => {
+app.get(`${API_BASE}/teachers`, (req, res) => {
   const query = "SELECT * FROM teachers";
   db.query(query, (err, results) => {
     if (err) {
@@ -320,7 +321,7 @@ app.get("https://school-management-cyan-seven.vercel.app/teachers", (req, res) =
 });
 
 // Delete a teacher by ID
-app.delete("https://school-management-cyan-seven.vercel.app/teachers/:id", (req, res) => {
+app.delete(`${API_BASE}/teachers/:id`, (req, res) => {
   const { id } = req.params; // Extract student ID from URL
   const query = "DELETE FROM teachers WHERE id = ?";
   const updateCINsQuery = `
@@ -343,7 +344,7 @@ app.delete("https://school-management-cyan-seven.vercel.app/teachers/:id", (req,
 });
 
 // Update a teacher by ID
-app.put("https://school-management-cyan-seven.vercel.app/teachers/:id", (req, res) => {
+app.put(`${API_BASE}/teachers/:id`, (req, res) => {
   const { id } = req.params;
   const { cin, fullname, email, date_registration, tel, adresse } = req.body;
 
@@ -378,7 +379,7 @@ app.put("https://school-management-cyan-seven.vercel.app/teachers/:id", (req, re
 
 //Add new teacher
 
-app.post("https://school-management-cyan-seven.vercel.app/add_t", (req, res) => {
+app.post(`${API_BASE}/add_t`, (req, res) => {
   const { cin, fullname, email, date_registration, tel, adresse } = req.body;
 
   // Validate incoming data
@@ -412,7 +413,7 @@ app.post("https://school-management-cyan-seven.vercel.app/add_t", (req, res) => 
 
 
 //Search teachers
-app.get("https://school-management-cyan-seven.vercel.app/search_t", (req, res) => {
+app.get(`${API_BASE}/search_t`, (req, res) => {
   const { query } = req.query;
 
   if (!query) {
@@ -442,7 +443,7 @@ app.get("https://school-management-cyan-seven.vercel.app/search_t", (req, res) =
 // ------------------------------------------------------Class------------------------------------------------------
 
 // Add new class
-app.get("https://school-management-cyan-seven.vercel.app/classes", (req, res) => {
+app.get(`${API_BASE}/classes`, (req, res) => {
   const sql = "SELECT id, name, number, bg_color AS bgColor FROM classes";
   db.query(sql, (err, results) => {
     if (err) {
@@ -455,7 +456,7 @@ app.get("https://school-management-cyan-seven.vercel.app/classes", (req, res) =>
 });
 
 // POST new class
-app.post("https://school-management-cyan-seven.vercel.app/classes", (req, res) => {
+app.post(`${API_BASE}/classes`, (req, res) => {
   const { name, number } = req.body;
   
   if (!name || !number) {
@@ -514,7 +515,7 @@ app.post("https://school-management-cyan-seven.vercel.app/classes", (req, res) =
 });
 
 // Delete a class by ID
-app.delete("https://school-management-cyan-seven.vercel.app/classes/:id", (req, res) => {
+app.delete(`${API_BASE}/classes/:id`, (req, res) => {
   const { id } = req.params; // Extract class ID from URL
   const query = "DELETE FROM classes WHERE id = ?";
   const updateIdsQuery = `
@@ -543,7 +544,7 @@ app.delete("https://school-management-cyan-seven.vercel.app/classes/:id", (req, 
 
 
 // Add new module
-app.get("https://school-management-cyan-seven.vercel.app/modules", (req, res) => {
+app.get(`${API_BASE}/modules`, (req, res) => {
   const sql = "SELECT id, module_name,date_creation, bg_color AS bgColor FROM modules";
   db.query(sql, (err, results) => {
     if (err) {
@@ -556,7 +557,7 @@ app.get("https://school-management-cyan-seven.vercel.app/modules", (req, res) =>
 });
 
 // POST new module
-app.post("https://school-management-cyan-seven.vercel.app/modules", (req, res) => {
+app.post(`${API_BASE}/modules`, (req, res) => {
   const { module_name,date_creation } = req.body;
   
   if (!module_name || !date_creation) {
@@ -615,7 +616,7 @@ app.post("https://school-management-cyan-seven.vercel.app/modules", (req, res) =
 });
 
 // Delete a module by ID
-app.delete("https://school-management-cyan-seven.vercel.app/modules/:id", (req, res) => {
+app.delete(`${API_BASE}/modules/:id`, (req, res) => {
   const { id } = req.params; // Extract class ID from URL
   const query = "DELETE FROM modules WHERE id = ?";
   const updateIdsQuery = `
@@ -642,7 +643,7 @@ app.delete("https://school-management-cyan-seven.vercel.app/modules/:id", (req, 
 
 
 // Add new groups
-app.get("https://school-management-cyan-seven.vercel.app/groups", (req, res) => {
+app.get(`${API_BASE}/groups`, (req, res) => {
   const sql = "SELECT id, name, number, bg_color AS bgColor FROM `groups`";
   db.query(sql, (err, results) => {
     if (err) {
@@ -657,7 +658,7 @@ app.get("https://school-management-cyan-seven.vercel.app/groups", (req, res) => 
 
 
 // GET total number of groups
-app.get("https://school-management-cyan-seven.vercel.app/groups/total", (req, res) => {
+app.get(`${API_BASE}/groups/total`, (req, res) => {
   const sql = "SELECT COUNT(*) as total FROM classes";
   
   db.query(sql, (err, results) => {
@@ -674,7 +675,7 @@ app.get("https://school-management-cyan-seven.vercel.app/groups/total", (req, re
 });
 
 // POST new groups
-app.post("https://school-management-cyan-seven.vercel.app/groups", (req, res) => {
+app.post(`${API_BASE}/groups`, (req, res) => {
   const { name, number } = req.body;
   
   if (!name || !number) {
@@ -733,7 +734,7 @@ app.post("https://school-management-cyan-seven.vercel.app/groups", (req, res) =>
 });
 
 // Delete a group by ID
-app.delete("https://school-management-cyan-seven.vercel.app/groups/:id", (req, res) => {
+app.delete(`${API_BASE}/groups/:id`, (req, res) => {
   const { id } = req.params; // Extract groups ID from URL
   const query = "DELETE FROM `groups` WHERE id = ?";
   const updateIdsQuery = `
@@ -759,7 +760,7 @@ app.delete("https://school-management-cyan-seven.vercel.app/groups/:id", (req, r
 
 
 // GET groups by year and class type
-app.get("https://school-management-cyan-seven.vercel.app/groups/by-year", (req, res) => {
+app.get(`${API_BASE}/groups/by-year`, (req, res) => {
   const sql = `
     SELECT 
       YEAR(date_creation) as year,
@@ -798,7 +799,7 @@ app.get("https://school-management-cyan-seven.vercel.app/groups/by-year", (req, 
 });
 
 // GET student gender distribution
-app.get("https://school-management-cyan-seven.vercel.app/students/gender-distribution", (req, res) => {
+app.get(`${API_BASE}/students/gender-distribution`, (req, res) => {
   // First try with gender field
   const sql = `
     SELECT 
@@ -864,7 +865,7 @@ app.get("https://school-management-cyan-seven.vercel.app/students/gender-distrib
 // ------------------------------------------------------Announcements------------------------------------------------------
 
 // Add new Announcement
-app.get("https://school-management-cyan-seven.vercel.app/announcements", (req, res) => {
+app.get(`${API_BASE}/announcements`, (req, res) => {
   const sql = "SELECT id, 	author_name, title, content FROM `announcements`";
   db.query(sql, (err, results) => {
     if (err) {
@@ -877,7 +878,7 @@ app.get("https://school-management-cyan-seven.vercel.app/announcements", (req, r
 });
 
 // POST new Announcements
-app.post("https://school-management-cyan-seven.vercel.app/announcements", (req, res) => {
+app.post(`${API_BASE}/announcements`, (req, res) => {
   const {author_name, title, content } = req.body;
   
      if (!title || !content) {
@@ -911,7 +912,7 @@ app.post("https://school-management-cyan-seven.vercel.app/announcements", (req, 
   });
 
 // Delete a group by ID
-app.delete("https://school-management-cyan-seven.vercel.app/announcements/:id", (req, res) => {
+app.delete(`${API_BASE}/announcements/:id`, (req, res) => {
   const { id } = req.params; // Extract announcements ID from URL
   const query = "DELETE FROM `announcements` WHERE id = ?";
   const updateIdsQuery = `
@@ -941,7 +942,7 @@ app.delete("https://school-management-cyan-seven.vercel.app/announcements/:id", 
 
 
 // GET all exams
-app.get("https://school-management-cyan-seven.vercel.app/exams", (req, res) => {
+app.get(`${API_BASE}/exams`, (req, res) => {
   const sql = "SELECT id, module_name, numero_control, date_exam, bg_color AS bgColor FROM exams";
   db.query(sql, (err, results) => {
     if (err) {
@@ -954,7 +955,7 @@ app.get("https://school-management-cyan-seven.vercel.app/exams", (req, res) => {
 });
 
 // POST new exam
-app.post("https://school-management-cyan-seven.vercel.app/exams", (req, res) => {
+app.post(`${API_BASE}/exams`, (req, res) => {
   const { module_name, numero_control, date_exam } = req.body;
   
   if (!module_name || !numero_control || !date_exam) {
@@ -1014,7 +1015,7 @@ app.post("https://school-management-cyan-seven.vercel.app/exams", (req, res) => 
 });
 
 // DELETE an exam by ID
-app.delete("https://school-management-cyan-seven.vercel.app/exams/:id", (req, res) => {
+app.delete(`${API_BASE}/exams/:id`, (req, res) => {
   const { id } = req.params; // Extract exam ID from URL
   const query = "DELETE FROM exams WHERE id = ?";
 
@@ -1035,7 +1036,7 @@ app.delete("https://school-management-cyan-seven.vercel.app/exams/:id", (req, re
 //------------------------------------------------------financials------------------------------------------------------
 
 // GET all financials entries
-app.get("https://school-management-cyan-seven.vercel.app/financials", (req, res) => {
+app.get(`${API_BASE}/financials`, (req, res) => {
   const sql = "SELECT * FROM financials ORDER BY date DESC";
   db.query(sql, (err, results) => {
     if (err) {
@@ -1047,7 +1048,7 @@ app.get("https://school-management-cyan-seven.vercel.app/financials", (req, res)
 });
 
 // GET financials summary (totals and statistics)
-app.get("https://school-management-cyan-seven.vercel.app/financials/summary", (req, res) => {
+app.get(`${API_BASE}/financials/summary`, (req, res) => {
   const summarySql = `
     SELECT
       COALESCE(SUM(CASE WHEN type='income' THEN amount END), 0) AS total_income,
@@ -1104,7 +1105,7 @@ app.get("https://school-management-cyan-seven.vercel.app/financials/summary", (r
 
 
 // POST new financials entry
-app.post("https://school-management-cyan-seven.vercel.app/financials", (req, res) => {
+app.post(`${API_BASE}/financials`, (req, res) => {
   const { description, amount, type, category, date } = req.body;
   
   if (!description || !amount || !type || !date) {
@@ -1137,7 +1138,7 @@ app.post("https://school-management-cyan-seven.vercel.app/financials", (req, res
 });
 
 // DELETE a financials entry by ID
-app.delete("https://school-management-cyan-seven.vercel.app/financials/:id", (req, res) => {
+app.delete(`${API_BASE}/financials/:id`, (req, res) => {
   const { id } = req.params;
   const query = "DELETE FROM financials WHERE id = ?";
 
@@ -1154,7 +1155,7 @@ app.delete("https://school-management-cyan-seven.vercel.app/financials/:id", (re
 });
 
 // GET income that is considered in outcome
-app.get("https://school-management-cyan-seven.vercel.app/financials/income-in-outcome", (req, res) => {
+app.get(`${API_BASE}/financials/income-in-outcome`, (req, res) => {
   const sql = `
     SELECT COALESCE(SUM(amount), 0) AS total_income_for_outcome
     FROM financials
@@ -1171,7 +1172,7 @@ app.get("https://school-management-cyan-seven.vercel.app/financials/income-in-ou
 
 
 // GET all absences
-app.get("https://school-management-cyan-seven.vercel.app/absences", (req, res) => {
+app.get(`${API_BASE}/absences`, (req, res) => {
   const sql = `
     SELECT 
       a.id, 
@@ -1195,7 +1196,7 @@ app.get("https://school-management-cyan-seven.vercel.app/absences", (req, res) =
 });
 
 // GET absences with student details
-app.get("https://school-management-cyan-seven.vercel.app/absences/details", (req, res) => {
+app.get(`${API_BASE}/absences/details`, (req, res) => {
   const sql = `
     SELECT 
       a.id, 
@@ -1242,7 +1243,7 @@ app.get("https://school-management-cyan-seven.vercel.app/absences/details", (req
 });
 
 // GET absences summary statistics
-app.get("https://school-management-cyan-seven.vercel.app/absences/summary", (req, res) => {
+app.get(`${API_BASE}/absences/summary`, (req, res) => {
   // Get total absences count
   const totalSQL = "SELECT COUNT(*) as total FROM absences";
   
@@ -1333,7 +1334,7 @@ app.get("https://school-management-cyan-seven.vercel.app/absences/summary", (req
 });
 
 // GET student names for dropdown
-app.get("https://school-management-cyan-seven.vercel.app/absences/students", (req, res) => {
+app.get(`${API_BASE}/absences/students`, (req, res) => {
   const sql = "SELECT CONCAT(first_name, ' ', last_name) AS name FROM students ORDER BY first_name, last_name";
   
   db.query(sql, (err, results) => {
@@ -1348,7 +1349,7 @@ app.get("https://school-management-cyan-seven.vercel.app/absences/students", (re
 });
 
 // GET module names for dropdown
-app.get("https://school-management-cyan-seven.vercel.app/absences/modules", (req, res) => {
+app.get(`${API_BASE}/absences/modules`, (req, res) => {
   const sql = "SELECT module_name FROM modules ORDER BY module_name";
   
   db.query(sql, (err, results) => {
@@ -1363,7 +1364,7 @@ app.get("https://school-management-cyan-seven.vercel.app/absences/modules", (req
 });
 
 // POST new absence
-app.post("https://school-management-cyan-seven.vercel.app/absences", (req, res) => {
+app.post(`${API_BASE}/absences`, (req, res) => {
   const { module_name, student_name, absence_date, seance, justification } = req.body;
   
   if (!module_name || !student_name || !absence_date || !seance) {
@@ -1421,7 +1422,7 @@ app.post("https://school-management-cyan-seven.vercel.app/absences", (req, res) 
 });
 
 // DELETE an absence by ID
-app.delete("https://school-management-cyan-seven.vercel.app/absences/:id", (req, res) => {
+app.delete(`${API_BASE}/absences/:id`, (req, res) => {
   const { id } = req.params;
   const query = "DELETE FROM absences WHERE id = ?";
 
@@ -1443,7 +1444,7 @@ app.delete("https://school-management-cyan-seven.vercel.app/absences/:id", (req,
 // Add these to your server.js file
 
 // GET groups by year and class type (already exists, but included for completeness)
-app.get("https://school-management-cyan-seven.vercel.app/groups/by-year", (req, res) => {
+app.get(`${API_BASE}/groups/by-year`, (req, res) => {
   const sql = `
     SELECT 
       YEAR(created_at) as year,
@@ -1482,7 +1483,7 @@ app.get("https://school-management-cyan-seven.vercel.app/groups/by-year", (req, 
 });
 
 // GET groups by type (new endpoint)
-app.get("https://school-management-cyan-seven.vercel.app/groups/by-type", (req, res) => {
+app.get(`${API_BASE}/groups/by-type`, (req, res) => {
   const sql = `
     SELECT 
       CASE 
@@ -1524,7 +1525,7 @@ app.get("https://school-management-cyan-seven.vercel.app/groups/by-type", (req, 
 });
 
 // GET groups growth over time (new endpoint)
-app.get("https://school-management-cyan-seven.vercel.app/groups/growth", (req, res) => {
+app.get(`${API_BASE}/groups/growth`, (req, res) => {
   const sql = `
     SELECT 
       YEAR(created_at) as year,

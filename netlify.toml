@@ -1,3 +1,22 @@
+[build]
+  publish = "dist"
+  command = "npm run build"
+
+# Environment variables
+[build.environment]
+  VITE_API_URL = "https://school-management-cyan-seven.vercel.app"
+
+# Context-specific environment variables
+[context.production.environment]
+  VITE_API_URL = "https://school-management-cyan-seven.vercel.app"
+
+[context.deploy-preview.environment]
+  VITE_API_URL = "https://school-management-cyan-seven.vercel.app"
+
+[context.branch-deploy.environment]
+  VITE_API_URL = "https://school-management-cyan-seven.vercel.app"
+
+# Redirects for SPA
 [[redirects]]
   from = "/*"
   to = "/index.html"
