@@ -48,58 +48,58 @@ const sidebarItem: menu[] = [
         title: 'Teachers',
         icon: BriefcaseIcon,
         BgColor: 'primary',
-        to: '/ui/teachers'
+        to: '/teachers'
     },
     {
         title: 'Students',
         icon: SchoolIcon,
         BgColor: 'primary',
-        to: '/ui/students'
+        to: '/students'
     },
     {
         title: 'Classes',
         icon: UsersIcon,
         BgColor: 'primary',
-        to: '/ui/classes'
+        to: '/classes'
     },
     {
         title: 'Modules',
         icon: HexagonsIcon,
         BgColor: 'primary',
-        to: '/ui/modules'
+        to: '/modules'
     },
     {
         title: 'Groups',
         icon: BuildingCarouselIcon,
         BgColor: 'primary',
-        to: '/ui/groups'
+        to: '/groups'
     },
 
     {
         title: 'Absences',
         icon: SchoolOffIcon,
         BgColor: 'primary',
-        to: '/ui/absences'
+        to: '/absences'
     },
     {
         title: 'Exams',
         icon: BrandSteamIcon,
         BgColor: 'primary',
-        to: '/ui/exams'
+        to: '/exams'
     },
 
     {
         title: 'Financials',
         icon: ReceiptRefundIcon,
         BgColor: 'primary',
-        to: '/ui/financials'
+        to: '/financials'
     },
 
     {
         title: 'Annoucements',
         icon: NotificationIcon,
         BgColor: 'primary',
-        to: '/ui/ann'
+        to: '/ann'
     }
 ];
 

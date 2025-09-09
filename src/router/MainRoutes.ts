@@ -13,62 +13,62 @@ const MainRoutes = {
         },
         {
             name: 'Alert',
-            path: '/ui/alerts',
+            path: '/alerts',
             component: () => import('@/views/ui-components/Alerts.vue')
         },
         {
             name: 'Teachers',
-            path: '/ui/teachers',
+            path: '/teachers',
             component: () => import('@/views/ui-components/Teachers.vue')
         },
         {
             name: 'Students',
-            path: '/ui/students',
+            path: '/students',
             component: () => import('@/views/ui-components/Students.vue')
         },
                 {
             name: 'Classes',
-            path: '/ui/classes',
+            path: '/classes',
             component: () => import('@/views/ui-components/Classes.vue')
         },
         {
             name: 'Modules',
-            path: '/ui/modules',
+            path: '/modules',
             component: () => import('@/views/ui-components/Modules.vue')
         },
         {
             name: 'Groups',
-            path: '/ui/groups',
+            path: '/groups',
             component: () => import('@/views/ui-components/Groups.vue')
         },
         {
             name: 'Absences',
-            path: '/ui/absences',
+            path: '/absences',
             component: () => import('@/views/ui-components/Absences.vue')
         },
         {
             name: 'Exams',
-            path: '/ui/exams',
+            path: '/exams',
             component: () => import('@/views/ui-components/Exams.vue')
         },
         // {
         //     name: 'Grades',
-        //     path: '/ui/grades',
+        //     path: '/grades',
         //     component: () => import('@/views/ui-components/Grades.vue')
         // },
         {
             name: 'Financials',
-            path: '/ui/financials',
+            path: '/financials',
             component: () => import('@/views/ui-components/Financials.vue')
         },
         // {
         //     name: 'Results',
-        //     path: '/ui/results',
+        //     path: '/results',
         //     component: () => import('@/views/ui-components/Results.vue')
         // },
         {
             name: 'Annoucements',
-            path: '/ui/ann',
+            path: '/ann',
             component: () => import('@/views/ui-components/ann.vue')
         }
 
