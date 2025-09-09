@@ -6,7 +6,9 @@ const bcrypt = require("bcryptjs");
 require('dotenv').config();
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: "*", 
+}));
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -41,7 +43,7 @@ db.connect((err) => {
   console.log("Connected to MySQL database");
 });
 // Register route
-app.post("/register", async (req, res) => {
+app.post("https://school-management-p6b434yeo-haitams-projects-58e1c745.vercel.app/register", async (req, res) => {
   const { username, password } = req.body;
 
   if (!username || !password)
@@ -70,7 +72,7 @@ app.post("/register", async (req, res) => {
 });
 
 // Login route
-app.post("/login", (req, res) => {
+app.post("https://school-management-p6b434yeo-haitams-projects-58e1c745.vercel.app/login", (req, res) => {
   const { username, password } = req.body;
 
   if (!username || !password)
@@ -96,7 +98,7 @@ app.post("/login", (req, res) => {
 // ------------------------------------------------------Students------------------------------------------------------
 
 // Get students data
-app.get("/students", (req, res) => {
+app.get("https://school-management-p6b434yeo-haitams-projects-58e1c745.vercel.app/students", (req, res) => {
   const query = "SELECT * FROM students";
   db.query(query, (err, results) => {
     if (err) {
@@ -111,7 +113,7 @@ app.get("/students", (req, res) => {
 
 
 // GET total number of students
-app.get("/students/total", (req, res) => {
+app.get("https://school-management-p6b434yeo-haitams-projects-58e1c745.vercel.app/students/total", (req, res) => {
   const sql = "SELECT COUNT(*) as total FROM students";
   
   db.query(sql, (err, results) => {
@@ -128,7 +130,7 @@ app.get("/students/total", (req, res) => {
 });
 
 // Delete a student by ID
-app.delete("/students/:id", (req, res) => {
+app.delete("https://school-management-p6b434yeo-haitams-projects-58e1c745.vercel.app/students/:id", (req, res) => {
   const { id } = req.params; // Extract student ID from URL
   const query = "DELETE FROM students WHERE id = ?";
   const updateIdsQuery = `
@@ -151,7 +153,7 @@ app.delete("/students/:id", (req, res) => {
 });
 
 // Update a student by ID
-app.put("/students/:id", (req, res) => {
+app.put("https://school-management-p6b434yeo-haitams-projects-58e1c745.vercel.app/students/:id", (req, res) => {
   const { id } = req.params;
   const {
     first_name,
@@ -209,7 +211,7 @@ app.put("/students/:id", (req, res) => {
 
 //Add new student
 
-app.post("/add", (req, res) => {
+app.post("https://school-management-p6b434yeo-haitams-projects-58e1c745.vercel.app/add", (req, res) => {
   const {
     id,
     first_name,
@@ -278,7 +280,7 @@ app.post("/add", (req, res) => {
 });
 
 //Search students
-app.get("/search", (req, res) => {
+app.get("https://school-management-p6b434yeo-haitams-projects-58e1c745.vercel.app/search", (req, res) => {
   const { query } = req.query;
 
   if (!query) {
@@ -305,7 +307,7 @@ app.get("/search", (req, res) => {
 // ------------------------------------------------------Teachers------------------------------------------------------
 
 // Get teachers data
-app.get("/teachers", (req, res) => {
+app.get("https://school-management-p6b434yeo-haitams-projects-58e1c745.vercel.app/teachers", (req, res) => {
   const query = "SELECT * FROM teachers";
   db.query(query, (err, results) => {
     if (err) {
@@ -318,7 +320,7 @@ app.get("/teachers", (req, res) => {
 });
 
 // Delete a teacher by ID
-app.delete("/teachers/:id", (req, res) => {
+app.delete("https://school-management-p6b434yeo-haitams-projects-58e1c745.vercel.app/teachers/:id", (req, res) => {
   const { id } = req.params; // Extract student ID from URL
   const query = "DELETE FROM teachers WHERE id = ?";
   const updateCINsQuery = `
@@ -341,7 +343,7 @@ app.delete("/teachers/:id", (req, res) => {
 });
 
 // Update a teacher by ID
-app.put("/teachers/:id", (req, res) => {
+app.put("https://school-management-p6b434yeo-haitams-projects-58e1c745.vercel.app/teachers/:id", (req, res) => {
   const { id } = req.params;
   const { cin, fullname, email, date_registration, tel, adresse } = req.body;
 
@@ -376,7 +378,7 @@ app.put("/teachers/:id", (req, res) => {
 
 //Add new teacher
 
-app.post("/add_t", (req, res) => {
+app.post("https://school-management-p6b434yeo-haitams-projects-58e1c745.vercel.app/add_t", (req, res) => {
   const { cin, fullname, email, date_registration, tel, adresse } = req.body;
 
   // Validate incoming data
@@ -410,7 +412,7 @@ app.post("/add_t", (req, res) => {
 
 
 //Search teachers
-app.get("/search_t", (req, res) => {
+app.get("https://school-management-p6b434yeo-haitams-projects-58e1c745.vercel.app/search_t", (req, res) => {
   const { query } = req.query;
 
   if (!query) {
@@ -440,7 +442,7 @@ app.get("/search_t", (req, res) => {
 // ------------------------------------------------------Class------------------------------------------------------
 
 // Add new class
-app.get("/classes", (req, res) => {
+app.get("https://school-management-p6b434yeo-haitams-projects-58e1c745.vercel.app/classes", (req, res) => {
   const sql = "SELECT id, name, number, bg_color AS bgColor FROM classes";
   db.query(sql, (err, results) => {
     if (err) {
@@ -453,7 +455,7 @@ app.get("/classes", (req, res) => {
 });
 
 // POST new class
-app.post("/classes", (req, res) => {
+app.post("https://school-management-p6b434yeo-haitams-projects-58e1c745.vercel.app/classes", (req, res) => {
   const { name, number } = req.body;
   
   if (!name || !number) {
@@ -512,7 +514,7 @@ app.post("/classes", (req, res) => {
 });
 
 // Delete a class by ID
-app.delete("/classes/:id", (req, res) => {
+app.delete("https://school-management-p6b434yeo-haitams-projects-58e1c745.vercel.app/classes/:id", (req, res) => {
   const { id } = req.params; // Extract class ID from URL
   const query = "DELETE FROM classes WHERE id = ?";
   const updateIdsQuery = `
@@ -541,7 +543,7 @@ app.delete("/classes/:id", (req, res) => {
 
 
 // Add new module
-app.get("/modules", (req, res) => {
+app.get("https://school-management-p6b434yeo-haitams-projects-58e1c745.vercel.app/modules", (req, res) => {
   const sql = "SELECT id, module_name,date_creation, bg_color AS bgColor FROM modules";
   db.query(sql, (err, results) => {
     if (err) {
@@ -554,7 +556,7 @@ app.get("/modules", (req, res) => {
 });
 
 // POST new module
-app.post("/modules", (req, res) => {
+app.post("https://school-management-p6b434yeo-haitams-projects-58e1c745.vercel.app/modules", (req, res) => {
   const { module_name,date_creation } = req.body;
   
   if (!module_name || !date_creation) {
@@ -613,7 +615,7 @@ app.post("/modules", (req, res) => {
 });
 
 // Delete a module by ID
-app.delete("/modules/:id", (req, res) => {
+app.delete("https://school-management-p6b434yeo-haitams-projects-58e1c745.vercel.app/modules/:id", (req, res) => {
   const { id } = req.params; // Extract class ID from URL
   const query = "DELETE FROM modules WHERE id = ?";
   const updateIdsQuery = `
@@ -640,7 +642,7 @@ app.delete("/modules/:id", (req, res) => {
 
 
 // Add new groups
-app.get("/groups", (req, res) => {
+app.get("https://school-management-p6b434yeo-haitams-projects-58e1c745.vercel.app/groups", (req, res) => {
   const sql = "SELECT id, name, number, bg_color AS bgColor FROM `groups`";
   db.query(sql, (err, results) => {
     if (err) {
@@ -655,7 +657,7 @@ app.get("/groups", (req, res) => {
 
 
 // GET total number of groups
-app.get("/groups/total", (req, res) => {
+app.get("https://school-management-p6b434yeo-haitams-projects-58e1c745.vercel.app/groups/total", (req, res) => {
   const sql = "SELECT COUNT(*) as total FROM classes";
   
   db.query(sql, (err, results) => {
@@ -672,7 +674,7 @@ app.get("/groups/total", (req, res) => {
 });
 
 // POST new groups
-app.post("/groups", (req, res) => {
+app.post("https://school-management-p6b434yeo-haitams-projects-58e1c745.vercel.app/groups", (req, res) => {
   const { name, number } = req.body;
   
   if (!name || !number) {
@@ -731,7 +733,7 @@ app.post("/groups", (req, res) => {
 });
 
 // Delete a group by ID
-app.delete("/groups/:id", (req, res) => {
+app.delete("https://school-management-p6b434yeo-haitams-projects-58e1c745.vercel.app/groups/:id", (req, res) => {
   const { id } = req.params; // Extract groups ID from URL
   const query = "DELETE FROM `groups` WHERE id = ?";
   const updateIdsQuery = `
@@ -757,7 +759,7 @@ app.delete("/groups/:id", (req, res) => {
 
 
 // GET groups by year and class type
-app.get("/groups/by-year", (req, res) => {
+app.get("https://school-management-p6b434yeo-haitams-projects-58e1c745.vercel.app/groups/by-year", (req, res) => {
   const sql = `
     SELECT 
       YEAR(date_creation) as year,
@@ -796,7 +798,7 @@ app.get("/groups/by-year", (req, res) => {
 });
 
 // GET student gender distribution
-app.get("/students/gender-distribution", (req, res) => {
+app.get("https://school-management-p6b434yeo-haitams-projects-58e1c745.vercel.app/students/gender-distribution", (req, res) => {
   // First try with gender field
   const sql = `
     SELECT 
@@ -862,7 +864,7 @@ app.get("/students/gender-distribution", (req, res) => {
 // ------------------------------------------------------Announcements------------------------------------------------------
 
 // Add new Announcement
-app.get("/announcements", (req, res) => {
+app.get("https://school-management-p6b434yeo-haitams-projects-58e1c745.vercel.app/announcements", (req, res) => {
   const sql = "SELECT id, 	author_name, title, content FROM `announcements`";
   db.query(sql, (err, results) => {
     if (err) {
@@ -875,7 +877,7 @@ app.get("/announcements", (req, res) => {
 });
 
 // POST new Announcements
-app.post("/announcements", (req, res) => {
+app.post("https://school-management-p6b434yeo-haitams-projects-58e1c745.vercel.app/announcements", (req, res) => {
   const {author_name, title, content } = req.body;
   
      if (!title || !content) {
@@ -909,7 +911,7 @@ app.post("/announcements", (req, res) => {
   });
 
 // Delete a group by ID
-app.delete("/announcements/:id", (req, res) => {
+app.delete("https://school-management-p6b434yeo-haitams-projects-58e1c745.vercel.app/announcements/:id", (req, res) => {
   const { id } = req.params; // Extract announcements ID from URL
   const query = "DELETE FROM `announcements` WHERE id = ?";
   const updateIdsQuery = `
@@ -939,7 +941,7 @@ app.delete("/announcements/:id", (req, res) => {
 
 
 // GET all exams
-app.get("/exams", (req, res) => {
+app.get("https://school-management-p6b434yeo-haitams-projects-58e1c745.vercel.app/exams", (req, res) => {
   const sql = "SELECT id, module_name, numero_control, date_exam, bg_color AS bgColor FROM exams";
   db.query(sql, (err, results) => {
     if (err) {
@@ -952,7 +954,7 @@ app.get("/exams", (req, res) => {
 });
 
 // POST new exam
-app.post("/exams", (req, res) => {
+app.post("https://school-management-p6b434yeo-haitams-projects-58e1c745.vercel.app/exams", (req, res) => {
   const { module_name, numero_control, date_exam } = req.body;
   
   if (!module_name || !numero_control || !date_exam) {
@@ -1012,7 +1014,7 @@ app.post("/exams", (req, res) => {
 });
 
 // DELETE an exam by ID
-app.delete("/exams/:id", (req, res) => {
+app.delete("https://school-management-p6b434yeo-haitams-projects-58e1c745.vercel.app/exams/:id", (req, res) => {
   const { id } = req.params; // Extract exam ID from URL
   const query = "DELETE FROM exams WHERE id = ?";
 
@@ -1033,7 +1035,7 @@ app.delete("/exams/:id", (req, res) => {
 //------------------------------------------------------financials------------------------------------------------------
 
 // GET all financials entries
-app.get("/financials", (req, res) => {
+app.get("https://school-management-p6b434yeo-haitams-projects-58e1c745.vercel.app/financials", (req, res) => {
   const sql = "SELECT * FROM financials ORDER BY date DESC";
   db.query(sql, (err, results) => {
     if (err) {
@@ -1045,7 +1047,7 @@ app.get("/financials", (req, res) => {
 });
 
 // GET financials summary (totals and statistics)
-app.get("/financials/summary", (req, res) => {
+app.get("https://school-management-p6b434yeo-haitams-projects-58e1c745.vercel.app/financials/summary", (req, res) => {
   const summarySql = `
     SELECT
       COALESCE(SUM(CASE WHEN type='income' THEN amount END), 0) AS total_income,
@@ -1102,7 +1104,7 @@ app.get("/financials/summary", (req, res) => {
 
 
 // POST new financials entry
-app.post("/financials", (req, res) => {
+app.post("https://school-management-p6b434yeo-haitams-projects-58e1c745.vercel.app/financials", (req, res) => {
   const { description, amount, type, category, date } = req.body;
   
   if (!description || !amount || !type || !date) {
@@ -1135,7 +1137,7 @@ app.post("/financials", (req, res) => {
 });
 
 // DELETE a financials entry by ID
-app.delete("/financials/:id", (req, res) => {
+app.delete("https://school-management-p6b434yeo-haitams-projects-58e1c745.vercel.app/financials/:id", (req, res) => {
   const { id } = req.params;
   const query = "DELETE FROM financials WHERE id = ?";
 
@@ -1152,7 +1154,7 @@ app.delete("/financials/:id", (req, res) => {
 });
 
 // GET income that is considered in outcome
-app.get("/financials/income-in-outcome", (req, res) => {
+app.get("https://school-management-p6b434yeo-haitams-projects-58e1c745.vercel.app/financials/income-in-outcome", (req, res) => {
   const sql = `
     SELECT COALESCE(SUM(amount), 0) AS total_income_for_outcome
     FROM financials
@@ -1169,7 +1171,7 @@ app.get("/financials/income-in-outcome", (req, res) => {
 
 
 // GET all absences
-app.get("/absences", (req, res) => {
+app.get("https://school-management-p6b434yeo-haitams-projects-58e1c745.vercel.app/absences", (req, res) => {
   const sql = `
     SELECT 
       a.id, 
@@ -1193,7 +1195,7 @@ app.get("/absences", (req, res) => {
 });
 
 // GET absences with student details
-app.get("/absences/details", (req, res) => {
+app.get("https://school-management-p6b434yeo-haitams-projects-58e1c745.vercel.app/absences/details", (req, res) => {
   const sql = `
     SELECT 
       a.id, 
@@ -1240,7 +1242,7 @@ app.get("/absences/details", (req, res) => {
 });
 
 // GET absences summary statistics
-app.get("/absences/summary", (req, res) => {
+app.get("https://school-management-p6b434yeo-haitams-projects-58e1c745.vercel.app/absences/summary", (req, res) => {
   // Get total absences count
   const totalSQL = "SELECT COUNT(*) as total FROM absences";
   
@@ -1331,7 +1333,7 @@ app.get("/absences/summary", (req, res) => {
 });
 
 // GET student names for dropdown
-app.get("/absences/students", (req, res) => {
+app.get("https://school-management-p6b434yeo-haitams-projects-58e1c745.vercel.app/absences/students", (req, res) => {
   const sql = "SELECT CONCAT(first_name, ' ', last_name) AS name FROM students ORDER BY first_name, last_name";
   
   db.query(sql, (err, results) => {
@@ -1346,7 +1348,7 @@ app.get("/absences/students", (req, res) => {
 });
 
 // GET module names for dropdown
-app.get("/absences/modules", (req, res) => {
+app.get("https://school-management-p6b434yeo-haitams-projects-58e1c745.vercel.app/absences/modules", (req, res) => {
   const sql = "SELECT module_name FROM modules ORDER BY module_name";
   
   db.query(sql, (err, results) => {
@@ -1361,7 +1363,7 @@ app.get("/absences/modules", (req, res) => {
 });
 
 // POST new absence
-app.post("/absences", (req, res) => {
+app.post("https://school-management-p6b434yeo-haitams-projects-58e1c745.vercel.app/absences", (req, res) => {
   const { module_name, student_name, absence_date, seance, justification } = req.body;
   
   if (!module_name || !student_name || !absence_date || !seance) {
@@ -1419,7 +1421,7 @@ app.post("/absences", (req, res) => {
 });
 
 // DELETE an absence by ID
-app.delete("/absences/:id", (req, res) => {
+app.delete("https://school-management-p6b434yeo-haitams-projects-58e1c745.vercel.app/absences/:id", (req, res) => {
   const { id } = req.params;
   const query = "DELETE FROM absences WHERE id = ?";
 
@@ -1441,7 +1443,7 @@ app.delete("/absences/:id", (req, res) => {
 // Add these to your server.js file
 
 // GET groups by year and class type (already exists, but included for completeness)
-app.get("/groups/by-year", (req, res) => {
+app.get("https://school-management-p6b434yeo-haitams-projects-58e1c745.vercel.app/groups/by-year", (req, res) => {
   const sql = `
     SELECT 
       YEAR(created_at) as year,
@@ -1480,7 +1482,7 @@ app.get("/groups/by-year", (req, res) => {
 });
 
 // GET groups by type (new endpoint)
-app.get("/groups/by-type", (req, res) => {
+app.get("https://school-management-p6b434yeo-haitams-projects-58e1c745.vercel.app/groups/by-type", (req, res) => {
   const sql = `
     SELECT 
       CASE 
@@ -1522,7 +1524,7 @@ app.get("/groups/by-type", (req, res) => {
 });
 
 // GET groups growth over time (new endpoint)
-app.get("/groups/growth", (req, res) => {
+app.get("https://school-management-p6b434yeo-haitams-projects-58e1c745.vercel.app/groups/growth", (req, res) => {
   const sql = `
     SELECT 
       YEAR(created_at) as year,
