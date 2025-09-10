@@ -15,8 +15,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // const API_BASE = process.env.API_BASE_URL;
 // Create MySQL connection
-// Create MySQL connection pool (better than single connection)
-const pool = mysql.createPool({
+const db = mysql.createConnection({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
@@ -25,19 +24,6 @@ const pool = mysql.createPool({
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
-});
-// Get a promise-based interface from the pool
-const promisePool = pool.promise();
-
-// Test database connection
-app.get("/test-db", async (req, res) => {
-  try {
-    const [rows] = await promisePool.execute("SELECT 1 as test");
-    res.json({ success: true, message: "Database connected successfully", data: rows });
-  } catch (error) {
-    console.error("Database connection error:", error);
-    res.status(500).json({ success: false, message: "Database connection failed", error: error.message });
-  }
 });
 
 // // Get a promise-based interface from the pool
@@ -113,27 +99,17 @@ app.post("/login", (req, res) => {
 // ------------------------------------------------------Students------------------------------------------------------
 
 // Get students data
-app.get("/students", async (req, res) => {
-  try {
-    const [rows] = await promisePool.execute("SELECT * FROM students");
-    res.json(rows);
-  } catch (error) {
-    console.error("Error fetching students:", error);
-    res.status(500).json({ error: "Failed to fetch students" });
-  }
-});
-
-// Connect to MySQL and test connection
-promisePool.execute("SELECT 1 as test")
-  .then(() => {
-    console.log("Connected to MySQL database successfully");
-  })
-  .catch((err) => {
-    console.error("Error connecting to MySQL:", err);
+app.get("/students", (req, res) => {
+  const query = "SELECT * FROM students";
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error("Error fetching students:", err);
+      res.status(500).send(err);
+    } else {
+      res.json(results);
+    }
   });
-
-// Export for Vercel
-module.exports = app;
+});
 
 
 
