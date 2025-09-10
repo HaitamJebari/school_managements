@@ -22,7 +22,8 @@ const handleLogout = () => {
 <template>
     <v-navigation-drawer left v-model="sDrawer" app class="leftSidebar ml-sm-7 mt-sm-4 bg-containerBg" elevation="10" width="270">
         <div class="pa-5 pl-4">
-            <Logo />
+            <!-- <Logo /> -->
+            <!-- <img :src="fav" alt="Logo" width="40" height="40" /> -->
         </div>
         <!-- ---------------------------------------------- -->
         <!---Navigation -->
