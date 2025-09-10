@@ -36,7 +36,7 @@ const items = ref([{ title: 'Action' }, { title: 'Another action' }, { title: 'S
 
 const fetchTeachers = async () => {
     try {
-        const response = await axios.get('http://localhost:5000/teachers');
+        const response = await axios.get('https://school-management-cyan-seven.vercel.app/teachers');
         teachers.value = response.data;
     } catch (error) {
         console.error('Error fetching teachers:', error);
