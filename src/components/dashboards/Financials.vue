@@ -118,7 +118,7 @@ const success = '#4CAF50';
 const fetchfinancialsData = async () => {
     try {
         isLoading.value = true;
-        const response = await axios.get('http://localhost:5000/financials');
+        const response = await axios.get('https://school-management-cyan-seven.vercel.app/financials');
         financialsData.value = response.data;
         console.log('financials data:', financialsData.value);
     } catch (error) {
@@ -144,14 +144,14 @@ const fetchfinancialsSummary = async () => {
     });
     try {
         isLoading.value = true;
-        const response = await axios.get('http://localhost:5000/financials/summary');
+        const response = await axios.get('https://school-management-cyan-seven.vercel.app/financials/summary');
         summary.value = response.data.summary;
         monthlyData.value = response.data.monthly;
         categoryData.value = response.data.categories;
 
         // Also fetch income that should be in outcome
         try {
-            const incomeInOutcomeResponse = await axios.get('http://localhost:5000/financials/income-in-outcome');
+            const incomeInOutcomeResponse = await axios.get('https://school-management-cyan-seven.vercel.app/financials/income-in-outcome');
             summary.value.income_in_outcome = incomeInOutcomeResponse.data.total_income_for_outcome;
         } catch (error) {
             console.error('Error fetching income in outcome:', error);
@@ -188,7 +188,7 @@ const addfinancials = async () => {
 
     try {
         isLoading.value = true;
-        const response = await axios.post('http://localhost:5000/financials', {
+        const response = await axios.post('https://school-management-cyan-seven.vercel.app/financials', {
             description: financialsForm.value.description,
             amount: parseFloat(financialsForm.value.amount),
             type: financialsForm.value.type,
@@ -256,7 +256,7 @@ const deletefinancials = (id: number) => {
             if (result.isConfirmed) {
                 try {
                     isLoading.value = true;
-                    const response = await axios.delete(`http://localhost:5000/financials/${id}`);
+                    const response = await axios.delete(`https://school-management-cyan-seven.vercel.app/financials/${id}`);
                     if (response.status === 200) {
                         swalWithBootstrapButtons.fire({
                             title: 'Deleted!',

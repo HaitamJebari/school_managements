@@ -157,7 +157,7 @@ const fetchAbsencesData = async () => {
         buttonsStyling: false
     });
     try {
-        const response = await axios.get('http://localhost:5000/absences');
+        const response = await axios.get('https://school-management-cyan-seven.vercel.app/absences');
         absencesData.value = response.data;
         console.log('Absences data:', absencesData.value);
     } catch (error) {
@@ -174,7 +174,7 @@ const fetchAbsencesData = async () => {
 // Fetch student names for dropdown
 const fetchStudentNames = async () => {
     try {
-        const response = await axios.get('http://localhost:5000/absences/students');
+        const response = await axios.get('https://school-management-cyan-seven.vercel.app/absences/students');
         studentNames.value = response.data;
         console.log('Student names:', studentNames.value);
     } catch (error) {
@@ -191,7 +191,7 @@ const fetchStudentNames = async () => {
 // Fetch module names for dropdown
 const fetchModuleNames = async () => {
     try {
-        const response = await axios.get('http://localhost:5000/absences/modules');
+        const response = await axios.get('https://school-management-cyan-seven.vercel.app/absences/modules');
         moduleNames.value = response.data;
         console.log('Module names:', moduleNames.value);
     } catch (error) {
@@ -208,7 +208,7 @@ const fetchModuleNames = async () => {
 // Fetch absence summary
 const fetchAbsenceSummary = async () => {
     try {
-        const response = await axios.get('http://localhost:5000/absences/summary');
+        const response = await axios.get('https://school-management-cyan-seven.vercel.app/absences/summary');
         summary.value = response.data;
         console.log('Absence summary:', summary.value);
     } catch (error) {
@@ -235,7 +235,7 @@ const addAbsence = async () => {
     }
 
     try {
-        const response = await axios.post('http://localhost:5000/absences', {
+        const response = await axios.post('https://school-management-cyan-seven.vercel.app/absences', {
             module_name: absenceForm.value.module_name,
             student_name: absenceForm.value.student_name,
             absence_date: absenceForm.value.absence_date,
@@ -296,7 +296,7 @@ const deleteAbsence = (id: number) => {
         .then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    const response = await axios.delete(`http://localhost:5000/absences/${id}`);
+                    const response = await axios.delete(`https://school-management-cyan-seven.vercel.app/absences/${id}`);
                     if (response.status === 200) {
                         swalWithBootstrapButtons.fire({
                             title: 'Deleted!',

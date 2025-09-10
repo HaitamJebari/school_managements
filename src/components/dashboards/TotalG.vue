@@ -17,7 +17,7 @@ const loading = ref(true);
 const fetchGroupTotal = async () => {
   try {
     loading.value = true;
-    const response = await axios.get('http://localhost:5000/groups/total');
+    const response = await axios.get('https://school-management-cyan-seven.vercel.app/groups/total');
     groupTotal.value = response.data.total;
     console.log('Group total:', groupTotal.value);
   } catch (error) {

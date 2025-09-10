@@ -27,7 +27,7 @@ const items = ref([{ title: 'Action' }, { title: 'Another action' }, { title: 'S
 
 const fetchStudents = async () => {
     try {
-        const response = await axios.get('http://localhost:5000/students');
+        const response = await axios.get('https://school-management-cyan-seven.vercel.app/students');
         students.value = response.data;
     } catch (error) {
         console.error('Error fetching students:', error);
@@ -68,7 +68,7 @@ const confirmDelete = async () => {
   if (studentToDelete.value) {
     try {
       const response = await axios.delete(
-        `http://localhost:5000/students/${studentToDelete.value}`
+        `https://school-management-cyan-seven.vercel.app/students/${studentToDelete.value}`
       );
 
       if (response.status === 200) {

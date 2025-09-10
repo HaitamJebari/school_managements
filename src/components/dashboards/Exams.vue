@@ -97,7 +97,7 @@ const addExam = async () => {
     }
 
     try {
-        const response = await axios.post('http://localhost:5000/exams', {
+        const response = await axios.post('https://school-management-cyan-seven.vercel.app/exams', {
             module_name: examForm.value.module_name,
             numero_control: examForm.value.numero_control,
             date_exam: examForm.value.date_exam
@@ -130,7 +130,7 @@ const addExam = async () => {
 // Update fetchExams to use backend-provided colors
 const fetchExams = async () => {
     try {
-        const response = await axios.get('http://localhost:5000/exams');
+        const response = await axios.get('https://school-management-cyan-seven.vercel.app/exams');
         exams.value = response.data.map((exam: any) => ({
             ...exam,
             bgColor: exam.bgColor || exam.bg_color // Handle both cases
@@ -185,7 +185,7 @@ const showConfirmationDialog = (examId: number) => {
         .then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    const response = await axios.delete(`http://localhost:5000/exams/${examId}`);
+                    const response = await axios.delete(`https://school-management-cyan-seven.vercel.app/exams/${examId}`);
                     if (response.status === 200) {
                         swalWithBootstrapButtons.fire({
                             title: 'Deleted!',

@@ -53,7 +53,7 @@ const fetchData = (): Promise<string> =>
 
 const addClass = async () => {
     try {
-        const response = await axios.post('http://localhost:5000/classes', {
+        const response = await axios.post('https://school-management-cyan-seven.vercel.app/classes', {
             name: classForm.value.name,
             number: Number(classForm.value.number)
         });
@@ -86,7 +86,7 @@ const addClass = async () => {
 // Update fetchClasses to use backend-provided colors
 const fetchClasses = async () => {
     try {
-        const response = await axios.get('http://localhost:5000/classes');
+        const response = await axios.get('https://school-management-cyan-seven.vercel.app/classes');
         classes.value = response.data.map((cls: any) => ({
             ...cls,
             bgColor: cls.bgColor || cls.bg_color // Handle both cases
@@ -134,7 +134,7 @@ const showConfirmationDialog = (classesId: number) => {
         .then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    const response = await axios.delete(`http://localhost:5000/classes/${classesId}`);
+                    const response = await axios.delete(`https://school-management-cyan-seven.vercel.app/classes/${classesId}`);
                     if (response.status === 200) {
                         swalWithBootstrapButtons.fire({
                             title: 'Deleted!',

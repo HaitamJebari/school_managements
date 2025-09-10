@@ -44,7 +44,7 @@ const items = ref([{ title: 'Action' }, { title: 'Another action' }, { title: 'S
 
 const fetchStudents = async () => {
     try {
-        const response = await axios.get('http://localhost:5000/students');
+        const response = await axios.get('https://school-management-cyan-seven.vercel.app/students');
         students.value = response.data;
     } catch (error) {
         console.error('Error fetching students:', error);
@@ -159,7 +159,7 @@ const showConfirmationDialog = (studentId: string) => {
         .then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    const response = await axios.delete(`http://localhost:5000/students/${studentId}`);
+                    const response = await axios.delete(`https://school-management-cyan-seven.vercel.app/students/${studentId}`);
                     if (response.status === 200) {
                         swalWithBootstrapButtons.fire({
                             title: 'Deleted!',
@@ -224,7 +224,7 @@ const errorMessage = ref('');
 const submitForm = async () => {
     try {
         console.log('Submitting form data:', form1.value); // Log form data
-        const response = await axios.post('http://localhost:5000/add', form1.value);
+        const response = await axios.post('https://school-management-cyan-seven.vercel.app/add', form1.value);
 
         // Add the newly created student to the local list
         students.value.push({ ...form1.value });
@@ -285,7 +285,7 @@ const resetForm2 = () => {
 //update student
 const updateStudent = async (studentId: string) => {
     try {
-        const response = await axios.put(`http://localhost:5000/students/${studentId}`, form2.value);
+        const response = await axios.put(`https://school-management-cyan-seven.vercel.app/students/${studentId}`, form2.value);
         Swal.fire({
             title: response.data.message || 'Student updated successfully!',
             icon: 'success',

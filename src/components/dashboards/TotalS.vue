@@ -18,7 +18,7 @@ const loading = ref(true);
 const fetchStudentTotal = async () => {
   try {
     loading.value = true;
-    const response = await axios.get('http://localhost:5000/students/total');
+    const response = await axios.get('https://school-management-cyan-seven.vercel.app/students/total');
     studentTotal.value = response.data.total;
     console.log('Student total:', studentTotal.value);
   } catch (error) {

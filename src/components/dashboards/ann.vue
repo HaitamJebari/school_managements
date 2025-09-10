@@ -94,7 +94,7 @@ const addAnnouncement = async () => {
 
     try {
         loading.value = true;
-        const response = await axios.post('http://localhost:5000/announcements', {
+        const response = await axios.post('https://school-management-cyan-seven.vercel.app/announcements', {
             author_name: announcementForm.value.author_name,
             title: announcementForm.value.title,
             content: announcementForm.value.content
@@ -135,7 +135,7 @@ const addAnnouncement = async () => {
 const fetchData = async () => {
     try {
         loading.value = true;
-        const response = await axios.get('http://localhost:5000/announcements');
+        const response = await axios.get('https://school-management-cyan-seven.vercel.app/announcements');
         announcements.value = response.data.map((item: any) => ({
             ...item,
             selected: false
@@ -212,7 +212,7 @@ const showConfirmationDialog = (announcementId: number) => {
     }).then(async (result) => {
         if (result.isConfirmed) {
             try {
-                const response = await axios.delete(`http://localhost:5000/announcements/${announcementId}`);
+                const response = await axios.delete(`https://school-management-cyan-seven.vercel.app/announcements/${announcementId}`);
 
                 if (response.status === 200) {
                     swalWithBootstrapButtons.fire({
@@ -281,7 +281,7 @@ const deleteSelectedAnnouncements = async () => {
             try {
                 loading.value = true;
                 // Delete all selected announcements
-                await Promise.all(selectedAnnouncements.value.map((id) => axios.delete(`http://localhost:5000/announcements/${id}`)));
+                await Promise.all(selectedAnnouncements.value.map((id) => axios.delete(`https://school-management-cyan-seven.vercel.app/announcements/${id}`)));
 
                 // Remove deleted announcements from the list
                 announcements.value = announcements.value.filter((announcement) => !selectedAnnouncements.value.includes(announcement.id));

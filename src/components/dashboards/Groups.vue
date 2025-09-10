@@ -67,7 +67,7 @@ const closePopup = () => {
 const fetchGenderDistribution = async () => {
   try {
     loading.value = true;
-    const response = await axios.get('http://localhost:5000/students/gender-distribution');
+    const response = await axios.get('https://school-management-cyan-seven.vercel.app/students/gender-distribution');
     genderData.value = response.data;
     
     // Map the data to the series
@@ -198,7 +198,7 @@ const chartOptionss = computed(() => {
 const fetchGroupsByYear = async () => {
   try {
     loading.value = true;
-    const response = await axios.get('http://localhost:5000/groups/by-year');
+    const response = await axios.get('https://school-management-cyan-seven.vercel.app/groups/by-year');
     groupsByYear.value = response.data;
     console.log('Groups by year:', groupsByYear.value);
   } catch (error) {
@@ -352,7 +352,7 @@ const chartOptions = computed(() => {
 
 const addGroup = async () => {
   try {
-    const response = await axios.post('http://localhost:5000/groups', {
+    const response = await axios.post('https://school-management-cyan-seven.vercel.app/groups', {
       name: groupForm.value.name,
       number: Number(groupForm.value.number)
     });
@@ -388,7 +388,7 @@ const addGroup = async () => {
 // Update fetchGroups to use backend-provided colors
 const fetchGroups = async () => {
   try {
-    const response = await axios.get('http://localhost:5000/groups');
+    const response = await axios.get('https://school-management-cyan-seven.vercel.app/groups');
     groups.value = response.data.map((cls: any) => ({
       ...cls,
       bgColor: cls.bgColor || cls.bg_color
@@ -439,7 +439,7 @@ const showConfirmationDialog = (groupsId: number) => {
     .then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await axios.delete(`http://localhost:5000/groups/${groupsId}`);
+          const response = await axios.delete(`https://school-management-cyan-seven.vercel.app/groups/${groupsId}`);
           if (response.status === 200) {
             swalWithBootstrapButtons.fire({
               title: 'Deleted!',

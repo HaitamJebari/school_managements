@@ -143,7 +143,7 @@ const showConfirmationDialog = (teacherId: number) => {
         .then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    const response = await axios.delete(`http://localhost:5000/teachers/${teacherId}`);
+                    const response = await axios.delete(`https://school-management-cyan-seven.vercel.app/teachers/${teacherId}`);
                     if (response.status === 200) {
                         swalWithBootstrapButtons.fire({
                             title: 'Deleted!',
@@ -212,7 +212,7 @@ const errorMessage = ref('');
 const submitForm = async () => {
     try {
         console.log('Submitting form data:', form1.value); // Log form data
-        const response = await axios.post('http://localhost:5000/add_t', form1.value);
+        const response = await axios.post('https://school-management-cyan-seven.vercel.app/add_t', form1.value);
 
         // Add the newly created teacher to the local list
         teachers.value.push({ ...form1.value, id: response.data.id || Date.now() });
@@ -268,7 +268,7 @@ const updateTeacher = async (teacherId: number) => {
     console.log('Updating teacher with ID:', teacherId); // Debugging
 
     try {
-        const response = await axios.put(`http://localhost:5000/teachers/${teacherId}`, form2.value);
+        const response = await axios.put(`https://school-management-cyan-seven.vercel.app/teachers/${teacherId}`, form2.value);
         Swal.fire({
             title: response.data.message || 'Teacher updated successfully!',
             icon: 'success',
