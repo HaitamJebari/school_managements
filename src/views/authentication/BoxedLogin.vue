@@ -12,7 +12,7 @@ import img1 from '@/assets/images/img1.png';
                         <v-card rounded="xl" elevation="10" class="px-sm-1 px-0 mx-auto index-2" max-width="450">
                             <v-card-item class="pa-sm-8">
                                 <div class="d-flex justify-center mb-5 ml-5">
-                                    <img :src="img1" alt="School Management Icon"  />
+                                    <img :src="img1" alt="School Management Icon"/>
                                 </div>
                                 <LoginForm />
                                 <h6 class="text-subtitle-1 text-grey100 d-flex justify-center align-center mt-3">

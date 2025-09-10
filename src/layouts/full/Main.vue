@@ -59,7 +59,10 @@ const handleLogout = () => {
             <v-app-bar elevation="0" height="70">
                 <div class="d-flex align-center justify-space-between w-100">
                     <form class="form">
-                        <button>
+                        <!--------------------- search  --------------------->
+
+
+                        <!-- <button>
                             <svg width="17" height="16" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="search">
                                 <path
                                     d="M7.667 12.667A5.333 5.333 0 107.667 2a5.333 5.333 0 000 10.667zM14.334 14l-2.9-2.9"
@@ -84,7 +87,7 @@ const handleLogout = () => {
                             >
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
                             </svg>
-                        </button>
+                        </button> -->
                     </form>
                     <ProfileDD />
                 </div>
@@ -261,6 +264,7 @@ input:not(:placeholder-shown) ~ .reset {
     height: 100px; /*This*/
     overflow: hidden; /* This */
     display: flex;
+    border-radius: 50%;
     flex-direction: column;
     align-items: center;
     justify-content: center;
