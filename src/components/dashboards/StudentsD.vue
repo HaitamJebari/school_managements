@@ -155,7 +155,7 @@ const filteredStudents = computed(() => {
                     </tr>
                 </tbody>
             </v-table>
-             <a href="ui/students" ><ChevronRightIcon :size="20" stroke-width="2" color="blue" />Modify Students</a>
+             <a href="students" ><ChevronRightIcon :size="20" stroke-width="2" color="blue" />Modify Students</a>
         </v-card-item>
     </v-card>
 </template>

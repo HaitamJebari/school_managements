@@ -14,7 +14,7 @@ const handleRegister = async () => {
     message.value = '';
     loading.value = true;
     try {
-        const response = await axios.post('http://localhost:5000/register', {
+        const response = await axios.post('https://school-management-cyan-seven.vercel.app/register', {
             username: username.value,
             password: password.value
         });

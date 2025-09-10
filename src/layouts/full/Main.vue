@@ -3,15 +3,14 @@ import { ref, shallowRef } from 'vue';
 import sidebarItems from './vertical-sidebar/sidebarItem';
 import NavGroup from './vertical-sidebar/NavGroup/index.vue';
 import NavItem from './vertical-sidebar/NavItem/index.vue';
-import Logo from './logo/Logo.vue';
-// Icon Imports
 import { Menu2Icon, BellRingingIcon } from 'vue-tabler-icons';
 import NotificationDD from './vertical-header/NotificationDD.vue';
 import ProfileDD from './vertical-header/ProfileDD.vue';
+import img1 from '@/assets/images/img1.png';
 import { router } from '@/router';
 const sidebarMenu = shallowRef(sidebarItems);
 const sDrawer = ref(true);
-const searchQuery = ref('')
+const searchQuery = ref('');
 
 const handleLogout = () => {
     localStorage.removeItem('isAuthenticated');
@@ -21,9 +20,10 @@ const handleLogout = () => {
 
 <template>
     <v-navigation-drawer left v-model="sDrawer" app class="leftSidebar ml-sm-7 mt-sm-4 bg-containerBg" elevation="10" width="270">
-        <div class="pa-5 pl-4">
-            <!-- <Logo /> -->
-            <!-- <img :src="fav" alt="Logo" width="40" height="40" /> -->
+        <div class="profil">
+            <div class="img-box" >
+                <img :src="img1" alt="School Management Icon" />
+            </div>
         </div>
         <!-- ---------------------------------------------- -->
         <!---Navigation -->
@@ -48,7 +48,7 @@ const handleLogout = () => {
                             </svg>
                         </div>
 
-                        <div class="text" >Logout</div>
+                        <div class="text">Logout</div>
                     </button>
                 </div>
             </v-list>
@@ -58,7 +58,7 @@ const handleLogout = () => {
         <div class="maxWidth">
             <v-app-bar elevation="0" height="70">
                 <div class="d-flex align-center justify-space-between w-100">
-                    <form class="form" >
+                    <form class="form">
                         <button>
                             <svg width="17" height="16" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="search">
                                 <path
@@ -248,8 +248,32 @@ input:not(:placeholder-shown) ~ .reset {
 .Btn:active {
     transform: translate(2px, 2px);
 }
-.logout-container{
-      margin-top:5em;
+.logout-container {
+    margin-top: 2em;
+}
+.profil{
+    display: flex;
+    align-items: center;
+
+}
+.img-box {
+    width: 100px;
+    height: 100px; /*This*/
+    overflow: hidden; /* This */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 3em;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    
 }
 
+.img-box img {
+    width: 100%;
+    height: 100%; /*This*/
+    object-fit: cover; /* This */
+}
 </style>
