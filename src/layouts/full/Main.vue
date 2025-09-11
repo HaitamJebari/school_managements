@@ -8,6 +8,8 @@ import NotificationDD from './vertical-header/NotificationDD.vue';
 import ProfileDD from './vertical-header/ProfileDD.vue';
 import img1 from '@/assets/images/img1.png';
 import { router } from '@/router';
+import '../../style.css'
+
 const sidebarMenu = shallowRef(sidebarItems);
 const sDrawer = ref(true);
 const searchQuery = ref('');
@@ -22,7 +24,7 @@ const handleLogout = () => {
     <v-navigation-drawer left v-model="sDrawer" app class="leftSidebar ml-sm-7 mt-sm-4 bg-containerBg" elevation="10" width="270">
         <div class="profil">
             <div class="img-box" >
-                <img :src="img1" alt="School Management Icon" />
+                <img :src="img1" id="img-icon" alt="School Management Icon" />
             </div>
         </div>
         <!-- ---------------------------------------------- -->
@@ -254,30 +256,5 @@ input:not(:placeholder-shown) ~ .reset {
 .logout-container {
     margin-top: 2em;
 }
-.profil{
-    display: flex;
-    align-items: center;
 
-}
-.img-box {
-    width: 100px;
-    height: 100px; /*This*/
-    overflow: hidden; /* This */
-    display: flex;
-    border-radius: 50%;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 3em;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 20px;
-    
-}
-
-.img-box img {
-    width: 100%;
-    height: 100%; /*This*/
-    object-fit: cover; /* This */
-}
 </style>

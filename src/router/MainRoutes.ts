@@ -12,11 +12,6 @@ const MainRoutes = {
             component: () => import('@/views/dashboard/index.vue')
         },
         {
-            name: 'Alert',
-            path: '/alerts',
-            component: () => import('@/views/ui-components/Alerts.vue')
-        },
-        {
             name: 'Teachers',
             path: '/teachers',
             component: () => import('@/views/ui-components/Teachers.vue')
@@ -51,21 +46,11 @@ const MainRoutes = {
             path: '/exams',
             component: () => import('@/views/ui-components/Exams.vue')
         },
-        // {
-        //     name: 'Grades',
-        //     path: '/grades',
-        //     component: () => import('@/views/ui-components/Grades.vue')
-        // },
         {
             name: 'Financials',
             path: '/financials',
             component: () => import('@/views/ui-components/Financials.vue')
         },
-        // {
-        //     name: 'Results',
-        //     path: '/results',
-        //     component: () => import('@/views/ui-components/Results.vue')
-        // },
         {
             name: 'Annoucements',
             path: '/ann',

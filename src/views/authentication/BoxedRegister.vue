@@ -2,6 +2,7 @@
 import img1 from '@/assets/images/img1.png';
 /* Register form */
 import RegisterForm from '@/components/auth/RegisterForm.vue';
+import '../../style.css';
 </script>
 <template>
     <div class="authentication">
@@ -10,10 +11,14 @@ import RegisterForm from '@/components/auth/RegisterForm.vue';
                 <v-col cols="12" class="d-flex align-center">
                     <div class="boxed-auth-wrap">
                         <v-card rounded="xl" elevation="10" class="px-sm-1 px-0 mx-auto index-2" max-width="450">
+                            
                             <v-card-item class="pa-sm-8">
-                                <div class="d-flex justify-center mb-5 ml-5">
-                                    <img :src="img1" alt="School Management Icon" />
+                                <div class="profil">
+                                    <div class="img-box">
+                                        <img :src="img1" id="img-icon" alt="School Management Icon" />
+                                    </div>
                                 </div>
+                                    <h5 style="text-align: center;" class="mb-4">Create your account to access the school management system.</h5>
                                 <RegisterForm />
                                 <h6 class="text-subtitle-1 text-grey100 d-flex justify-center align-center mt-3">
                                     Already have an Account?

@@ -27,7 +27,7 @@ const items = ref([{ title: 'Action' }, { title: 'Another action' }, { title: 'S
 
 const fetchStudents = async () => {
     try {
-        const response = await axios.get('https:/school-management-cyan-seven.vercel.app/students');
+        const response = await axios.get('https://school-management-cyan-seven.vercel.app/students');
         students.value = response.data;
     } catch (error) {
         console.error('Error fetching students:', error);

@@ -215,9 +215,9 @@ const showConfirmationDialog = (classesId: number) => {
                 <div class="total">
                     <h1>{{ Math.floor(Math.random() * 8) }}</h1>
                     <div class="images">
-                        <img src="../../assets/images/profile/user-4.jpg" alt="" />
+                        <img src="../../assets/images/profile/user-4.jpg" id="img1" alt="" />
                         <img src="../../assets/images/profile/user-5.jpg" id="img2" alt="" />
-                        <img src="../../assets/images/profile/user-6.jpg" alt="" />
+                        <img src="../../assets/images/profile/user-6.jpg" id="img1" alt="" />
                     </div>
                 </div>
             </v-card>
@@ -264,7 +264,7 @@ const showConfirmationDialog = (classesId: number) => {
     display: flex;
     border-radius: 50%;
 }
-img {
+#img1 {
     width: 100%;
     height: 100%;
     border-radius: 50%;
