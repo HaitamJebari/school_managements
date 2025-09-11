@@ -37,7 +37,8 @@ const handleRegister = async () => {
         Swal.fire({
             title: 'Registration Failed',
             text: error.response?.data?.message || 'Please try again.',
-            icon: 'error'
+            icon: 'error',
+            confirmButtonColor: 'red',
         });
     } finally {
         loading.value = false;
