@@ -37,7 +37,7 @@ const messages = {
         Description : 'Description',
         Category : 'Category',
         Amount : 'Amount',
-        Type : 'Type',
+        Type : 'Type',  
         'No entries found': 'No entries found',
         'Financials Entries': 'Financials Entries',
         'No category data available' : 'No category data available',
