@@ -30,13 +30,11 @@ interface TeacherForm {
     adresse: string;
 }
 
-const value1 = ref('');
-const value2 = ref('');
+
 // Access the Vue I18n instance
-const { locale, t } = useI18n(); // Must be called first!
+const { locale, t } = useI18n(); 
 
 const teachers = ref<Teacher[]>([]);
-const items = ref([{ title: 'Action' }, { title: 'Another action' }, { title: 'Something else here' }]);
 
 const fetchTeachers = async () => {
     try {
@@ -48,16 +46,16 @@ const fetchTeachers = async () => {
 };
 
 const formatDate = (datetime: string) => {
-    if (!datetime) return ''; // Handle empty or null values
+    if (!datetime) return ''; 
     const date = new Date(datetime);
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Two-digit month
-    const day = String(date.getDate()).padStart(2, '0'); // Two-digit day
-    return `${year}-${month}-${day}`; // Return in YYYY-MM-DD format
+    const month = String(date.getMonth() + 1).padStart(2, '0'); 
+    const day = String(date.getDate()).padStart(2, '0'); 
+    return `${year}-${month}-${day}`; 
 };
 
 const parseDate = (dateString: string) => {
-    if (!dateString) return ''; // Handle empty or null values
+    if (!dateString) return ''; 
     return new Date(dateString).toISOString(); // Convert to full ISO format if needed
 };
 
@@ -76,14 +74,10 @@ onMounted(() => {
     fetchTeachers();
 });
 
-// Function to change the language
-const changeLanguage = (lang: string) => {
-    locale.value = lang;
-};
+
 
 const showInput = ref(false); // Reactive property for input visibility
-const showPopup = ref(false); // Reactive property for popup visibility
-const teacherToDelete = ref<number | null>(null); // Stores the ID of the teacher to delete
+
 
 // Function to toggle the input field
 const toggleInput = () => {
@@ -132,12 +126,12 @@ const showConfirmationDialog = (teacherId: number) => {
 
     swalWithBootstrapButtons
         .fire({
-            title: 'Are you sure?',
-            text: 'This action cannot be undone!',
+            title: t("Are you sure?"),
+            text: t("This action cannot be undone!"),
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: 'Yes, delete it!',
-            cancelButtonText: 'No, cancel!',
+            confirmButtonText: t("Yes, delete it!"),
+            cancelButtonText: t("No, cancel!"),
             reverseButtons: true
         })
         .then(async (result) => {
@@ -146,19 +140,19 @@ const showConfirmationDialog = (teacherId: number) => {
                     const response = await axios.delete(`https://school-management-cyan-seven.vercel.app/teachers/${teacherId}`);
                     if (response.status === 200) {
                         swalWithBootstrapButtons.fire({
-                            title: 'Deleted!',
-                            text: 'The teacher has been deleted successfully.',
+                            title: t("Deleted!"),
+                            text: t("The teacher has been deleted successfully."),
                             icon: 'success',
-                            confirmButtonText: 'OK' 
+                            confirmButtonText: t("OK")
                         });
                         // Update the local list of teachers
                         teachers.value = teachers.value.filter((teacher) => teacher.id !== teacherId);
                     } else {
                         swalWithBootstrapButtons.fire({
-                            title: 'Failed!',
-                            text: 'Failed to delete the teacher.',
+                            title: t("Failed!"),
+                            text: t("Failed to delete the teacher."),
                             icon: 'error',
-                            confirmButtonText: 'OK',
+                            confirmButtonText: t("OK"),
                             customClass: {
                                 confirmButton: 'btn btn-danger'
                             }
@@ -166,10 +160,10 @@ const showConfirmationDialog = (teacherId: number) => {
                     }
                 } catch (error: any) {
                     swalWithBootstrapButtons.fire({
-                        title: 'Error!',
-                        text: 'Something went wrong during deletion.',
+                        title: t("Error!"),
+                        text: t("Something went wrong during deletion."),
                         icon: 'error',
-                        confirmButtonText: 'OK',
+                        confirmButtonText: t("OK"),
                         customClass: {
                             confirmButton: 'btn btn-danger'
                         }
@@ -177,11 +171,11 @@ const showConfirmationDialog = (teacherId: number) => {
                 }
             } else if (result.dismiss === Swal.DismissReason.cancel) {
                 swalWithBootstrapButtons.fire({
-                    title: 'Cancelled',
+                    title: t("Cancelled"),
                     icon: 'info',
-                    confirmButtonText: 'OK',
+                    confirmButtonText: t("OK"),
                     customClass: {
-                        confirmButton: 'btn btn-info    '
+                        confirmButton: 'btn btn-info'
                     }
                 });
             }
@@ -211,32 +205,32 @@ const errorMessage = ref('');
 
 const submitForm = async () => {
     try {
-        console.log('Submitting form data:', form1.value); // Log form data
+        console.log(t("Submitting form data:"), form1.value); // Log form data
         const response = await axios.post('https://school-management-cyan-seven.vercel.app/add_t', form1.value);
 
         // Add the newly created teacher to the local list
         teachers.value.push({ ...form1.value, id: response.data.id || Date.now() });
 
         Swal.fire({
-            title: 'Teacher added successfully!',
+            title: t("Teacher added successfully!"),
             icon: 'success',
-            confirmButtonText: 'OK',
+            confirmButtonText: t("OK"),
             customClass: {
-                confirmButton: 'btn btn-success' // Add a green class for the button
+                confirmButton: 'btn btn-success' 
             },
-            buttonsStyling: false // Disable default styling to apply your custom class
+            buttonsStyling: false 
         });
         resetForm1();
     } catch (error: any) {
-        console.error('Error submitting form:', error.response?.data || error.message);
+        console.error(t("Error submitting form:"), error.response?.data || error.message);
         Swal.fire({
             icon: 'error',
-            title: 'Failed to add Teacher',
-            confirmButtonText: 'OK',
+            title: t("Failed to add Teacher"),
+            confirmButtonText: t("OK"),
             customClass: {
-                confirmButton: 'btn btn-danger' // Red button class
+                confirmButton: 'btn btn-danger' 
             },
-            buttonsStyling: false // Disable default styling to apply your custom styles
+            buttonsStyling: false 
         });
     }
 };
@@ -270,9 +264,9 @@ const updateTeacher = async (teacherId: number) => {
     try {
         const response = await axios.put(`https://school-management-cyan-seven.vercel.app/teachers/${teacherId}`, form2.value);
         Swal.fire({
-            title: response.data.message || 'Teacher updated successfully!',
+            title: response.data.message || t("Teacher updated successfully!"),
             icon: 'success',
-            confirmButtonText: 'OK',
+            confirmButtonText: t("OK"),
             customClass: {
                 confirmButton: 'btn btn-success'
             }
@@ -284,10 +278,10 @@ const updateTeacher = async (teacherId: number) => {
         console.error('Error:', error); // Debugging
 
         Swal.fire({
-            title: 'Error updating teacher',
-            text: error.response?.data?.error || 'An error occurred',
+            title: t("Error updating teacher."),
+            text: error.response?.data?.error || t("An error occurred"),
             icon: 'error',
-            confirmButtonText: 'OK',
+            confirmButtonText: t("OK"),
             customClass: {
                 confirmButton: 'btn btn-danger'
             }
@@ -317,7 +311,7 @@ const filteredTeachers = computed(() => {
         <v-col cols="12" sm="12" lg="12">
             <v-card elevation="10" style="border-radius: 20px; height: 4em">
                 <v-card-item>
-                    <h4 class="d-flex align-center justify-space-between">Teachers Management</h4>
+                    <h4 class="d-flex align-center justify-space-between">{{ t('Teachers Management') }} </h4>
                 </v-card-item>
             </v-card>
         </v-col>
@@ -337,7 +331,7 @@ const filteredTeachers = computed(() => {
                                     type="text"
                                     v-model="searchQuery"
                                     class="animated-input"
-                                    placeholder="Search here..."
+                                    :placeholder="t('search here')"
                                 />
                             </transition>
                             <v-btn icon color="inherit" @click="toggleInput" flat>
@@ -352,7 +346,7 @@ const filteredTeachers = computed(() => {
                                 <div class="popup-contentp">
                                     <div style="display: flex; justify-content: space-between; align-items: center">
                                         <v-card-title class="title" style="margin: 10px auto; text-align: center">
-                                            <h1>Add New Teacher</h1>
+                                            <h1>{{ t('add') }} {{ t('Teacher') }}</h1>
                                         </v-card-title>
                                         <v-btn icon color="inherit" @click="closePopup" flat style="transform: translateY(-30px)">
                                             <XIcon stroke-width="1.5" size="24" class="text-grey100" />
@@ -427,13 +421,13 @@ const filteredTeachers = computed(() => {
                                                                 </el-icon>
                                                             </template>
                                                         </el-date-picker>
-                                                        <label for="date-registration">Pick a Date</label>
+                                                        <label for="date-registration">{{ t('pickDate') }}</label>
                                                     </div>
                                                 </div>
 
                                                 <div class="inputGroup">
                                                     <input type="text" v-model="form1.tel" autocomplete="off" />
-                                                    <label for="tel">Tel</label>
+                                                    <label for="tel">{{ t('Tel') }}</label>
                                                 </div>
 
                                                 <div class="inputGroup">
@@ -442,8 +436,8 @@ const filteredTeachers = computed(() => {
                                                 </div>
                                             </fieldset>
                                         </div>
-                                        <v-btn color="primary" type="submit" id="add">Add</v-btn>
-                                        <v-btn id="add" @click="resetForm1">Cancel</v-btn>
+                                        <v-btn color="primary" type="submit" id="add">{{ t('add') }}</v-btn>
+                                        <v-btn id="add" @click="resetForm1">{{ t('cancel') }}</v-btn>
                                     </form>
                                 </div>
                             </v-card>
@@ -455,7 +449,7 @@ const filteredTeachers = computed(() => {
                                 <th class="text-subtitle-1 font-weight-bold">{{ t('Cin') }}</th>
                                 <th class="text-subtitle-1 font-weight-bold">{{ t('Fullname') }}</th>
                                 <th class="text-subtitle-1 font-weight-bold">{{ t('Email') }}</th>
-                                <th class="text-subtitle-1 font-weight-bold">{{ t('Date Registration') }}</th>
+                                <th class="text-subtitle-1 font-weight-bold">{{ t('Date_Registration') }}</th>
                                 <th class="text-subtitle-1 font-weight-bold">{{ t('Tel') }}</th>
                                 <th class="text-subtitle-1 font-weight-bold">{{ t('Adresse') }}</th>
                                 <th style="text-align: center">Action</th>
@@ -497,7 +491,7 @@ const filteredTeachers = computed(() => {
                     <div class="popup-contentp">
                         <div style="display: flex; justify-content: space-between; align-items: center">
                             <v-card-title class="title" style="margin: 10px auto; text-align: center">
-                                <h1>Edit Teacher</h1>
+                                <h1>{{ t('edit') }} {{ t('Teachers') }}</h1>
                             </v-card-title>
                             <v-btn icon color="inherit" @click="closePopup_up" flat style="transform: translateY(-30px)">
                                 <XIcon stroke-width="1.5" size="24" class="text-grey100" />
@@ -508,11 +502,11 @@ const filteredTeachers = computed(() => {
                                 <fieldset class="field1">
                                     <div class="inputGroup">
                                         <input type="text" v-model="form2.cin" autocomplete="off" />
-                                        <label for="name">Cin</label>
+                                        <label for="name">{{ t('Cin') }}</label>
                                     </div>
                                     <div class="inputGroup">
                                         <input type="text" v-model="form2.fullname" autocomplete="off" />
-                                        <label for="name">Fullname</label>
+                                        <label for="name">{{ t('Fullname') }}</label>
                                     </div>
                                     <div class="inputGroup">
                                         <input type="email" v-model="form2.email" autocomplete="off" />
@@ -535,8 +529,8 @@ const filteredTeachers = computed(() => {
                                     </div>
                                 </fieldset>
                             </div>
-                            <v-btn type="submit" color="primary" id="add" @click="updateTeacher(form2.id!)">Update</v-btn>
-                            <v-btn id="add" @click="resetForm2">Cancel</v-btn>
+                            <v-btn type="submit" color="primary" id="add" @click="updateTeacher(form2.id!)">{{ t('edit') }}</v-btn>
+                            <v-btn id="add" @click="resetForm2">{{ t('cancel') }}</v-btn>
                         </form>
                     </div>
                 </v-card>

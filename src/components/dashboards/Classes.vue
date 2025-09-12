@@ -63,8 +63,8 @@ const addClass = async () => {
 
         Swal.fire({
             icon: 'success',
-            title: 'Class added successfully!',
-            confirmButtonText: 'OK',
+            title: t('class') + ' ' + t('added successfully!'),
+            confirmButtonText: t('OK'),
             customClass: {
                 confirmButton: 'btn btn-success'
             },
@@ -76,9 +76,9 @@ const addClass = async () => {
         console.error('Error adding class:', error);
         Swal.fire({
             icon: 'error',
-            title: 'Failed to add class',
-            text: error.response?.data?.message || 'An error occurred',
-            confirmButtonText: 'OK'
+            title: t('Failed to add ') + t('class'),
+            text: error.response?.data?.message || t('An error occurred'),
+            confirmButtonText: t('OK')
         });
     }
 };
@@ -123,12 +123,12 @@ const showConfirmationDialog = (classesId: number) => {
 
     swalWithBootstrapButtons
         .fire({
-            title: 'Are you sure?',
-            text: 'This action cannot be undone!',
+            title: t('Are you sure?'),
+            text: t('This action cannot be undone!'),
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: 'Yes, delete it!',
-            cancelButtonText: 'No, cancel!',
+            confirmButtonText: t('Yes, delete it!'),
+            cancelButtonText: t('No, cancel!'),
             reverseButtons: true
         })
         .then(async (result) => {
@@ -137,19 +137,19 @@ const showConfirmationDialog = (classesId: number) => {
                     const response = await axios.delete(`https://school-management-cyan-seven.vercel.app/classes/${classesId}`);
                     if (response.status === 200) {
                         swalWithBootstrapButtons.fire({
-                            title: 'Deleted!',
-                            text: 'The Class has been deleted successfully.',
+                            title: t('Deleted!'),
+                            text: t('The Class has been deleted successfully.'),
                             icon: 'success',
-                            confirmButtonText: 'OK'
+                            confirmButtonText: t('OK')
                         });
                         // Update the local list of class
                         classes.value = classes.value.filter((classItem) => classItem.id !== classesId);
                     } else {
                         swalWithBootstrapButtons.fire({
-                            title: 'Failed!',
-                            text: 'Failed to delete the class.',
+                            title: t('Failed!'),
+                            text: t('Failed to delete the class.'),
                             icon: 'error',
-                            confirmButtonText: 'OK',
+                            confirmButtonText: t('OK'),
                             customClass: {
                                 confirmButton: 'btn btn-danger'
                             }
@@ -157,10 +157,10 @@ const showConfirmationDialog = (classesId: number) => {
                     }
                 } catch (error: any) {
                     swalWithBootstrapButtons.fire({
-                        title: 'Error!',
-                        text: 'Something went wrong during deletion.',
+                        title: t('Error!'),
+                        text: t('Something went wrong during deletion.'),
                         icon: 'error',
-                        confirmButtonText: 'OK',
+                        confirmButtonText: t('OK'),
                         customClass: {
                             confirmButton: 'btn btn-danger'
                         }
@@ -168,9 +168,9 @@ const showConfirmationDialog = (classesId: number) => {
                 }
             } else if (result.dismiss === Swal.DismissReason.cancel) {
                 swalWithBootstrapButtons.fire({
-                    title: 'Cancelled',
+                    title: t('Cancelled'),
                     icon: 'info',
-                    confirmButtonText: 'OK',
+                    confirmButtonText: t('OK'),
                     customClass: {
                         confirmButton: 'btn btn-info'
                     }
@@ -185,7 +185,7 @@ const showConfirmationDialog = (classesId: number) => {
         <v-col cols="12" sm="12" lg="12">
             <v-card elevation="10" style="border-radius: 20px ; height: 4em;">
                 <v-card-item >
-                    <h4 class="d-flex align-center justify-space-between">Classes Management</h4>
+                    <h4 class="d-flex align-center justify-space-between">{{ t('Classes Management') }}</h4>
                 </v-card-item>
             </v-card>
         </v-col>
@@ -228,7 +228,7 @@ const showConfirmationDialog = (classesId: number) => {
                 <div class="popup-contentp">
                     <div style="display: flex; justify-content: space-between; align-items: center">
                         <v-card-title class="title" style="margin: 10px auto; text-align: center">
-                            <h1>Add New Class</h1>
+                            <h1>{{ t('add') }} {{ t('Class') }}</h1>
                         </v-card-title>
                         <v-btn icon color="inherit" @click="closePopup" flat style="transform: translateY(-30px)">
                             <XIcon stroke-width="1.5" size="24" class="text-grey100" />
@@ -239,18 +239,18 @@ const showConfirmationDialog = (classesId: number) => {
                             <fieldset class="field1">
                                 <div class="inputGroup">
                                     <input type="text" v-model="classForm.name" autocomplete="off" />
-                                    <label for="name">{{ t('Classe Name') }}</label>
+                                    <label for="name">{{ t('class') }} {{ t('Name') }}</label>
                                 </div>
                             </fieldset>
                             <fieldset class="field2">
                                 <div class="inputGroup">
                                     <input type="number" v-model="classForm.number" autocomplete="off" />
-                                    <label for="name">{{ t('Classe Number') }}</label>
+                                    <label for="name">{{ t('class') }} {{ t('Number') }}</label>
                                 </div>
                             </fieldset>
                         </div>
-                        <v-btn color="primary" type="submit" id="add">Add</v-btn>
-                        <v-btn id="add" @click="resetForm1">Cancel</v-btn>
+                        <v-btn color="primary" type="submit" id="add">{{ t('add') }}</v-btn>
+                        <v-btn id="add" @click="resetForm1">{{ t('cancel') }}</v-btn>
                     </form>
                 </div>
             </v-card>

@@ -164,9 +164,9 @@ const fetchAbsencesData = async () => {
         console.error('Error fetching absences data:', error);
         swalWithBootstrapButtons.fire({
             icon: 'error',
-            title: 'Loading Error',
-            text: 'Failed to load absences data. Please refresh the page.',
-            confirmButtonText: 'OK'
+            title: t('Error!'),
+            text: t('Failed to load absences data. Please refresh the page.'),
+            confirmButtonText: t('OK')
         });
     }
 };
@@ -181,9 +181,9 @@ const fetchStudentNames = async () => {
         console.error('Error fetching student names:', error);
         Swal.fire({
             icon: 'error',
-            title: 'Loading Error',
-            text: 'Failed to load student names. Please refresh the page.',
-            confirmButtonText: 'OK'
+            title: t('Error!'),
+            text: t('Failed to load student names. Please refresh the page.'),
+            confirmButtonText: t('OK')
         });
     }
 };
@@ -198,9 +198,9 @@ const fetchModuleNames = async () => {
         console.error('Error fetching module names:', error);
         Swal.fire({
             icon: 'error',
-            title: 'Loading Error',
-            text: 'Failed to load module names. Please refresh the page.',
-            confirmButtonText: 'OK'
+            title: t('Error!'),
+            text: t('Failed to load module names. Please refresh the page.'),
+            confirmButtonText: t('OK')
         });
     }
 };
@@ -215,21 +215,28 @@ const fetchAbsenceSummary = async () => {
         console.error('Error fetching absence summary:', error);
         Swal.fire({
             icon: 'error',
-            title: 'Loading Error',
-            text: 'Failed to load absence summary. Please refresh the page.',
-            confirmButtonText: 'OK'
+            title: t('Error!'),
+            text: t('Failed to load absence summary. Please refresh the page.'),
+            confirmButtonText: t('OK')
         });
     }
 };
 
 // Add new absence
 const addAbsence = async () => {
+    const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+            confirmButton: 'btn btn-success mx-2',
+            cancelButton: 'btn btn-danger mx-2'
+        },
+        buttonsStyling: false
+    });
     if (!absenceForm.value.module_name || !absenceForm.value.student_name || !absenceForm.value.absence_date || !absenceForm.value.seance) {
-        Swal.fire({
+        swalWithBootstrapButtons.fire({
             icon: 'warning',
-            title: 'Validation Error',
-            text: 'Module name, student name, absence date, and seance are required',
-            confirmButtonText: 'OK'
+            title: t('Validation') + ' ' + t('Error!'),
+            text: t('Module name, student name, absence date, and seance are required'),
+            confirmButtonText: t('OK')
         });
         return;
     }
@@ -243,9 +250,9 @@ const addAbsence = async () => {
             justification: absenceForm.value.justification
         });
 
-        Swal.fire({
+        swalWithBootstrapButtons.fire({
             icon: 'success',
-            title: 'Absence recorded successfully!',
+            title: t('Absence recorded successfully!'),
             customClass: {
                 confirmButton: 'btn btn-success'
             }
@@ -264,11 +271,11 @@ const addAbsence = async () => {
         await fetchAbsenceSummary();
     } catch (error: any) {
         console.error('Error adding absence:', error);
-        Swal.fire({
+        swalWithBootstrapButtons.fire({
             icon: 'error',
-            title: 'Failed to record absence',
-            text: error.response?.data?.message || 'An error occurred',
-            confirmButtonText: 'OK'
+            title: t('Failed to record absence'),
+            text: error.response?.data?.message || t('An error occurred'),
+            confirmButtonText: t('OK')
         });
     }
 };
@@ -285,12 +292,12 @@ const deleteAbsence = (id: number) => {
 
     swalWithBootstrapButtons
         .fire({
-            title: 'Are you sure?',
-            text: 'This action cannot be undone!',
+            title: t('Are you sure?'),
+            text: t('This action cannot be undone!'),
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: 'Yes, delete it!',
-            cancelButtonText: 'No, cancel!',
+            confirmButtonText: t('Yes, delete it!'),
+            cancelButtonText: t('No, cancel!'),
             reverseButtons: true
         })
         .then(async (result) => {
@@ -299,20 +306,20 @@ const deleteAbsence = (id: number) => {
                     const response = await axios.delete(`https://school-management-cyan-seven.vercel.app/absences/${id}`);
                     if (response.status === 200) {
                         swalWithBootstrapButtons.fire({
-                            title: 'Deleted!',
-                            text: 'The absence record has been deleted successfully.',
+                            title: t('Deleted!'),
+                            text: t('The absence record has been deleted successfully.'),
                             icon: 'success',
-                            confirmButtonText: 'OK'
+                            confirmButtonText: t('OK')
                         });
                         // Update the local data
                         await fetchAbsencesData();
                         await fetchAbsenceSummary();
                     } else {
                         swalWithBootstrapButtons.fire({
-                            title: 'Failed!',
-                            text: 'Failed to delete the absence record.',
+                            title: t('Failed!'),
+                            text: t('Failed to delete the absence record.'),
                             icon: 'error',
-                            confirmButtonText: 'OK',
+                            confirmButtonText: t('OK'),
                             customClass: {
                                 confirmButton: 'btn btn-danger'
                             }
@@ -320,10 +327,10 @@ const deleteAbsence = (id: number) => {
                     }
                 } catch (error: any) {
                     swalWithBootstrapButtons.fire({
-                        title: 'Error!',
-                        text: 'Something went wrong during deletion.',
+                        title: t('Error!'),
+                        text: t('Something went wrong during deletion.'),
                         icon: 'error',
-                        confirmButtonText: 'OK',
+                        confirmButtonText: t('OK'),
                         customClass: {
                             confirmButton: 'btn btn-danger'
                         }
@@ -331,9 +338,9 @@ const deleteAbsence = (id: number) => {
                 }
             } else if (result.dismiss === Swal.DismissReason.cancel) {
                 swalWithBootstrapButtons.fire({
-                    title: 'Cancelled',
+                    title: t('Cancelled'),
                     icon: 'info',
-                    confirmButtonText: 'OK',
+                    confirmButtonText: t('OK'),
                     customClass: {
                         confirmButton: 'btn btn-info'
                     }
@@ -646,7 +653,7 @@ onMounted(async () => {
         <v-col cols="12" sm="12" lg="12">
             <v-card elevation="10" style="border-radius: 20px; height: 4em">
                 <div class="d-flex align-center justify-space-between px-4" style="height: 100%">
-                    <h4 class="m-0">Absences Management</h4>
+                    <h4 class="m-0">{{ t('Absences Management') }}</h4>
                     <v-btn icon @click="openPopup" size="32" variant="text">
                         <PlusIcon stroke-width="1.5" size="35"  />
                     </v-btn>
@@ -663,7 +670,7 @@ onMounted(async () => {
                             <CalendarIcon stroke-width="1.5" size="48" />
                         </div>
                         <div>
-                            <h6 class="text-subtitle-1 mb-1">Total Absences</h6>
+                            <h6 class="text-subtitle-1 mb-1">{{ t('Total Absences') }}</h6>
                             <h4 class="text-h4 font-weight-bold">{{ summary.total || 0 }}</h4>
                         </div>
                     </div>
@@ -679,7 +686,7 @@ onMounted(async () => {
                             <UserIcon stroke-width="1.5" size="48" />
                         </div>
                         <div>
-                            <h6 class="text-subtitle-1 mb-1">Students with Absences</h6>
+                            <h6 class="text-subtitle-1 mb-1">{{ t('Students with Absences') }}</h6>
                             <h4 class="text-h4 font-weight-bold">{{ summary.byStudent?.length || 0 }}</h4>
                         </div>
                     </div>
@@ -695,7 +702,7 @@ onMounted(async () => {
                             <BookIcon stroke-width="1.5" size="48" />
                         </div>
                         <div>
-                            <h6 class="text-subtitle-1 mb-1">Modules with Absences</h6>
+                            <h6 class="text-subtitle-1 mb-1">{{ t('Modules with Absences') }}</h6>
                             <h4 class="text-h4 font-weight-bold">{{ summary.byModule?.length || 0 }}</h4>
                         </div>
                     </div>
@@ -711,7 +718,7 @@ onMounted(async () => {
                             <ClockIcon stroke-width="1.5" size="48" />
                         </div>
                         <div>
-                            <h6 class="text-subtitle-1 mb-1">Seances with Absences</h6>
+                            <h6 class="text-subtitle-1 mb-1">{{ t('Seances with Absences') }}</h6>
                             <h4 class="text-h4 font-weight-bold">{{ summary.bySeance?.length || 0 }}</h4>
                         </div>
                     </div>
@@ -732,7 +739,7 @@ onMounted(async () => {
                         ></apexchart>
                     </div>
                     <div v-else class="text-center py-8">
-                        <p>No module data available</p>
+                        <p>{{ t('No module data available') }}</p>
                     </div>
                 </v-card-item>
             </v-card>
@@ -750,7 +757,7 @@ onMounted(async () => {
                         ></apexchart>
                     </div>
                     <div v-else class="text-center py-8">
-                        <p>No student data available</p>
+                        <p>{{ t('No student data available') }}</p>
                     </div>
                 </v-card-item>
             </v-card>
@@ -762,12 +769,12 @@ onMounted(async () => {
                 <v-card-item>
                     <div class="d-flex align-center justify-space-between mb-4">
                         <div>
-                            <h5 class="text-h6 font-weight-semibold">Absence Records</h5>
+                            <h5 class="text-h6 font-weight-semibold">{{ t('Absence Records') }}</h5>
                         </div>
                         <div class="d-flex align-center">
                             <v-text-field
                                 v-model="searchQuery"
-                                label="Search"
+                                :label="t('search here')"
                                 variant="outlined"
                                 density="compact"
                                 hide-details
@@ -775,10 +782,10 @@ onMounted(async () => {
                                 style="width: 15em"
                             ></v-text-field>
                             <v-btn-toggle v-model="activeTab" mandatory>
-                                <v-btn value="all" color="primary" variant="text">All</v-btn>
-                                <v-btn value="today" color="success" variant="text">Today</v-btn>
-                                <v-btn value="week" color="warning" variant="text">Week</v-btn>
-                                <v-btn value="month" color="error" variant="text">Month</v-btn>
+                                <v-btn value="all" color="primary" variant="text">{{ t('All') }}</v-btn>
+                                <v-btn value="today" color="success" variant="text">{{ t('Today') }}</v-btn>
+                                <v-btn value="week" color="warning" variant="text">{{ t('Week') }}</v-btn>
+                                <v-btn value="month" color="error" variant="text">{{ t('Month') }}</v-btn>
                             </v-btn-toggle>
                         </div>
                     </div>
@@ -786,12 +793,12 @@ onMounted(async () => {
                     <v-table>
                         <thead>
                             <tr>
-                                <th>Date</th>
-                                <th>Student</th>
-                                <th>Module</th>
-                                <th>Seance</th>
-                                <th>Justification</th>
-                                <th>Actions</th>
+                                <th>{{ t('Date') }}</th>
+                                <th>{{ t('Student') }}</th>
+                                <th>{{ t('Module') }}</th>
+                                <th>{{ t('Seance') }}</th>
+                                <th>{{ t('Justification') }}</th>
+                                <th>{{ t('Actions') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -808,7 +815,7 @@ onMounted(async () => {
                                 </td>
                             </tr>
                             <tr v-if="filteredAbsencesData.length === 0">
-                                <td colspan="6" class="text-center py-4">No absence records found</td>
+                                <td colspan="6" class="text-center py-4">{{ t('No absence records found') }}</td>
                             </tr>
                         </tbody>
                     </v-table>
@@ -822,7 +829,7 @@ onMounted(async () => {
                 <div class="popup-contentp">
                     <div style="display: flex; justify-content: space-between; align-items: center">
                         <v-card-title class="title" style="margin: 10px auto; text-align: center">
-                            <h1>Add New Absence</h1>
+                            <h1>{{ t('add') }} {{ t('Abscence') }}</h1>
                         </v-card-title>
                         <v-btn icon color="inherit" @click="closePopup" flat style="transform: translateY(-30px)">
                             <XIcon stroke-width="1.5" size="24" class="text-grey100" />
@@ -838,18 +845,18 @@ onMounted(async () => {
                                             {{ option }}
                                         </option>
                                     </select>
-                                    <label for="module_name">{{ t('Module Name') }}</label>
+                                    <label for="module_name">{{ t('Module') }} {{ t('Name') }}</label>
                                 </div>
                             </fieldset>
                             <fieldset class="field2">
                                 <div class="inputGroup">
                                     <select id="student_name" v-model="absenceForm.student_name" autocomplete="off">
-                                        <option value="">Select Student</option>
+                                        <option value="">{{ t('Select') }} {{ t('Student') }}</option>
                                         <option v-for="(option, index) in studentNames" :key="index" :value="option">
                                             {{ option }}
                                         </option>
                                     </select>
-                                    <label for="student_name">{{ t('Student Name') }}</label>
+                                    <label for="student_name">{{ t('Student') }} {{ t('Name') }}</label>
                                 </div>
                             </fieldset>
                             <fieldset class="field3">
@@ -871,14 +878,14 @@ onMounted(async () => {
                                                 <el-icon><CaretRight /></el-icon>
                                             </template>
                                         </el-date-picker>
-                                        <label for="date-registration">Pick a Date</label>
+                                        <label for="date-registration">{{ t('pickDate') }}</label>
                                     </div>
                                 </div>
                             </fieldset>
                             <fieldset class="field4">
                                 <div class="inputGroup">
                                     <select id="seance" v-model="absenceForm.seance" autocomplete="off">
-                                        <option value="">Select Seance</option>
+                                        <option value="">{{t('Select')}} {{ t('Seance') }}</option>
                                         <option v-for="(option, index) in seanceOptions" :key="index" :value="option">
                                             {{ option }}
                                         </option>
@@ -893,8 +900,8 @@ onMounted(async () => {
                                 </div>
                             </fieldset>
                         </div>
-                        <v-btn color="primary" type="submit" id="add">Add</v-btn>
-                        <v-btn id="add" @click="resetForm">Cancel</v-btn>
+                        <v-btn color="primary" type="submit" id="add">{{ t('add') }}</v-btn>
+                        <v-btn id="add" @click="resetForm">{{ t('cancel') }}</v-btn>
                     </form>
                 </div>
             </v-card>

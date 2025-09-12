@@ -125,9 +125,9 @@ const fetchfinancialsData = async () => {
         console.error('Error fetching financials data:', error);
         Swal.fire({
             icon: 'error',
-            title: 'Loading Error',
-            text: 'Failed to load financials data. Please refresh the page.',
-            confirmButtonText: 'OK'
+            title: 'Loading ' + t('Error!'),
+            text: t('Failed to load financials data. Please refresh the page.'),
+            confirmButtonText: t('OK')
         });
     } finally {
         isLoading.value = false;
@@ -158,16 +158,16 @@ const fetchfinancialsSummary = async () => {
             summary.value.income_in_outcome = 0;
         }
 
-        console.log('financials summary:', summary.value);
-        console.log('Monthly data:', monthlyData.value);
-        console.log('Category data:', categoryData.value);
+        console.log(('financials summary:'), summary.value);
+        console.log(('Monthly data:'), monthlyData.value);
+        console.log(('Category data:'), categoryData.value);
     } catch (error) {
         console.error('Error fetching financials summary:', error);
         swalWithBootstrapButtons.fire({
             icon: 'error',
-            title: 'Loading Error',
-            text: 'Failed to load financials summary. Please refresh the page.',
-            confirmButtonText: 'OK'
+            title: 'Loading ' + t('Error!'),
+            text: t('Failed to load financials summary. Please refresh the page.'),
+            confirmButtonText: t('OK')
         });
     } finally {
         isLoading.value = false;
@@ -179,9 +179,9 @@ const addfinancials = async () => {
     if (!financialsForm.value.description || !financialsForm.value.amount || !financialsForm.value.date) {
         Swal.fire({
             icon: 'warning',
-            title: 'Validation Error',
-            text: 'Description, amount, and date are required',
-            confirmButtonText: 'OK'
+            title: 'Validation ' + t('Error!'),
+            text: t('Description, amount, and date are required'),
+            confirmButtonText: t('OK')
         });
         return;
     }
@@ -198,11 +198,11 @@ const addfinancials = async () => {
 
         Swal.fire({
             icon: 'success',
-            title: 'financials entry added successfully!',
+            title: t('financials entry added successfully!'),
             text:
                 financialsForm.value.type === 'income'
-                    ? 'Income entry added and will be reflected in both income and outcome calculations.'
-                    : 'financials entry added successfully.',
+                    ? t('Income entry added and will be reflected in both income and outcome calculations.')
+                    : t('financials entry added successfully.'),
             customClass: {
                 confirmButton: 'btn btn-success'
             }
@@ -223,9 +223,9 @@ const addfinancials = async () => {
         console.error('Error adding financials entry:', error);
         Swal.fire({
             icon: 'error',
-            title: 'Failed to add financials entry',
-            text: error.response?.data?.message || 'An error occurred',
-            confirmButtonText: 'OK'
+            title: t('Failed to add financials entry'),
+            text: error.response?.data?.message || t('An error occurred'),
+            confirmButtonText: t('OK')
         });
     } finally {
         isLoading.value = false;
@@ -244,12 +244,12 @@ const deletefinancials = (id: number) => {
 
     swalWithBootstrapButtons
         .fire({
-            title: 'Are you sure?',
-            text: 'This action cannot be undone!',
+            title: t('Are you sure?'),
+            text: t('This action cannot be undone!'),
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: 'Yes, delete it!',
-            cancelButtonText: 'No, cancel!',
+            confirmButtonText: t('Yes, delete it!'),
+            cancelButtonText: t('No, cancel!'),
             reverseButtons: true
         })
         .then(async (result) => {
@@ -259,20 +259,20 @@ const deletefinancials = (id: number) => {
                     const response = await axios.delete(`https://school-management-cyan-seven.vercel.app/financials/${id}`);
                     if (response.status === 200) {
                         swalWithBootstrapButtons.fire({
-                            title: 'Deleted!',
-                            text: response.data.message || 'The financials entry has been deleted successfully.',
+                            title: t('Deleted!'),
+                            text: response.data.message || t('The financials entry has been deleted successfully.'),
                             icon: 'success',
-                            confirmButtonText: 'OK'
+                            confirmButtonText: t('OK')
                         });
                         // Update the local data
                         await fetchfinancialsData();
                         await fetchfinancialsSummary();
                     } else {
                         swalWithBootstrapButtons.fire({
-                            title: 'Failed!',
-                            text: 'Failed to delete the financials entry.',
+                            title: t('Failed!'),
+                            text: t('Failed to delete the financials entry.'),
                             icon: 'error',
-                            confirmButtonText: 'OK',
+                            confirmButtonText: t('OK'),
                             customClass: {
                                 confirmButton: 'btn btn-danger'
                             }
@@ -280,10 +280,10 @@ const deletefinancials = (id: number) => {
                     }
                 } catch (error: any) {
                     swalWithBootstrapButtons.fire({
-                        title: 'Error!',
-                        text: 'Something went wrong during deletion.',
+                        title: t('Error!'),
+                        text: t('Something went wrong during deletion.'),
                         icon: 'error',
-                        confirmButtonText: 'OK',
+                        confirmButtonText: t('OK'),
                         customClass: {
                             confirmButton: 'btn btn-danger'
                         }
@@ -293,9 +293,9 @@ const deletefinancials = (id: number) => {
                 }
             } else if (result.dismiss === Swal.DismissReason.cancel) {
                 swalWithBootstrapButtons.fire({
-                    title: 'Cancelled',
+                    title: t('Cancelled'),
                     icon: 'info',
-                    confirmButtonText: 'OK',
+                    confirmButtonText: t('OK'),
                     customClass: {
                         confirmButton: 'btn btn-info'
                     }
@@ -495,7 +495,7 @@ onMounted(async () => {
         <v-col cols="12" sm="12" lg="12">
             <v-card elevation="10" style="border-radius: 20px; height: 4em">
                 <div class="d-flex align-center justify-space-between px-4" style="height: 100%">
-                    <h4 class="m-0">Financials Management</h4>
+                    <h4 class="m-0">{{ t('Financial Management') }}</h4>
                     <v-btn icon @click="openPopup" size="32" variant="text">
                         <PlusIcon stroke-width="1.5" size="35"  />
                     </v-btn>
@@ -512,7 +512,7 @@ onMounted(async () => {
                             <CashIcon stroke-width="1.5" size="48" />
                         </div>
                         <div>
-                            <h6 class="text-subtitle-1 mb-1">Total Income</h6>
+                            <h6 class="text-subtitle-1 mb-1">{{ t('Total') }} {{ t('Income') }}</h6>
                             <h4 class="text-h4 font-weight-bold">{{ formatCurrency(summary.total_income) }}</h4>
                         </div>
                     </div>
@@ -528,7 +528,7 @@ onMounted(async () => {
                             <CreditCardIcon stroke-width="1.5" size="48" />
                         </div>
                         <div>
-                            <h6 class="text-subtitle-1 mb-1">Total Outcome</h6>
+                            <h6 class="text-subtitle-1 mb-1">{{ t('Total') }} {{ t('Outcome') }}</h6>
                             <h4 class="text-h4 font-weight-bold">{{ formatCurrency(summary.total_outcome) }}</h4>
                            
                         </div>
@@ -545,7 +545,7 @@ onMounted(async () => {
                             <WalletIcon stroke-width="1.5" size="48" />
                         </div>
                         <div>
-                            <h6 class="text-subtitle-1 mb-1">Balance</h6>
+                            <h6 class="text-subtitle-1 mb-1">{{ t('Balance') }}</h6>
                             <h4 class="text-h4 font-weight-bold">{{ formatCurrency(summary.balance) }}</h4>
                         </div>
                     </div>
@@ -559,7 +559,7 @@ onMounted(async () => {
                 <v-card-item>
                     <div class="d-flex align-center justify-space-between mb-4">
                         <div>
-                            <h5 class="text-h6 font-weight-semibold">Monthly Financials Trend</h5>
+                            <h5 class="text-h6 font-weight-semibold">{{ t('Monthly Financials Trend') }}</h5>
                         </div>
                     </div>
                     <div v-if="monthlyData.length > 0">
@@ -571,7 +571,7 @@ onMounted(async () => {
                         ></apexchart>
                     </div>
                     <div v-else class="text-center py-8">
-                        <p>No monthly data available</p>
+                        <p>{{ t('No monthly data available')}}</p>
                     </div>
                 </v-card-item>
             </v-card>
@@ -600,7 +600,7 @@ onMounted(async () => {
                         </div>
                     </div>
                     <div v-else class="text-center py-8">
-                        <p>No category data available</p>
+                        <p>{{ t('No category data available') }}</p>
                     </div>
                 </v-card-item>
             </v-card>
@@ -612,13 +612,13 @@ onMounted(async () => {
                 <v-card-item>
                     <div class="d-flex align-center justify-space-between mb-4">
                         <div>
-                            <h5 class="text-h6 font-weight-semibold">Financials Entries</h5>
+                            <h5 class="text-h6 font-weight-semibold">{{ t('Financials Entries')}}</h5>
                         </div>
                         <div>
                             <v-btn-toggle v-model="activeTab" mandatory>
-                                <v-btn value="all" color="primary" variant="text">All</v-btn>
-                                <v-btn value="income" color="success" variant="text">Income</v-btn>
-                                <v-btn value="outcome" color="error" variant="text">Outcome</v-btn>
+                                <v-btn value="all" color="primary" variant="text">{{ t('All')}}</v-btn>
+                                <v-btn value="income" color="success" variant="text">{{ t('Income')}}</v-btn>
+                                <v-btn value="outcome" color="error" variant="text">{{ t('Outcome')}}</v-btn>
                             </v-btn-toggle>
                         </div>
                     </div>
@@ -626,12 +626,12 @@ onMounted(async () => {
                     <v-table>
                         <thead>
                             <tr>
-                                <th>Date</th>
-                                <th>Description</th>
-                                <th>Category</th>
-                                <th>Amount</th>
-                                <th>Type</th>
-                                <th>Actions</th>
+                                <th>{{ t('Date') }}</th>
+                                <th>{{ t('Description') }}</th>
+                                <th>{{ t('Category') }}</th>
+                                <th>{{ t('Amount') }}</th>
+                                <th>{{ t('Type') }}</th>
+                                <th>{{ t('Actions') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -654,7 +654,7 @@ onMounted(async () => {
                                 </td>
                             </tr>
                             <tr v-if="filteredfinancialsData.length === 0">
-                                <td colspan="6" class="text-center py-4">No entries found</td>
+                                <td colspan="6" class="text-center py-4">{{ t('No entries found')}}</td>
                             </tr>
                         </tbody>
                     </v-table>
@@ -668,7 +668,7 @@ onMounted(async () => {
                 <div class="popup-contentp">
                     <div style="display: flex; justify-content: space-between; align-items: center">
                         <v-card-title class="title" style="margin: 10px auto; text-align: center">
-                            <h1>Add Income / Outcome</h1>
+                            <h1>{{ t('Add')}} {{ t('Income') }} / {{ t('Outcome') }}</h1>
                         </v-card-title>
                         <v-btn icon color="inherit" @click="closePopup" flat style="transform: translateY(-30px)">
                             <XIcon stroke-width="1.5" size="24" class="text-grey100" />
@@ -678,34 +678,34 @@ onMounted(async () => {
                         <fieldset class="field1">
                             <div class="inputGroup">
                                 <input type="text" id="Description" v-model="financialsForm.description" autocomplete="off" />
-                                <label for="Description">Description</label>
+                                <label for="Description">{{ t('Description')}}</label>
                             </div>
                         </fieldset>
                         <fieldset class="field2">
                             <div class="inputGroup">
                                 <input type="number" id="Amount" v-model="financialsForm.amount" autocomplete="off" />
-                                <label for="Amount">Amount</label>
+                                <label for="Amount">{{ t('Amount')}}</label>
                             </div>
                         </fieldset>
                         <fieldset class="field3">
                             <div class="inputGroup">
                                 <select id="type" v-model="financialsForm.type" class="select-input">
-                                    <option value="" disabled>Select Type</option>
-                                    <option value="income">Income</option>
-                                    <option value="outcome">Outcome</option>
+                                    <option value="" disabled>{{ t('Select')}} Type</option>
+                                    <option value="income">{{ t('Income')}}</option>
+                                    <option value="outcome">{{ t('Outcome')}}</option>
                                 </select>
-                                <label for="type">Type</label>
+                                <label for="type">{{ t('Type')}}</label>
                             </div>
                         </fieldset>
                         <fieldset class="field3">
                             <div class="inputGroup">
                                 <select id="category" v-model="financialsForm.category" class="select-input">
-                                    <option value="" disabled>Select Category</option>
+                                    <option value="" disabled>{{ t('Select')}} {{ t('Category')}}</option>
                                     <option v-for="(option, index) in categoryOptions" :key="index" :value="option">
                                         {{ option }}
                                     </option>
                                 </select>
-                                <label for="category">Category</label>
+                                <label for="category">{{ t('Category')}}</label>
                             </div>
                         </fieldset>
                         <fieldset class="field3">
@@ -716,9 +716,9 @@ onMounted(async () => {
                         </fieldset>
 
                         <v-btn :color="financialsForm.type === 'income' ? 'primary' : 'error'" type="submit" id="add">
-                            Add {{ financialsForm.type === 'income' ? 'Income' : 'Outcome' }}
+                            {{ t('add') }} {{ financialsForm.type === 'income' ? t('Income') : t('Outcome') }}
                         </v-btn>
-                        <v-btn id="add" class="cancel-btn" @click="resetForm">Cancel</v-btn>
+                        <v-btn id="add" class="cancel-btn" @click="resetForm">{{ t('cancel')}}</v-btn>
                     </form>
                 </div>
             </v-card>

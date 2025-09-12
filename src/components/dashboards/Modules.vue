@@ -8,16 +8,16 @@ import { CaretLeft, CaretRight } from '@element-plus/icons-vue';
 
 // Define interfaces
 interface ModuleItem {
-  id: number;
-  module_name: string;
-  date_creation: string;
-  bgColor: string;
-  bg_color?: string;
+    id: number;
+    module_name: string;
+    date_creation: string;
+    bgColor: string;
+    bg_color?: string;
 }
 
 interface ModuleForm {
-  module_name: string;
-  date_creation: string;
+    module_name: string;
+    date_creation: string;
 }
 
 const { locale, t } = useI18n();
@@ -25,232 +25,232 @@ const { locale, t } = useI18n();
 // Reactive variables
 const showPopupp = ref(false);
 const moduleForm = ref<ModuleForm>({
-  module_name: '',
-  date_creation: ''
+    module_name: '',
+    date_creation: ''
 });
 const modules = ref<ModuleItem[]>([]);
 
 // Function to change the language
 const changeLanguage = (lang: string) => {
-  locale.value = lang;
+    locale.value = lang;
 };
 
 // Open popup method
 const openPopup = async () => {
-  showPopupp.value = true;
+    showPopupp.value = true;
 };
 
 // Close popup_add method
 const closePopup = () => {
-  showPopupp.value = false;
+    showPopupp.value = false;
 };
 
 // Simulated async fetch function
 const fetchData = (): Promise<string> =>
-  new Promise((resolve) => {
-    setTimeout(() => resolve('This is the content loaded asynchronously!'), 2000);
-  });
+    new Promise((resolve) => {
+        setTimeout(() => resolve('This is the content loaded asynchronously!'), 2000);
+    });
 
 const addModule = async () => {
-  try {
-    const response = await axios.post('https://school-management-cyan-seven.vercel.app/modules', {
-      module_name: moduleForm.value.module_name,
-      date_creation: moduleForm.value.date_creation
-    });
+    try {
+        const response = await axios.post('https://school-management-cyan-seven.vercel.app/modules', {
+            module_name: moduleForm.value.module_name,
+            date_creation: moduleForm.value.date_creation
+        });
 
-    // The backend now returns the module with its random color
-    modules.value.push(response.data);
+        // The backend now returns the module with its random color
+        modules.value.push(response.data);
 
-    Swal.fire({
-      icon: 'success',
-      title: 'Module added successfully!',
-      confirmButtonText: 'OK',
-      customClass: {
-        confirmButton: 'btn btn-success' 
-      },
-    });
+        Swal.fire({
+            icon: 'success',
+            title: t('module') + ' ' + t('added successfully!'),
+            confirmButtonText: t('OK'),
+            customClass: {
+                confirmButton: 'btn btn-success'
+            }
+        });
 
-    moduleForm.value = { module_name: '', date_creation: '' };
-    closePopup();
-  } catch (error: any) {
-    console.error('Error adding module:', error);
-    Swal.fire({
-      icon: 'error',
-      title: 'Failed to add module',
-      text: error.response?.data?.message || 'An error occurred',
-      confirmButtonText: 'OK'
-    });
-  }
+        moduleForm.value = { module_name: '', date_creation: '' };
+        closePopup();
+    } catch (error: any) {
+        console.error('Error adding module:', error);
+        Swal.fire({
+            icon: 'error',
+            title: t('Failed to add ') + t('module'),
+            text: error.response?.data?.message || t('An error occurred'),
+            confirmButtonText: t('OK')
+        });
+    }
 };
 
 // Update fetchModules to use backend-provided colors
 const fetchModules = async () => {
-  try {
-    const response = await axios.get('https://school-management-cyan-seven.vercel.app/modules');
-    modules.value = response.data.map((cls: any) => ({
-      ...cls,
-      bgColor: cls.bgColor || cls.bg_color // Handle both cases
-    }));
-    console.log('modules after fetch:', modules.value); // Debug
-  } catch (error) {
-    console.error('Error fetching modules:', error);
-  }
+    try {
+        const response = await axios.get('https://school-management-cyan-seven.vercel.app/modules');
+        modules.value = response.data.map((cls: any) => ({
+            ...cls,
+            bgColor: cls.bgColor || cls.bg_color // Handle both cases
+        }));
+        console.log('modules after fetch:', modules.value); // Debug
+    } catch (error) {
+        console.error('Error fetching modules:', error);
+    }
 };
 
 const submitForm = () => {
-  addModule();
+    addModule();
 };
 
 const resetForm1 = () => {
-  moduleForm.value = { module_name: '', date_creation: '' };
+    moduleForm.value = { module_name: '', date_creation: '' };
 };
 
 onMounted(async () => {
-  console.log('Fetching Modules...');
-  await fetchModules();
-  console.log('Modules fetched:', modules.value);
+    console.log('Fetching Modules...');
+    await fetchModules();
+    console.log('Modules fetched:', modules.value);
 });
 
 //delete module
 const showConfirmationDialog = (modulesId: number) => {
-  const swalWithBootstrapButtons = Swal.mixin({
-    customClass: {
-      confirmButton: 'btn btn-success mx-2',
-      cancelButton: 'btn btn-danger mx-2'
-    },
-    buttonsStyling: false
-  });
-
-  swalWithBootstrapButtons
-    .fire({
-      title: 'Are you sure?',
-      text: 'This action cannot be undone!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'No, cancel!',
-      reverseButtons: true
-    })
-    .then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          const response = await axios.delete(`https://school-management-cyan-seven.vercel.app/modules/${modulesId}`);
-          if (response.status === 200) {
-            swalWithBootstrapButtons.fire({
-              title: 'Deleted!',
-              text: 'The module has been deleted successfully.',
-              icon: 'success',
-              confirmButtonText: 'OK'
-            });
-            // Update the local list of modules
-            modules.value = modules.value.filter((module) => module.id !== modulesId);
-          } else {
-            swalWithBootstrapButtons.fire({
-              title: 'Failed!',
-              text: 'Failed to delete the module.',
-              icon: 'error',
-              confirmButtonText: 'OK',
-              customClass: {
-                confirmButton: 'btn btn-danger'
-              }
-            });
-          }
-        } catch (error: any) {
-          swalWithBootstrapButtons.fire({
-            title: 'Error!',
-            text: 'Something went wrong during deletion.',
-            icon: 'error',
-            confirmButtonText: 'OK',
-            customClass: {
-              confirmButton: 'btn btn-danger'
-            }
-          });
-        }
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        swalWithBootstrapButtons.fire({
-          title: 'Cancelled',
-          icon: 'info',
-          confirmButtonText: 'OK',
-          customClass: {
-            confirmButton: 'btn btn-info'
-          }
-        });
-      }
+    const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+            confirmButton: 'btn btn-success mx-2',
+            cancelButton: 'btn btn-danger mx-2'
+        },
+        buttonsStyling: false
     });
+
+    swalWithBootstrapButtons
+        .fire({
+            title: t('Are you sure?'),
+            text: t('This action cannot be undone!'),
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: t('Yes, delete it!'),
+            cancelButtonText: t('No, cancel!'),
+            reverseButtons: true
+        })
+        .then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const response = await axios.delete(`https://school-management-cyan-seven.vercel.app/modules/${modulesId}`);
+                    if (response.status === 200) {
+                        swalWithBootstrapButtons.fire({
+                            title: t('Deleted!'),
+                            text: t('The module has been deleted successfully.'),
+                            icon: 'success',
+                            confirmButtonText: t('OK')
+                        });
+                        // Update the local list of modules
+                        modules.value = modules.value.filter((module) => module.id !== modulesId);
+                    } else {
+                        swalWithBootstrapButtons.fire({
+                            title: t('Failed!'),
+                            text: t('Failed to delete the module.'),
+                            icon: 'error',
+                            confirmButtonText: t('OK'),
+                            customClass: {
+                                confirmButton: 'btn btn-danger'
+                            }
+                        });
+                    }
+                } catch (error: any) {
+                    swalWithBootstrapButtons.fire({
+                        title: t('Error!'),
+                        text: t('Something went wrong during deletion.'),
+                        icon: 'error',
+                        confirmButtonText: t('OK'),
+                        customClass: {
+                            confirmButton: 'btn btn-danger'
+                        }
+                    });
+                }
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                swalWithBootstrapButtons.fire({
+                    title: t('Cancelled'),
+                    icon: 'info',
+                    confirmButtonText: t('OK'),
+                    customClass: {
+                        confirmButton: 'btn btn-info'
+                    }
+                });
+            }
+        });
 };
 </script>
 
 <template>
-  <v-row>
-    <v-col cols="12" sm="12" lg="12">
-            <v-card elevation="10" style="border-radius: 20px ; height: 4em;">
-                <v-card-item >
-                    <h4 class="d-flex align-center justify-space-between">Modules Management</h4>
+    <v-row>
+        <v-col cols="12" sm="12" lg="12">
+            <v-card elevation="10" style="border-radius: 20px; height: 4em">
+                <v-card-item>
+                    <h4 class="d-flex align-center justify-space-between">{{ t('Modules Management') }}</h4>
                 </v-card-item>
             </v-card>
         </v-col>
-    
-    <v-col cols="12" sm="12" lg="4" class="d-flex align-center justify-center">
-      <v-card class="d-flex align-center justify-center" style="height: 10vh; width: 10vh; border-radius: 50%">
-        <v-btn icon color="white" @click="openPopup" size="80" flat>
-          <PlusIcon stroke-width="1.5" size="60" style="color: grey" />
-        </v-btn>
-      </v-card>
-    </v-col>
-    
-    <v-col v-for="(moduleItem, index) in modules" :key="moduleItem.id" cols="12" sm="12" lg="4">
-      <v-card :style="{ backgroundColor: moduleItem.bgColor }" style="border-radius: 20px;">
-        <v-btn
-          :style="{ backgroundColor: moduleItem.bgColor }"
-          icon
-          @click="showConfirmationDialog(moduleItem.id)"
-          style="position: absolute; right: 10px; top: 10px; z-index: 10"
-        >
-          <TrashIcon stroke-width="1.5" size="24" />
-        </v-btn>
 
-        <div class="inside-card" style="color: white">
-          <h4>{{ moduleItem.module_name }} </h4>
-        </div>
-        <div class="total" style="color: white">
-          <h1>{{ new Date(moduleItem.date_creation).toLocaleDateString('en-CA') }}</h1>
-        </div>
-      </v-card>
-    </v-col>
+        <v-col cols="12" sm="12" lg="4" class="d-flex align-center justify-center">
+            <v-card class="d-flex align-center justify-center" style="height: 10vh; width: 10vh; border-radius: 50%">
+                <v-btn icon color="white" @click="openPopup" size="80" flat>
+                    <PlusIcon stroke-width="1.5" size="60" style="color: grey" />
+                </v-btn>
+            </v-card>
+        </v-col>
 
-    <v-col cols="12" sm="12" lg="4" class="d-flex align-center justify-center">
-      <v-card elevation="0" v-if="showPopupp" class="popup-card">
-        <div class="popup-contentp">
-          <div style="display: flex; justify-content: space-between; align-items: center">
-            <v-card-title class="title" style="margin: 10px auto; text-align: center">
-              <h1>Add New Module</h1>
-            </v-card-title>
-            <v-btn icon color="inherit" @click="closePopup" flat style="transform: translateY(-30px)">
-              <XIcon stroke-width="1.5" size="24" class="text-grey100" />
-            </v-btn>
-          </div>
-          <form @submit.prevent="submitForm">
-            <div class="formContainer">
-              <fieldset class="field1">
-                <div class="inputGroup">
-                  <input type="text" v-model="moduleForm.module_name" autocomplete="off" />
-                  <label for="name">{{ t('Module Name') }}</label>
+        <v-col v-for="(moduleItem, index) in modules" :key="moduleItem.id" cols="12" sm="12" lg="4">
+            <v-card :style="{ backgroundColor: moduleItem.bgColor }" style="border-radius: 20px">
+                <v-btn
+                    :style="{ backgroundColor: moduleItem.bgColor }"
+                    icon
+                    @click="showConfirmationDialog(moduleItem.id)"
+                    style="position: absolute; right: 10px; top: 10px; z-index: 10"
+                >
+                    <TrashIcon stroke-width="1.5" size="24" />
+                </v-btn>
+
+                <div class="inside-card" style="color: white">
+                    <h4>{{ moduleItem.module_name }}</h4>
                 </div>
-              </fieldset>
-              <fieldset class="field2">
-                <div class="inputGroup">
-                  <input type="date" v-model="moduleForm.date_creation" autocomplete="off" />
-                  <label for="date_creation">Creation Date</label>
+                <div class="total" style="color: white">
+                    <h1>{{ new Date(moduleItem.date_creation).toLocaleDateString('en-CA') }}</h1>
                 </div>
-              </fieldset>
-            </div>
-            <v-btn color="primary" type="submit" id="add">Add</v-btn>
-            <v-btn id="add" @click="resetForm1">Cancel</v-btn>
-          </form>
-        </div>
-      </v-card>
-    </v-col>
-  </v-row>
+            </v-card>
+        </v-col>
+
+        <v-col cols="12" sm="12" lg="4" class="d-flex align-center justify-center">
+            <v-card elevation="0" v-if="showPopupp" class="popup-card">
+                <div class="popup-contentp">
+                    <div style="display: flex; justify-content: space-between; align-items: center">
+                        <v-card-title class="title" style="margin: 10px auto; text-align: center">
+                            <h1>{{ t('add') }} {{ t('module') }}</h1>
+                        </v-card-title>
+                        <v-btn icon color="inherit" @click="closePopup" flat style="transform: translateY(-30px)">
+                            <XIcon stroke-width="1.5" size="24" class="text-grey100" />
+                        </v-btn>
+                    </div>
+                    <form @submit.prevent="submitForm">
+                        <div class="formContainer">
+                            <fieldset class="field1">
+                                <div class="inputGroup">
+                                    <input type="text" v-model="moduleForm.module_name" autocomplete="off" />
+                                    <label for="name">{{ t('Module') }}</label>
+                                </div>
+                            </fieldset>
+                            <fieldset class="field2">
+                                <div class="inputGroup">
+                                    <input type="date" v-model="moduleForm.date_creation" autocomplete="off" />
+                                    <label for="date_creation">{{ t('pickDate') }}</label>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <v-btn color="primary" type="submit" id="add">{{ t('add') }}</v-btn>
+                        <v-btn id="add" @click="resetForm1">{{ t('cancel') }}</v-btn>
+                    </form>
+                </div>
+            </v-card>
+        </v-col>
+    </v-row>
 </template>
 <style>
 .images {
@@ -310,7 +310,6 @@ h4 {
     display: block;
     border-bottom: 2px solid #ccc;
 }
-
 
 .inputGroup {
     font-family: 'Segoe UI', sans-serif;
@@ -550,4 +549,3 @@ label {
     box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
 }
 </style>
-

@@ -362,8 +362,8 @@ const addGroup = async () => {
 
     Swal.fire({
       icon: 'success',
-      title: 'Group added successfully!',
-      confirmButtonText: 'OK',
+      title: t('Group added successfully!'),
+      confirmButtonText: t('OK'),
       customClass: {
         confirmButton: 'btn btn-success'
       },
@@ -378,9 +378,9 @@ const addGroup = async () => {
     console.error('Error adding group:', error);
     Swal.fire({
       icon: 'error',
-      title: 'Failed to add group',
-      text: error.response?.data?.message || 'An error occurred',
-      confirmButtonText: 'OK'
+      title: t('Failed to add group'),
+      text: error.response?.data?.message || t('An error occurred'),
+      confirmButtonText: t('OK')
     });
   }
 };
@@ -428,12 +428,12 @@ const showConfirmationDialog = (groupsId: number) => {
 
   swalWithBootstrapButtons
     .fire({
-      title: 'Are you sure?',
-      text: 'This action cannot be undone!',
+      title: t('Are you sure?'),
+      text: t('This action cannot be undone!'),
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'No, cancel!',
+      confirmButtonText: t('Yes, delete it!'),
+      cancelButtonText: t('No, cancel!'),
       reverseButtons: true
     })
     .then(async (result) => {
@@ -442,10 +442,10 @@ const showConfirmationDialog = (groupsId: number) => {
           const response = await axios.delete(`https://school-management-cyan-seven.vercel.app/groups/${groupsId}`);
           if (response.status === 200) {
             swalWithBootstrapButtons.fire({
-              title: 'Deleted!',
-              text: 'The Group has been deleted successfully.',
+              title: t('Deleted!'),
+              text: t('The Group has been deleted successfully.'),
               icon: 'success',
-              confirmButtonText: 'OK'
+              confirmButtonText: t('OK')
             });
             // Update the local list of groups
             groups.value = groups.value.filter((group) => group.id !== groupsId);
@@ -454,10 +454,10 @@ const showConfirmationDialog = (groupsId: number) => {
             fetchGroupsByYear();
           } else {
             swalWithBootstrapButtons.fire({
-              title: 'Failed!',
-              text: 'Failed to delete the Group.',
+              title: t('Failed!'),
+              text: t('Failed to delete the Group.'),
               icon: 'error',
-              confirmButtonText: 'OK',
+              confirmButtonText: t('OK'),
               customClass: {
                 confirmButton: 'btn btn-danger'
               }
@@ -465,10 +465,10 @@ const showConfirmationDialog = (groupsId: number) => {
           }
         } catch (error: any) {
           swalWithBootstrapButtons.fire({
-            title: 'Error!',
-            text: 'Something went wrong during deletion.',
+            title: t('Error!'),
+            text: t('Something went wrong during deletion.'),
             icon: 'error',
-            confirmButtonText: 'OK',
+            confirmButtonText: t('OK'),
             customClass: {
               confirmButton: 'btn btn-danger'
             }
@@ -476,9 +476,9 @@ const showConfirmationDialog = (groupsId: number) => {
         }
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         swalWithBootstrapButtons.fire({
-          title: 'Cancelled',
+          title: t('Cancelled'),
           icon: 'info',
-          confirmButtonText: 'OK',
+          confirmButtonText: t('OK'),
           customClass: {
             confirmButton: 'btn btn-info'
           }
@@ -493,7 +493,7 @@ const showConfirmationDialog = (groupsId: number) => {
     <v-col cols="12" sm="12" lg="12">
             <v-card elevation="10" style="border-radius: 20px ; height: 4em;">
                 <v-card-item >
-                    <h4 class="d-flex align-center justify-space-between ">Groups Management</h4>
+                    <h4 class="d-flex align-center justify-space-between ">{{t('Groups Management')}}</h4>
                 </v-card-item>
             </v-card>
         </v-col>
@@ -502,7 +502,7 @@ const showConfirmationDialog = (groupsId: number) => {
         <v-card-item>
           <div class="d-flex align-center justify-space-between">
             <div>
-              <h5 class="text-h5 mb-1 font-weight-semibold">Number of Groups by Year</h5>
+              <h5 class="text-h5 mb-1 font-weight-semibold">{{t('Number of Groups by Year')}}</h5>
             </div>
           </div>
 
@@ -510,7 +510,7 @@ const showConfirmationDialog = (groupsId: number) => {
             <v-col cols="12">
               <div v-if="loading" class="text-center py-5">
                 <v-progress-circular indeterminate color="primary"></v-progress-circular>
-                <p class="mt-2">Loading chart data...</p>
+                <p class="mt-2">{{t('Loading chart data')}}...</p>
               </div>
               <apexchart
                 v-else
@@ -529,7 +529,7 @@ const showConfirmationDialog = (groupsId: number) => {
       <v-card elevation="10" style="border-radius: 20px; max-width: 100%; padding: 20px; height: 100%">
         <div v-if="loading" class="text-center py-5">
           <v-progress-circular indeterminate color="primary"></v-progress-circular>
-          <p class="mt-2">Loading chart data...</p>
+          <p class="mt-2">{{t('Loading chart data')}}...</p>
         </div>
         <div v-else>
           <apexchart
@@ -579,7 +579,7 @@ const showConfirmationDialog = (groupsId: number) => {
         <div class="popup-contentp">
           <div style="display: flex; justify-content: space-between; align-items: center">
             <v-card-title class="title" style="margin: 10px auto; text-align: center">
-              <h1>Add New Group</h1>
+              <h1>{{ t('add') }} {{ t('group') }}</h1>
             </v-card-title>
             <v-btn icon color="inherit" @click="closePopup" flat style="transform: translateY(-30px)">
               <XIcon stroke-width="1.5" size="24" class="text-grey100" />
@@ -590,18 +590,18 @@ const showConfirmationDialog = (groupsId: number) => {
               <fieldset class="field1">
                 <div class="inputGroup">
                   <input type="text" v-model="groupForm.name" autocomplete="off" />
-                  <label for="name">{{ t('Group Name') }}</label>
+                  <label for="name">{{ t('group') }} {{ t('name') }}</label>
                 </div>
               </fieldset>
               <fieldset class="field2">
                 <div class="inputGroup">
                   <input type="number" v-model="groupForm.number" autocomplete="off" />
-                  <label for="name">{{ t('Group Number') }}</label>
+                  <label for="name">{{ t('group') }} {{ t('number') }}</label>
                 </div>
               </fieldset>
             </div>
-            <v-btn color="primary" type="submit" id="add">Add</v-btn>
-            <v-btn id="add" @click="resetForm1">Cancel</v-btn>
+            <v-btn color="primary" type="submit" id="add">{{ t('add') }}</v-btn>
+            <v-btn id="add" @click="resetForm1">{{ t('cancel') }}</v-btn>
           </form>
         </div>
       </v-card>
