@@ -3,11 +3,38 @@
 import LoginForm from '@/components/auth/LoginForm.vue';
 import img1 from '@/assets/images/img1.png';
 import '../../style.css';
+import { useI18n } from 'vue-i18n';
+import { ref } from 'vue';
+const { locale, t } = useI18n();
+// Function to change the language
+const changeLanguage = (lang: string) => {
+    locale.value = lang;
+};
+const languages = ref([
+    { code: 'en', name: 'English', flag: 'fi-us' },
+    { code: 'fr', name: 'Français', flag: 'fi-fr' }
+    // { code: 'de', name: 'Deutsch', flag: 'fi-de' },
+    // { code: 'es', name: 'Español', flag: 'fi-es' }
+]);
 </script>
 <template>
     <div class="authentication">
         <v-container fluid class="pa-3">
             <v-row class="h-100vh d-flex justify-center align-center">
+                <div class="language-calendar-wrapper">
+                    <v-btn
+                        v-for="lang in languages"
+                        :key="lang.code"
+                        size="small"
+                        class="circle-button"
+                        :class="{ 'selected-language': locale === lang.code }"
+                        color="primary"
+                        flat
+                        @click="changeLanguage(lang.code)"
+                    >
+                        <span :class="['fi', lang.flag]"></span>
+                    </v-btn>
+                </div>
                 <v-col cols="12" class="d-flex align-center">
                     <div class="boxed-auth-wrap">
                         <v-card rounded="xl" elevation="10" class="px-sm-1 px-0 mx-auto index-2" max-width="450">
@@ -17,16 +44,16 @@ import '../../style.css';
                                         <img :src="img1" id="img-icon" alt="School Management Icon" />
                                     </div>
                                 </div>
-                                                                    <h5 style="text-align: center;" class="mb-4">Sign in to access the school management system.</h5>
+                                <h5 style="text-align: center" class="mb-4">{{ t('Sign in to access the school management system.') }}</h5>
                                 <LoginForm />
                                 <h6 class="text-subtitle-1 text-grey100 d-flex justify-center align-center mt-3">
-                                    New in the plateform ?
+                                    {{ t('New in the plateform ?') }}
                                     <v-btn
                                         class="pl-0 text-primary text-body-1 font-weight-medium opacity-1 pl-2"
                                         height="auto"
                                         to="/auth/register"
                                         variant="plain"
-                                        >Create an account</v-btn
+                                        >{{ t('Create an account') }}</v-btn
                                     >
                                 </h6>
                             </v-card-item>
@@ -37,3 +64,26 @@ import '../../style.css';
         </v-container>
     </div>
 </template>
+<style scoped>
+.language-calendar-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.circle-button {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.circle-button .fi {
+    font-size: 20px;
+}
+.selected-language {
+    transform: scale(1.1);
+    border: 1px solid red;
+}
+</style>

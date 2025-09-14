@@ -103,7 +103,7 @@ onMounted(() => {
     <v-card style="border-radius: 20px; background-color: rgb(251, 140, 0,1); height: 17vh; color: white">
         <v-card-item>
             <div class="d-sm-flex align-center justify-space-between pt-sm-2">
-                <v-card-title class="text-h5">Students</v-card-title>
+                <v-card-title class="text-h5">{{t('Students')}}</v-card-title>
                 <v-btn size="small" icon style="background-color: rgb(251, 140, 0,1);">
                     <v-avatar size="30">
                         <UserIcon size="30" />

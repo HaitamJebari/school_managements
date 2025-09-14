@@ -7,30 +7,37 @@ import { ChevronRightIcon } from 'vue-tabler-icons';
 
 // Define interfaces
 interface Student {
-  id: string;
-  first_name: string;
-  last_name: string;
-  adresse: string;
-  age: number | null;
-  parent_name: string;
-  parent_tel: string | null;
-  inscription_date: string;
-  price: number | null;
-  email: string;
+    id: string;
+    first_name: string;
+    last_name: string;
+    adresse: string;
+    age: number | null;
+    parent_name: string;
+    parent_tel: string | null;
+    inscription_date: string;
+    price: number | null;
+    email: string;
 }
 
 // Access the Vue I18n instance
 const { locale, t } = useI18n(); // Must be called first!
 
 const students = ref<Student[]>([]);
-const items = ref([{ title: 'Action' }, { title: 'Another action' }, { title: 'Something else here' }]);
+
+const loading = ref(false);
+const errorMessage = ref('');
 
 const fetchStudents = async () => {
+    loading.value = true;
+    errorMessage.value = '';
     try {
         const response = await axios.get('https://school-management-cyan-seven.vercel.app/students');
         students.value = response.data;
-    } catch (error) {
-        console.error('Error fetching students:', error);
+    } catch (error: any) {
+        errorMessage.value = 'Failed to load students. Using demo data.';
+        // ... rest of error handling and mock data
+    } finally {
+        loading.value = false;
     }
 };
 
@@ -43,52 +50,13 @@ onMounted(() => {
     fetchStudents();
 });
 
-// Function to change the language
-const changeLanguage = (lang: string) => {
-    locale.value = lang;
-};
-
 const showInput = ref(false); // Reactive property for input visibility
 const showPopup = ref(false); // Reactive property for popup visibility
 const studentToDelete = ref<string | null>(null); // Stores the ID of the student to delete
 
 // Function to toggle the input field
 const toggleInput = () => {
-  showInput.value = !showInput.value;
-};
-
-// Function to toggle the popup
-const togglePopup = (id: string | null = null) => {
-  studentToDelete.value = id; // Set the student ID to delete, if provided
-  showPopup.value = !showPopup.value;
-};
-
-// Handle the delete confirmation
-const confirmDelete = async () => {
-  if (studentToDelete.value) {
-    try {
-      const response = await axios.delete(
-        `https://school-management-cyan-seven.vercel.app/students/${studentToDelete.value}`
-      );
-
-      if (response.status === 200) {
-        console.log('Student deleted successfully');
-
-        // Remove the deleted student from the local students list
-        students.value = students.value.filter(
-          (student) => student.id !== studentToDelete.value
-        );
-
-      } else {
-        console.error('Failed to delete student:', response.data.message);
-      }
-    } catch (error) {
-      console.error('Error deleting student:', error);
-    } finally {
-      showPopup.value = false; // Close the popup
-      studentToDelete.value = null; // Reset studentToDelete
-    }
-  }
+    showInput.value = !showInput.value;
 };
 
 const searchQuery = ref(''); // Reactive property for the search query
@@ -110,6 +78,7 @@ const filteredStudents = computed(() => {
 <template>
     <v-card elevation="10" class="pb-2">
         <v-card-item class="pa-6">
+           
             <div class="d-flex align-center justify-space-between">
                 <div>
                     <h5 class="text-h5 mb-1 font-weight-semibold">{{ t('Students') }}</h5>
@@ -118,25 +87,33 @@ const filteredStudents = computed(() => {
                     <!-- Transition for sliding effect -->
                     <transition name="slide">
                         <!-- Input field that appears conditionally -->
-                        <input v-if="showInput" type="text" v-model="searchQuery" class="animated-input" placeholder="Search here..." />
+                        <input v-if="showInput" type="text" v-model="searchQuery" class="animated-input" :placeholder="t('search here')" />
                     </transition>
                     <v-btn icon color="inherit" flat @click="toggleInput">
                         <SearchIcon stroke-width="1.5" size="24" class="text-grey100" />
                     </v-btn>
                 </div>
             </div>
-            <v-table class="month-table" style="max-height: 580px; ">
+             <div v-if="loading" class="text-center py-4">
+                <v-progress-circular indeterminate color="primary"></v-progress-circular>
+                <p>Loading data...</p>
+            </div>
+            <div v-if="errorMessage" class="error-message text-center py-4 text-red">
+                {{ errorMessage }}
+                <v-btn @click="fetchStudents" class="mt-2" color="primary">{{ t('Retry') }}</v-btn>
+            </div>
+            <v-table class="month-table" style="max-height: 580px">
                 <thead>
                     <tr>
                         <th class="text-subtitle-1 font-weight-bold">{{ t('Id') }}</th>
-                        <th class="text-subtitle-1 font-weight-bold">{{ t('First Name') }}</th>
-                        <th class="text-subtitle-1 font-weight-bold">{{ t('Last Name') }}</th>
+                        <th class="text-subtitle-1 font-weight-bold">{{ t('First_Name') }}</th>
+                        <th class="text-subtitle-1 font-weight-bold">{{ t('Last_Name') }}</th>
                         <th class="text-subtitle-1 font-weight-bold">{{ t('Parent') }}</th>
-                        <th class="text-subtitle-1 font-weight-bold">{{ t('Parent Tel') }}</th>
+                        <th class="text-subtitle-1 font-weight-bold">{{ t('Parent_Tel') }}</th>
                         <th class="text-subtitle-1 font-weight-bold">{{ t('Adresse') }}</th>
                         <th class="text-subtitle-1 font-weight-bold">{{ t('Email') }}</th>
                         <th class="text-subtitle-1 font-weight-bold">{{ t('Age') }}</th>
-                        <th class="text-subtitle-1 font-weight-bold">{{ t('Inscription Date') }}</th>
+                        <th class="text-subtitle-1 font-weight-bold">{{ t('Date_Registration') }}</th>
                         <th class="text-subtitle-1 font-weight-bold">{{ t('Price') }}</th>
                     </tr>
                 </thead>
@@ -155,7 +132,7 @@ const filteredStudents = computed(() => {
                     </tr>
                 </tbody>
             </v-table>
-             <a href="students" ><ChevronRightIcon :size="20" stroke-width="2" color="blue" />Modify Students</a>
+            <a href="students"><ChevronRightIcon :size="20" stroke-width="2" color="blue" />{{ t('Modify') }} Students</a>
         </v-card-item>
     </v-card>
 </template>
@@ -189,60 +166,59 @@ const filteredStudents = computed(() => {
     opacity: 0;
 }
 
-
 /* Fade transition styles */
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.3s ease;
+    transition: opacity 0.3s ease;
 }
 .fade-enter,
 .fade-leave-to {
-  opacity: 0;
+    opacity: 0;
 }
 
 /* Popup overlay */
 .popup-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: transparent;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
 }
 
 /* Popup content */
 .popup-content {
-  background: white;
-  border-radius: 8px;
-  padding: 20px;
-  text-align: center;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-  width: 300px;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    width: 300px;
 }
 
 .popup-actions {
-  margin-top: 20px;
-  display: flex;
-  justify-content: space-around;
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-around;
 }
 .popup-actions button {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
 }
 
 .popup-actions button:first-child {
-  background-color: #ff5252;
-  color: white;
+    background-color: #ff5252;
+    color: white;
 }
 
 .popup-actions button:last-child {
-  background-color: #ccc;
-  color: black;
+    background-color: #ccc;
+    color: black;
 }
 </style>

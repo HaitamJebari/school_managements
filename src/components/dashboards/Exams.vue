@@ -85,13 +85,20 @@ const examForm = ref<{ module_name: string; numero_control: string; date_exam: s
 const exams = ref<ExamItem[]>([]);
 
 const addExam = async () => {
+    const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+            confirmButton: 'btn btn-success mx-2',
+            cancelButton: 'btn btn-danger mx-2'
+        },
+        buttonsStyling: false
+    });
     // Added form validation
     if (!examForm.value.module_name || !examForm.value.numero_control || !examForm.value.date_exam) {
-        Swal.fire({
+        swalWithBootstrapButtons.fire({
             icon: 'warning',
-            title: 'Validation Error',
-            text: 'All fields are required',
-            confirmButtonText: 'OK'
+            title: 'Validation ' + t('Error!'),
+            text: t('All fields are required'),
+            confirmButtonText: t('OK')
         });
         return;
     }
@@ -106,9 +113,9 @@ const addExam = async () => {
         // The backend now returns the exam with its random color
         exams.value.push(response.data);
 
-        Swal.fire({
+        swalWithBootstrapButtons.fire({
             icon: 'success',
-            title: 'Exam added successfully!',
+            title: t('Exam added successfully!'),
              customClass: {
                 confirmButton: 'btn btn-success' // Add a green class for the button
             },
@@ -118,17 +125,24 @@ const addExam = async () => {
         closePopup();
     } catch (error: any) {
         console.error('Error adding exam:', error);
-        Swal.fire({
+        swalWithBootstrapButtons.fire({
             icon: 'error',
-            title: 'Failed to add exam',
-            text: error.response?.data?.message || 'An error occurred',
-            confirmButtonText: 'OK'
+            title: t('Failed to add exam'),
+            text: error.response?.data?.message || t('An error occurred'),
+            confirmButtonText: t('OK')
         });
     }
 };
 
 // Update fetchExams to use backend-provided colors
 const fetchExams = async () => {
+    const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+            confirmButton: 'btn btn-success mx-2',
+            cancelButton: 'btn btn-danger mx-2'
+        },
+        buttonsStyling: false
+    });
     try {
         const response = await axios.get('https://school-management-cyan-seven.vercel.app/exams');
         exams.value = response.data.map((exam: any) => ({
@@ -139,11 +153,11 @@ const fetchExams = async () => {
     } catch (error) {
         console.error('Error fetching exams:', error);
         // Added user-friendly error notification
-        Swal.fire({
+        swalWithBootstrapButtons.fire({
             icon: 'error',
-            title: 'Loading Error',
-            text: 'Failed to load exams. Please refresh the page.',
-            confirmButtonText: 'OK'
+            title: t('Loading Error'),
+            text: t('Failed to load exams. Please refresh the page.'),
+            confirmButtonText: t('OK')
         });
     }
 };
@@ -174,12 +188,12 @@ const showConfirmationDialog = (examId: number) => {
 
     swalWithBootstrapButtons
         .fire({
-            title: 'Are you sure?',
-            text: 'This action cannot be undone!',
+            title: t('Are you sure?'),
+            text: t('This action cannot be undone!'),
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: 'Yes, delete it!',
-            cancelButtonText: 'No, cancel!',
+            confirmButtonText: t('Yes, delete it!'),
+            cancelButtonText: t('No, cancel!'),
             reverseButtons: true
         })
         .then(async (result) => {
@@ -188,19 +202,19 @@ const showConfirmationDialog = (examId: number) => {
                     const response = await axios.delete(`https://school-management-cyan-seven.vercel.app/exams/${examId}`);
                     if (response.status === 200) {
                         swalWithBootstrapButtons.fire({
-                            title: 'Deleted!',
-                            text: 'The Exam has been deleted successfully.',
+                            title: t('Deleted!'),
+                            text: t('The Exam has been deleted successfully.'),
                             icon: 'success',
-                            confirmButtonText: 'OK'
+                            confirmButtonText: t('OK')
                         });
                         // Update the local list of exams
                         exams.value = exams.value.filter((exam) => exam.id !== examId);
                     } else {
                         swalWithBootstrapButtons.fire({
-                            title: 'Failed!',
-                            text: 'Failed to delete the Exam.',
+                            title: t('Failed!'),
+                            text: t('Failed to delete the Exam.'),
                             icon: 'error',
-                            confirmButtonText: 'OK',
+                            confirmButtonText: t('OK'),
                             customClass: {
                                 confirmButton: 'btn btn-danger'
                             }
@@ -208,10 +222,10 @@ const showConfirmationDialog = (examId: number) => {
                     }
                 } catch (error: any) {
                     swalWithBootstrapButtons.fire({
-                        title: 'Error!',
-                        text: 'Something went wrong during deletion.',
+                        title: t('Error!'),
+                        text: t('Something went wrong during deletion.'),
                         icon: 'error',
-                        confirmButtonText: 'OK',
+                        confirmButtonText: t('OK'),
                         customClass: {
                             confirmButton: 'btn btn-danger'
                         }
@@ -219,9 +233,9 @@ const showConfirmationDialog = (examId: number) => {
                 }
             } else if (result.dismiss === Swal.DismissReason.cancel) {
                 swalWithBootstrapButtons.fire({
-                    title: 'Cancelled',
+                    title: t('Cancelled'),
                     icon: 'info',
-                    confirmButtonText: 'OK',
+                    confirmButtonText: t('OK'),
                     customClass: {
                         confirmButton: 'btn btn-info'
                     }
@@ -242,7 +256,7 @@ const formatDate = (dateString: string): string => {
         <v-col cols="12" sm="12" lg="12">
             <v-card elevation="10" style="border-radius: 20px ; height: 4em;">
                 <v-card-item >
-                    <h4 class="d-flex align-center justify-space-between">Exams Management</h4>
+                    <h4 class="d-flex align-center justify-space-between">{{ t('Exams Management') }}</h4>
                 </v-card-item>
             </v-card>
         </v-col>
@@ -267,8 +281,8 @@ const formatDate = (dateString: string): string => {
                 </v-btn>
                 <div class="inside-card">
                     <h4>{{ examItem.module_name }}</h4>
-                    <p>Control Number: {{ examItem.numero_control }}</p>
-                    <p>Exam Date: {{ formatDate(examItem.date_exam) }}</p>
+                    <p>{{ t('Control') }} {{ t('Number') }}: {{ examItem.numero_control }}</p>
+                    <p>{{ t('Exam Date') }}: {{ formatDate(examItem.date_exam) }}</p>
                 </div>
             </v-card>
         </v-col>
@@ -278,7 +292,7 @@ const formatDate = (dateString: string): string => {
                 <div class="popup-contentp">
                     <div style="display: flex; justify-content: space-between; align-items: center">
                         <v-card-title class="title" style="margin: 10px auto; text-align: center">
-                            <h1>Add New Exam</h1>
+                            <h1>{{ t('add') }} {{ t('Exam') }}</h1>
                         </v-card-title>
                         <v-btn icon color="inherit" @click="closePopup" flat style="transform: translateY(-30px)">
                             <XIcon stroke-width="1.5" size="24" class="text-grey100" />
@@ -347,13 +361,13 @@ const formatDate = (dateString: string): string => {
                                                         </el-icon>
                                                     </template>
                                                 </el-date-picker>
-                                                <label for="date-registration">Pick a Date</label>
+                                                <label for="date-registration">{{ t('pickDate') }}</label>
                                             </div>
                                 </div>
                             </fieldset>
                         </div>
-                        <v-btn color="primary" type="submit" id="add">Add</v-btn>
-                        <v-btn id="add" class="cancel-btn" @click="resetForm">Cancel</v-btn>
+                        <v-btn color="primary" type="submit" id="add">{{ t('add') }}</v-btn>
+                        <v-btn id="add" class="cancel-btn" @click="resetForm">{{ t('cancel') }}</v-btn>
                     </form>
                 </div>
             </v-card>

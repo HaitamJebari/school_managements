@@ -1,13 +1,5 @@
 import {
     LayoutDashboardIcon,
-    BorderAllIcon,
-    AlertCircleIcon,
-    CircleDotIcon,
-    BoxMultiple1Icon,
-    LoginIcon,
-    MoodHappyIcon,
-    ApertureIcon,
-    UserPlusIcon,
     BriefcaseIcon,
     SchoolIcon,
     UsersIcon,
@@ -35,7 +27,7 @@ export interface menu {
     type?: string;
     subCaption?: string;
 }
-
+    
 const sidebarItem: menu[] = [
     {
         title: 'Dashboard',
@@ -43,7 +35,6 @@ const sidebarItem: menu[] = [
         BgColor: 'primary',
         to: '/'
     },
-    //   { header: 'Ui components' },
     {
         title: 'Teachers',
         icon: BriefcaseIcon,
@@ -74,7 +65,6 @@ const sidebarItem: menu[] = [
         BgColor: 'primary',
         to: '/groups'
     },
-
     {
         title: 'Absences',
         icon: SchoolOffIcon,
@@ -87,16 +77,14 @@ const sidebarItem: menu[] = [
         BgColor: 'primary',
         to: '/exams'
     },
-
     {
         title: 'Financials',
         icon: ReceiptRefundIcon,
         BgColor: 'primary',
         to: '/financials'
     },
-
     {
-        title: 'Annoucements',
+        title: 'Announcements',
         icon: NotificationIcon,
         BgColor: 'primary',
         to: '/ann'

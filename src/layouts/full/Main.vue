@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, shallowRef } from 'vue';
+import { ref, shallowRef, computed } from 'vue';
 import sidebarItems from './vertical-sidebar/sidebarItem';
 import NavGroup from './vertical-sidebar/NavGroup/index.vue';
 import NavItem from './vertical-sidebar/NavItem/index.vue';
@@ -9,14 +9,23 @@ import ProfileDD from './vertical-header/ProfileDD.vue';
 import img1 from '@/assets/images/img1.png';
 import { router } from '@/router';
 import '../../style.css'
+import { useI18n } from 'vue-i18n';
 
-const sidebarMenu = shallowRef(sidebarItems);
+const { t } = useI18n();
 const sDrawer = ref(true);
 const searchQuery = ref('');
 
+// Create translated sidebar items
+const translatedSidebarItems = computed(() => {
+  return sidebarItems.map(item => ({
+    ...item,
+    title: t(`sidebar.${item.title}`)
+  }));
+});
+
 const handleLogout = () => {
-    localStorage.removeItem('isAuthenticated');
-    router.push('/auth/login');
+  localStorage.removeItem('isAuthenticated');
+  router.push('/auth/login');
 };
 </script>
 
@@ -33,13 +42,10 @@ const handleLogout = () => {
         <perfect-scrollbar class="scrollnavbar bg-containerBg overflow-y-hidden">
             <v-list class="py-2 px-4 bg-containerBg">
                 <!---Menu Loop -->
-                <template v-for="(item, i) in sidebarMenu">
-                    <!---Item Sub Header -->
-                    <NavGroup :item="item" v-if="item.header" :key="item.title" />
-                    <!---Single Item-->
-                    <NavItem :item="item" v-else class="leftPadding" />
-                    <!---End Single Item-->
-                </template>
+                <template v-for="(item, i) in translatedSidebarItems" :key="i">
+          <NavGroup :item="item" v-if="item.header" />
+          <NavItem :item="item" v-else class="leftPadding" />
+        </template>
                 <div class="logout-container pa-7">
                     <button class="Btn" @click="handleLogout">
                         <div class="sign">
@@ -50,7 +56,7 @@ const handleLogout = () => {
                             </svg>
                         </div>
 
-                        <div class="text">Logout</div>
+                        <div class="text">{{ t('sidebar.Logout') }}</div>
                     </button>
                 </div>
             </v-list>
@@ -227,7 +233,7 @@ input:not(:placeholder-shown) ~ .reset {
 /* hover effect on button width */
 .Btn:hover {
     background-color: rgba(33, 150, 243, 1);
-    width: 125px;
+    width: 190px;
     border-radius: 40px;
     transition-duration: 0.3s;
 }

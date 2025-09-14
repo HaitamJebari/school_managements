@@ -32,7 +32,7 @@ interface TeacherForm {
 
 
 // Access the Vue I18n instance
-const { locale, t } = useI18n(); 
+const { t } = useI18n(); 
 
 const teachers = ref<Teacher[]>([]);
 

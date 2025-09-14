@@ -69,7 +69,7 @@ const areaChart = {
    <v-card style="border-radius: 20px; background-color: #4caf50; height: 17vh; color: white">
         <v-card-item>
             <div class="d-sm-flex align-center justify-space-between pt-sm-2">
-                <v-card-title class="text-h5">Revenue</v-card-title>
+                <v-card-title class="text-h5">{{t('Revenue')}}</v-card-title>
                 <v-btn size="small" icon style="background-color: rgb(76 175 80);">
                     <v-avatar size="30">
                         <CurrencyDollarIcon size="30" />

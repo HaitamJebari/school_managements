@@ -4,6 +4,7 @@ import Swal from 'sweetalert2';
 import { onMounted, ref, computed } from 'vue';
 import { TrashIcon, PlusIcon, XIcon, SearchIcon, BellIcon, CalendarIcon, UserIcon, EditIcon } from 'vue-tabler-icons';
 import { format, parseISO } from 'date-fns';
+import { useI18n } from 'vue-i18n';
 
 // Define interfaces
 interface AnnouncementItem {
@@ -62,6 +63,8 @@ const closePopup = () => {
     showPopup.value = false;
 };
 
+const { locale, t } = useI18n();
+
 // Format date
 const formatDate = (dateString: string) => {
     try {
@@ -85,9 +88,9 @@ const addAnnouncement = async () => {
     if (!announcementForm.value.author_name || !announcementForm.value.title || !announcementForm.value.content) {
         Swal.fire({
             icon: 'error',
-            title: 'Missing Information',
-            text: 'Please fill in all fields',
-            confirmButtonText: 'OK'
+            title: t('Missing Information'),
+            text: t('Please fill in all fields'),
+            confirmButtonText: t('OK')
         });
         return;
     }
@@ -108,9 +111,9 @@ const addAnnouncement = async () => {
 
         Swal.fire({
             icon: 'success',
-            title: 'Announcement Added',
-            text: 'Your announcement has been published successfully',
-            confirmButtonText: 'OK',
+            title: t('Announcement Added'),
+            text: t('Your announcement has been published successfully'),
+            confirmButtonText: t('OK'),
             customClass: {
                 confirmButton: 'btn btn-success'
             }
@@ -122,9 +125,9 @@ const addAnnouncement = async () => {
         console.error('Error adding announcement:', error);
         Swal.fire({
             icon: 'error',
-            title: 'Failed to Add Announcement',
-            text: error.response?.data?.message || 'An error occurred',
-            confirmButtonText: 'OK'
+            title: t('Failed to Add Announcement'),
+            text: error.response?.data?.message || t('An error occurred'),
+            confirmButtonText: t('OK')
         });
     } finally {
         loading.value = false;
@@ -144,9 +147,9 @@ const fetchData = async () => {
         console.error('Error fetching data:', error);
         Swal.fire({
             icon: 'error',
-            title: 'Failed to Load Announcements',
+            title: t('Failed to Load Announcements'),
             text: 'Please try again later',
-            confirmButtonText: 'OK'
+            confirmButtonText: t('OK')
         });
     } finally {
         loading.value = false;
@@ -202,13 +205,13 @@ const showConfirmationDialog = (announcementId: number) => {
     });
 
     swalWithBootstrapButtons.fire({
-        title: 'Are you sure?',
-        text: 'This action cannot be undone!',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, delete it!',
-        cancelButtonText: 'No, cancel!',
-        reverseButtons: true
+        title: t('Are you sure?'),
+            text: t('This action cannot be undone!'),
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: t('Yes, delete it!'),
+            cancelButtonText: t('No, cancel!'),
+            reverseButtons: true
     }).then(async (result) => {
         if (result.isConfirmed) {
             try {
@@ -216,10 +219,10 @@ const showConfirmationDialog = (announcementId: number) => {
 
                 if (response.status === 200) {
                     swalWithBootstrapButtons.fire({
-                        title: 'Deleted!',
-                        text: 'The announcement has been deleted successfully.',
+                        title: t('Deleted!'),
+                        text: t('The announcement has been deleted successfully.'),
                         icon: 'success',
-                        confirmButtonText: 'OK'
+                        confirmButtonText: t('OK')
                     });
 
                     // Update the local list of announcements
@@ -229,10 +232,10 @@ const showConfirmationDialog = (announcementId: number) => {
                         selectedAnnouncements.value.length === announcements.value.length && announcements.value.length > 0;
                 } else {
                     swalWithBootstrapButtons.fire({
-                        title: 'Failed!',
-                        text: 'Failed to delete the announcement.',
+                        title: t('Failed!'),
+                        text: t('Failed to delete the announcement.'),
                         icon: 'error',
-                        confirmButtonText: 'OK',
+                        confirmButtonText: t('OK'),
                         customClass: {
                                 confirmButton: 'btn btn-danger'
                             }
@@ -240,10 +243,10 @@ const showConfirmationDialog = (announcementId: number) => {
                 }
             } catch (error: any) {
                     swalWithBootstrapButtons.fire({
-                        title: 'Error!',
-                        text: 'Something went wrong during deletion.',
+                        title: t('Error!'),
+                        text: t('Something went wrong during deletion.'),
                         icon: 'error',
-                        confirmButtonText: 'OK',
+                        confirmButtonText: t('OK'),
                         customClass: {
                             confirmButton: 'btn btn-danger'
                         }
@@ -251,11 +254,11 @@ const showConfirmationDialog = (announcementId: number) => {
                 }
             } else if (result.dismiss === Swal.DismissReason.cancel) {
                 swalWithBootstrapButtons.fire({
-                    title: 'Cancelled',
+                    title: t('Cancelled'),
                     icon: 'info',
-                    confirmButtonText: 'OK',
+                    confirmButtonText: t('OK'),
                     customClass: {
-                        confirmButton: 'btn btn-info    '
+                        confirmButton: 'btn btn-info'
                     }
                 });
             }
@@ -267,12 +270,12 @@ const deleteSelectedAnnouncements = async () => {
     if (!selectedAnnouncements.value.length) return;
 
     Swal.fire({
-        title: `Delete ${selectedAnnouncements.value.length} announcements?`,
-        text: 'This action cannot be undone!',
+        title: `${t('delete')} ${selectedAnnouncements.value.length} ${t('announcements')}?`,
+        text: t('This action cannot be undone!'),
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: 'Yes, delete them!',
-        cancelButtonText: 'Cancel',
+        confirmButtonText: t('Yes, delete them!'),
+        cancelButtonText: t('cancel'),
         confirmButtonColor: '#d33',
         cancelButtonColor: '#3085d6',
         reverseButtons: true
@@ -291,18 +294,18 @@ const deleteSelectedAnnouncements = async () => {
                 isSelectedAll.value = false;
 
                 Swal.fire({
-                    title: 'Deleted!',
-                    text: 'Announcements deleted successfully.',
+                    title: t('Deleted!'),
+                    text: t('Announcements deleted successfully.'),
                     icon: 'success',
-                    confirmButtonText: 'OK'
+                    confirmButtonText: t('OK')
                 });
             } catch (error: any) {
                 console.error('Error deleting announcements:', error);
                 Swal.fire({
-                    title: 'Error!',
-                    text: 'Failed to delete some announcements.',
+                    title: t('Error!'),
+                    text: t('Failed to delete some announcements.'),
                     icon: 'error',
-                    confirmButtonText: 'OK'
+                    confirmButtonText: t('OK')
                 });
             } finally {
                 loading.value = false;
@@ -344,7 +347,7 @@ const getInitials = (name: string) => {
         <v-col cols="12" sm="12" lg="12">
             <v-card elevation="10" style="border-radius: 20px; height: 4em">
                 <v-card-item>
-                    <h4 class="d-flex align-center justify-space-between">Announcements Management</h4>
+                    <h4 class="d-flex align-center justify-space-between">{{ t('Announcements Management') }}</h4>
                 </v-card-item>
             </v-card>
         </v-col>
@@ -376,13 +379,13 @@ const getInitials = (name: string) => {
                                     :loading="loading"
                                 >
                                     <TrashIcon class="me-1" size="16" />
-                                    Delete ({{ selectedAnnouncements.length }})
+                                    {{ t('delete') }} ({{ selectedAnnouncements.length }})
                                 </v-btn>
                             </div>
 
                             <v-btn color="primary" variant="elevated" @click="openPopup" :loading="loading" class="add-btn">
                                 <PlusIcon class="me-1" size="18" />
-                                New Announcement
+                                {{ t('new') }} {{ t('Announcement') }}
                             </v-btn>
                         </div>
                     </div>
@@ -400,11 +403,11 @@ const getInitials = (name: string) => {
                 <v-card-item>
                     <div class="d-flex flex-column align-center">
                         <v-icon icon="mdi-bell-off" size="64" color="grey-lighten-1" class="mb-4"></v-icon>
-                        <h3 class="text-h5 font-weight-medium mb-2">No Announcements Yet</h3>
-                        <p class="text-body-1 text-grey mb-4">Create your first announcement to get started</p>
+                        <h3 class="text-h5 font-weight-medium mb-2">{{ t('No Announcements Yet') }}</h3>
+                        <p class="text-body-1 text-grey mb-4">{{ t('Create your first announcement to get started') }}</p>
                         <v-btn color="primary" @click="openPopup">
                             <PlusIcon class="me-1" />
-                            New Announcement
+                            {{ t('New') }} {{ t('Announcement') }}
                         </v-btn>
                     </div>
                 </v-card-item>
@@ -476,7 +479,7 @@ const getInitials = (name: string) => {
                     <div class="popup-contentp">
                         <div style="display: flex; justify-content: space-between; align-items: center">
                             <v-card-title class="title" style="margin: 10px auto; text-align: center">
-                                <h1>Add New Announcement</h1>
+                                <h1>{{ t('add') }} {{ t('Announcement') }}</h1>
                             </v-card-title>
                             <v-btn icon color="inherit" @click="closePopup" flat style="transform: translateY(-30px)">
                                 <XIcon stroke-width="1.5" size="24" class="text-grey100" />
@@ -487,27 +490,27 @@ const getInitials = (name: string) => {
                                 <fieldset class="field1">
                                     <div class="inputGroup">
                                         <input type="text" id="author_name" v-model="announcementForm.author_name" autocomplete="off" />
-                                        <label for="author_name">Author Name</label>
+                                        <label for="author_name">{{t('Author Name')}}</label>
                                     </div>
                                 </fieldset>
 
                                 <fieldset class="field2">
                                     <div class="inputGroup">
                                         <input type="text" id="title" v-model="announcementForm.title" autocomplete="off" />
-                                        <label for="title">Title</label>
+                                        <label for="title">{{t('Title')}}</label>
                                     </div>
                                 </fieldset>
 
                                 <fieldset class="field3">
                                     <div class="inputGroup">
                                         <input type="text" id="content" v-model="announcementForm.content" autocomplete="off" />
-                                        <label for="content">Content</label>
+                                        <label for="content">{{t('Content')}}</label>
                                     </div>
                                 </fieldset>
                             </div>
 
-                            <v-btn color="primary" type="submit" id="add">Publish Announcement</v-btn>
-                            <v-btn id="add" class="cancel-btn" @click="resetForm">Cancel</v-btn>
+                            <v-btn color="primary" type="submit" id="add">{{t('Publish Announcement')}}</v-btn>
+                            <v-btn id="add" class="cancel-btn" @click="resetForm">{{t('cancel')}}</v-btn>
                         </form>
                     </div>
                 </v-card>

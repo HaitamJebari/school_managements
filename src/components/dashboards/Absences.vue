@@ -645,10 +645,13 @@ onMounted(async () => {
     await fetchStudentNames();
     await fetchModuleNames();
 });
+const loading = ref(false);
+
 </script>
 
 <template>
     <v-row>
+        
         <!-- Header Card -->
         <v-col cols="12" sm="12" lg="12">
             <v-card elevation="10" style="border-radius: 20px; height: 4em">

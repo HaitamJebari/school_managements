@@ -4,6 +4,10 @@ import TeachersD from '@/components/dashboards/TeachersD.vue';
 import Revenuedd from '@/components/dashboards/Revenuedd.vue';
 import TotalS from '@/components/dashboards/TotalS.vue';
 import TotalG from '@/components/dashboards/TotalG.vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
+
 
 </script>
 
@@ -33,7 +37,7 @@ import TotalG from '@/components/dashboards/TotalG.vue';
         </v-col>
         <v-col class="text-center mt-2 d-md-flex justify-md-space-between">
             <p class="text-muted">
-                Design and Developed by
+                {{ t('Design and Developed by') }}
                 <a flat variant="text" href="https://github.com/HaitamJebari" target="_blank" class="pl-1 text-primary">Haitam Jebari</a>
             </p>
         </v-col>

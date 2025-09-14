@@ -32,14 +32,26 @@ interface TeacherForm {
 const { locale, t } = useI18n(); // Must be called first!
 
 const teachers = ref<Teacher[]>([]);
-const items = ref([{ title: 'Action' }, { title: 'Another action' }, { title: 'Something else here' }]);
+const loading = ref(false);
+const errorMessage = ref('');
+
 
 const fetchTeachers = async () => {
     try {
         const response = await axios.get('https://school-management-cyan-seven.vercel.app/teachers');
         teachers.value = response.data;
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error fetching teachers:', error);
+        
+        // Show more detailed error message
+        if (error.response) {
+            console.error('Server responded with:', error.response.status);
+            console.error('Response data:', error.response.data);
+        } else if (error.request) {
+            console.error('No response received:', error.request);
+        } else {
+            console.error('Error setting up request:', error.message);
+        }
     }
 };
 
@@ -112,6 +124,8 @@ const filteredTeachers = computed(() => {
 <template>
     <v-card elevation="10" class="pb-2 mt-4">
         <v-card-item class="pa-6">
+            
+             
             <div class="d-flex align-center justify-space-between">
                 <div>
                     <h5 class="text-h5 mb-1 font-weight-semibold">{{ t('Teachers') }}</h5>
@@ -120,20 +134,32 @@ const filteredTeachers = computed(() => {
                     <!-- Transition for sliding effect -->
                     <transition name="slide">
                         <!-- Input field that appears conditionally -->
-                        <input v-if="showInput" type="text" v-model="searchQuery" class="animated-input" placeholder="Search here..." />
+                        <input v-if="showInput" type="text" v-model="searchQuery" class="animated-input" :placeholder="t('search here')" />
                     </transition>
                     <v-btn icon color="inherit" @click="toggleInput" flat>
                         <SearchIcon stroke-width="1.5" size="24" class="text-grey100" />
                     </v-btn>
                 </div>
             </div>
+    
+
+            <div v-if="loading" class="text-center py-4">
+                <v-progress-circular indeterminate color="primary"></v-progress-circular>
+                <p>Loading data...</p>
+            </div>
+            <div v-if="errorMessage" class="error-message text-center py-4 text-red">
+                {{ errorMessage }}
+                <v-btn @click="fetchTeachers" class="mt-2" color="primary">{{ t('Retry') }}</v-btn>
+            </div>
+           
             <v-table class="month-table" style="max-height: 580px;">
+                
                 <thead>
                     <tr>
                         <th class="text-subtitle-1 font-weight-bold">{{ t('Cin') }}</th>
                         <th class="text-subtitle-1 font-weight-bold">{{ t('Fullname') }}</th>
                         <th class="text-subtitle-1 font-weight-bold">{{ t('Email') }}</th>
-                        <th class="text-subtitle-1 font-weight-bold">{{ t('Date Registration') }}</th>
+                        <th class="text-subtitle-1 font-weight-bold">{{ t('Date_Registration') }}</th>
                         <th class="text-subtitle-1 font-weight-bold">{{ t('Tel') }}</th>
                         <th class="text-subtitle-1 font-weight-bold">{{ t('Adresse') }}</th>
                     </tr>
@@ -151,7 +177,7 @@ const filteredTeachers = computed(() => {
                     </tr>
                 </tbody>
             </v-table>
-             <a href="teachers" ><ChevronRightIcon :size="20" stroke-width="2" color="blue" />Modify Teachers</a>
+             <a href="teachers" ><ChevronRightIcon :size="20" stroke-width="2" color="blue" />{{ t('Modify') }} Teachers</a>
         </v-card-item>
     </v-card>
 </template>
