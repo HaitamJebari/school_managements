@@ -46,7 +46,7 @@ const handleLogout = () => {
           <NavGroup :item="item" v-if="item.header" />
           <NavItem :item="item" v-else class="leftPadding" />
         </template>
-                <div class="logout-container pa-7">
+                <div class="logout-container pa-7 d-flex justify-center sm-4">
                     <button class="Btn" @click="handleLogout">
                         <div class="sign">
                             <svg viewBox="0 0 512 512">
