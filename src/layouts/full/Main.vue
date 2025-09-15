@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, shallowRef, computed } from 'vue';
+import { ref, shallowRef, computed , watch, onMounted, onBeforeUnmount } from 'vue';
 import sidebarItems from './vertical-sidebar/sidebarItem';
 import NavGroup from './vertical-sidebar/NavGroup/index.vue';
 import NavItem from './vertical-sidebar/NavItem/index.vue';
@@ -10,9 +10,15 @@ import img1 from '@/assets/images/img1.png';
 import { router } from '@/router';
 import '../../style.css'
 import { useI18n } from 'vue-i18n';
+import Slide from 'vue-burger-menu'; 
+
+
+
+// existing code...
+const sDrawer = ref(true);
+
 
 const { t } = useI18n();
-const sDrawer = ref(true);
 const searchQuery = ref('');
 
 // Create translated sidebar items
@@ -27,6 +33,8 @@ const handleLogout = () => {
   localStorage.removeItem('isAuthenticated');
   router.push('/auth/login');
 };
+
+
 </script>
 
 <template>
@@ -39,14 +47,14 @@ const handleLogout = () => {
         <!-- ---------------------------------------------- -->
         <!---Navigation -->
         <!-- ---------------------------------------------- -->
-        <perfect-scrollbar class="scrollnavbar bg-containerBg overflow-y-hidden">
+        <perfect-scrollbar class="scrollnavbar bg-containerBg overflow-y-auto">
             <v-list class="py-2 px-4 bg-containerBg">
                 <!---Menu Loop -->
                 <template v-for="(item, i) in translatedSidebarItems" :key="i">
           <NavGroup :item="item" v-if="item.header" />
           <NavItem :item="item" v-else class="leftPadding" />
         </template>
-                <div class="logout-container pa-7 d-flex justify-center sm-4">
+                <div class="logout-container d-flex justify-center ">
                     <button class="Btn" @click="handleLogout">
                         <div class="sign">
                             <svg viewBox="0 0 512 512">
@@ -62,6 +70,7 @@ const handleLogout = () => {
             </v-list>
         </perfect-scrollbar>
     </v-navigation-drawer>
+    
     <div class="container verticalLayout">
         <div class="maxWidth">
             <v-app-bar elevation="0" height="70">
@@ -230,7 +239,6 @@ input:not(:placeholder-shown) ~ .reset {
     font-weight: 600;
     transition-duration: 0.3s;
 }
-/* hover effect on button width */
 .Btn:hover {
     background-color: rgba(33, 150, 243, 1);
     width: 190px;
@@ -248,19 +256,25 @@ input:not(:placeholder-shown) ~ .reset {
     fill: white;
 }
 
-/* hover effect button's text */
 .Btn:hover .text {
     opacity: 1;
     width: 70%;
     transition-duration: 0.3s;
     padding-right: 10px;
 }
-/* button click effect*/
 .Btn:active {
     transform: translate(2px, 2px);
 }
 .logout-container {
     margin-top: 2em;
 }
+@media screen and (max-width: 1080px) {
+    .logout-container {
+    margin-top: 2px;
+}
+  
+}
+
+
 
 </style>

@@ -843,5 +843,32 @@ label {
     margin: 3px;
     box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
 }
+@media (max-width: 1080px) {
+    .popup-card {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: rgba(0, 0, 0, 0.173);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        z-index: 1000;
+    }
+
+    .popup-contentp {
+        position: absolute;
+        top: 20%;
+        left: 0;
+        height: 60vh;
+        width: 80%;
+        background: rgb(255, 255, 255); /* Transparent white background */
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Soft shadow for depth */
+        text-align: center;
+        color: #000000; /* White text for contrast */
+        border: 1px solid rgba(255, 255, 255, 0.3); /* Subtle border for definition */
+        transform: translateX(11%);
+    }
+    
+}
 </style>
 

@@ -30,9 +30,8 @@ interface TeacherForm {
     adresse: string;
 }
 
-
 // Access the Vue I18n instance
-const { t } = useI18n(); 
+const { t } = useI18n();
 
 const teachers = ref<Teacher[]>([]);
 
@@ -46,16 +45,16 @@ const fetchTeachers = async () => {
 };
 
 const formatDate = (datetime: string) => {
-    if (!datetime) return ''; 
+    if (!datetime) return '';
     const date = new Date(datetime);
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0'); 
-    const day = String(date.getDate()).padStart(2, '0'); 
-    return `${year}-${month}-${day}`; 
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
 };
 
 const parseDate = (dateString: string) => {
-    if (!dateString) return ''; 
+    if (!dateString) return '';
     return new Date(dateString).toISOString(); // Convert to full ISO format if needed
 };
 
@@ -74,10 +73,7 @@ onMounted(() => {
     fetchTeachers();
 });
 
-
-
 const showInput = ref(false); // Reactive property for input visibility
-
 
 // Function to toggle the input field
 const toggleInput = () => {
@@ -126,12 +122,12 @@ const showConfirmationDialog = (teacherId: number) => {
 
     swalWithBootstrapButtons
         .fire({
-            title: t("Are you sure?"),
-            text: t("This action cannot be undone!"),
+            title: t('Are you sure?'),
+            text: t('This action cannot be undone!'),
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: t("Yes, delete it!"),
-            cancelButtonText: t("No, cancel!"),
+            confirmButtonText: t('Yes, delete it!'),
+            cancelButtonText: t('No, cancel!'),
             reverseButtons: true
         })
         .then(async (result) => {
@@ -140,19 +136,19 @@ const showConfirmationDialog = (teacherId: number) => {
                     const response = await axios.delete(`https://school-management-cyan-seven.vercel.app/teachers/${teacherId}`);
                     if (response.status === 200) {
                         swalWithBootstrapButtons.fire({
-                            title: t("Deleted!"),
-                            text: t("The teacher has been deleted successfully."),
+                            title: t('Deleted!'),
+                            text: t('The teacher has been deleted successfully.'),
                             icon: 'success',
-                            confirmButtonText: t("OK")
+                            confirmButtonText: t('OK')
                         });
                         // Update the local list of teachers
                         teachers.value = teachers.value.filter((teacher) => teacher.id !== teacherId);
                     } else {
                         swalWithBootstrapButtons.fire({
-                            title: t("Failed!"),
-                            text: t("Failed to delete the teacher."),
+                            title: t('Failed!'),
+                            text: t('Failed to delete the teacher.'),
                             icon: 'error',
-                            confirmButtonText: t("OK"),
+                            confirmButtonText: t('OK'),
                             customClass: {
                                 confirmButton: 'btn btn-danger'
                             }
@@ -160,10 +156,10 @@ const showConfirmationDialog = (teacherId: number) => {
                     }
                 } catch (error: any) {
                     swalWithBootstrapButtons.fire({
-                        title: t("Error!"),
-                        text: t("Something went wrong during deletion."),
+                        title: t('Error!'),
+                        text: t('Something went wrong during deletion.'),
                         icon: 'error',
-                        confirmButtonText: t("OK"),
+                        confirmButtonText: t('OK'),
                         customClass: {
                             confirmButton: 'btn btn-danger'
                         }
@@ -171,9 +167,9 @@ const showConfirmationDialog = (teacherId: number) => {
                 }
             } else if (result.dismiss === Swal.DismissReason.cancel) {
                 swalWithBootstrapButtons.fire({
-                    title: t("Cancelled"),
+                    title: t('Cancelled'),
                     icon: 'info',
-                    confirmButtonText: t("OK"),
+                    confirmButtonText: t('OK'),
                     customClass: {
                         confirmButton: 'btn btn-info'
                     }
@@ -205,32 +201,32 @@ const errorMessage = ref('');
 
 const submitForm = async () => {
     try {
-        console.log(t("Submitting form data:"), form1.value); // Log form data
+        console.log(t('Submitting form data:'), form1.value); // Log form data
         const response = await axios.post('https://school-management-cyan-seven.vercel.app/add_t', form1.value);
 
         // Add the newly created teacher to the local list
         teachers.value.push({ ...form1.value, id: response.data.id || Date.now() });
 
         Swal.fire({
-            title: t("Teacher added successfully!"),
+            title: t('Teacher added successfully!'),
             icon: 'success',
-            confirmButtonText: t("OK"),
+            confirmButtonText: t('OK'),
             customClass: {
-                confirmButton: 'btn btn-success' 
+                confirmButton: 'btn btn-success'
             },
-            buttonsStyling: false 
+            buttonsStyling: false
         });
         resetForm1();
     } catch (error: any) {
-        console.error(t("Error submitting form:"), error.response?.data || error.message);
+        console.error(t('Error submitting form:'), error.response?.data || error.message);
         Swal.fire({
             icon: 'error',
-            title: t("Failed to add Teacher"),
-            confirmButtonText: t("OK"),
+            title: t('Failed to add Teacher'),
+            confirmButtonText: t('OK'),
             customClass: {
-                confirmButton: 'btn btn-danger' 
+                confirmButton: 'btn btn-danger'
             },
-            buttonsStyling: false 
+            buttonsStyling: false
         });
     }
 };
@@ -264,9 +260,9 @@ const updateTeacher = async (teacherId: number) => {
     try {
         const response = await axios.put(`https://school-management-cyan-seven.vercel.app/teachers/${teacherId}`, form2.value);
         Swal.fire({
-            title: response.data.message || t("Teacher updated successfully!"),
+            title: response.data.message || t('Teacher updated successfully!'),
             icon: 'success',
-            confirmButtonText: t("OK"),
+            confirmButtonText: t('OK'),
             customClass: {
                 confirmButton: 'btn btn-success'
             }
@@ -278,10 +274,10 @@ const updateTeacher = async (teacherId: number) => {
         console.error('Error:', error); // Debugging
 
         Swal.fire({
-            title: t("Error updating teacher."),
-            text: error.response?.data?.error || t("An error occurred"),
+            title: t('Error updating teacher.'),
+            text: error.response?.data?.error || t('An error occurred'),
             icon: 'error',
-            confirmButtonText: t("OK"),
+            confirmButtonText: t('OK'),
             customClass: {
                 confirmButton: 'btn btn-danger'
             }
@@ -311,7 +307,7 @@ const filteredTeachers = computed(() => {
         <v-col cols="12" sm="12" lg="12">
             <v-card elevation="10" style="border-radius: 20px; height: 4em">
                 <v-card-item>
-                    <h4 class="d-flex align-center justify-space-between">{{ t('Teachers Management') }} </h4>
+                    <h4 class="d-flex align-center justify-space-between">{{ t('Teachers Management') }}</h4>
                 </v-card-item>
             </v-card>
         </v-col>
@@ -348,7 +344,7 @@ const filteredTeachers = computed(() => {
                                         <v-card-title class="title" style="margin: 10px auto; text-align: center">
                                             <h1>{{ t('add') }} {{ t('Teacher') }}</h1>
                                         </v-card-title>
-                                        <v-btn icon color="inherit" @click="closePopup" flat style="transform: translateY(-30px)">
+                                        <v-btn icon color="inherit" @click="closePopup" flat style="transform: translateY(-30px)" class="btn_x">
                                             <XIcon stroke-width="1.5" size="24" class="text-grey100" />
                                         </v-btn>
                                     </div>
@@ -379,6 +375,7 @@ const filteredTeachers = computed(() => {
                                                             date-format="MMM DD, YYYY"
                                                             time-format="HH:mm"
                                                             class="custom-date-picker"
+                                                            style=""
                                                         >
                                                             <template #prev-month>
                                                                 <el-icon><CaretLeft /></el-icon>
@@ -809,5 +806,32 @@ label {
     width: 20%;
     margin: 3px;
     box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+}
+@media (max-width: 1080px) {
+    .popup-card {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: rgba(0, 0, 0, 0.173);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        z-index: 1000;
+    }
+
+    .popup-contentp {
+        position: absolute;
+        top: 20%;
+        left: 0;
+        height: 60vh;
+        width: 80%;
+        background: rgb(255, 255, 255); /* Transparent white background */
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Soft shadow for depth */
+        text-align: center;
+        color: #000000; /* White text for contrast */
+        border: 1px solid rgba(255, 255, 255, 0.3); /* Subtle border for definition */
+        transform: translateX(11%);
+    }
+    
 }
 </style>

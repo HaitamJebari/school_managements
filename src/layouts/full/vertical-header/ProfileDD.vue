@@ -53,6 +53,7 @@ const languages = ref([
     <!-- ---------------------------------------------- -->
     <v-menu :close-on-content-click="false">
   <template v-slot:activator="{ props }">
+    
     <div class="language-calendar-wrapper" v-bind="props">
       
       <!-- Language Buttons -->
