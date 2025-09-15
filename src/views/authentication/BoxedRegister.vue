@@ -53,9 +53,9 @@ const languages = ref([
                                 <h6 class="text-subtitle-1 text-grey100 d-flex justify-center align-center mt-3">
                                     {{ t('Already have an Account?') }}
                                     <v-btn
-                                        variant="plain"
+                                        class="pl-0 text-primary text-body-1 font-weight-medium opacity-1 pl-2"
+                                        height="auto"
                                         to="/auth/login"
-                                        class="text-primary text-body-1 opacity-1 font-weight-medium pl-2"
                                         >{{ t('Sign In') }}</v-btn
                                     >
                                 </h6>
@@ -72,6 +72,8 @@ const languages = ref([
     display: flex;
     align-items: center;
     gap: 10px;
+    position: absolute;
+    top: 50px;
 }
 .circle-button {
     width: 50px;
@@ -88,5 +90,15 @@ const languages = ref([
 .selected-language {
     transform: scale(1.1);
     border: 1px solid red;
+}
+
+@media screen and (max-width: 1080px) {
+    .boxed-auth-wrap{
+          margin-top: 40px;      
+    }
+    .language-calendar-wrapper{
+        position: absolute;
+        top: 40px;
+    }
 }
 </style>

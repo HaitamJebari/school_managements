@@ -13,6 +13,7 @@ const router = useRouter();
 const handleLogin = async () => {
     message.value = '';
     loading.value = true;
+    
     try {
         const res = await axios.post('https://school-management-cyan-seven.vercel.app/login', {
             username: username.value,

@@ -13,6 +13,7 @@ const router = useRouter();
 const handleRegister = async () => {
     message.value = '';
     loading.value = true;
+    
     try {
         const response = await axios.post('https://school-management-cyan-seven.vercel.app/register', {
             username: username.value,
@@ -39,6 +40,13 @@ const handleRegister = async () => {
             text: error.response?.data?.message || 'Please try again.',
             icon: 'error',
             confirmButtonColor: 'red',
+            didOpen: () => {
+                const confirmBtn = Swal.getConfirmButton();
+                // Add null check to fix the TypeScript error
+                if (confirmBtn) {
+                    confirmBtn.style.color = 'white'; 
+                }
+            }
         });
     } finally {
         loading.value = false;

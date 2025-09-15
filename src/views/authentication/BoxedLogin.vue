@@ -20,7 +20,7 @@ const languages = ref([
 <template>
     <div class="authentication">
         <v-container fluid class="pa-3">
-            <v-row class="h-100vh d-flex justify-center align-center">
+            <v-row class="h-100vh d-flex justify-center align-center ">
                 <div class="language-calendar-wrapper">
                     <v-btn
                         v-for="lang in languages"
@@ -65,10 +65,13 @@ const languages = ref([
     </div>
 </template>
 <style scoped>
+
 .language-calendar-wrapper {
     display: flex;
     align-items: center;
     gap: 10px;
+    position: absolute;
+    top: 50px;
 }
 .circle-button {
     width: 50px;
@@ -85,5 +88,15 @@ const languages = ref([
 .selected-language {
     transform: scale(1.1);
     border: 1px solid red;
+}
+
+@media screen and (max-width: 1080px) {
+    .boxed-auth-wrap{
+          margin-top: 40px;      
+    }
+    .language-calendar-wrapper{
+        position: absolute;
+        top: 40px;
+    }
 }
 </style>
